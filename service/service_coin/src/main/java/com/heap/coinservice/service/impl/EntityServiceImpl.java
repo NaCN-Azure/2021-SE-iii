@@ -4,6 +4,7 @@ import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.service.EntityService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +16,6 @@ import org.springframework.stereotype.Service;
  * @since 2021-03-07
  */
 @Service
-public class EntityServiceImpl extends ServiceImpl<EntityMapper, Entity> implements EntityService {
+public class EntityServiceImpl implements EntityService {
 
 }

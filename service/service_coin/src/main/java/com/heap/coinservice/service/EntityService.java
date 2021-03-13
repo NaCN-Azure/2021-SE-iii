@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author 车一晗
  * @since 2021-03-07
  */
-public interface EntityService extends IService<Entity> {
+public interface EntityService  {
 
 }

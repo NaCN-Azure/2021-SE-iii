@@ -5,26 +5,30 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.neo4j.ogm.annotation.GeneratedValue;
+import org.neo4j.ogm.annotation.Id;
+import org.neo4j.ogm.annotation.NodeEntity;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author 车一晗
  * @since 2021-03-07
  */
+@NodeEntity
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="Entity对象", description="")
+@ApiModel(value="Entity", description="")
 public class Entity implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-      @TableId(value = "id", type = IdType.ID_WORKER)
-    private String id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
     private String name;
 

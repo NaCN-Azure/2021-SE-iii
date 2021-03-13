@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2021-03-07
  */
 @Service
-public class RelationshipServiceImpl extends ServiceImpl<RelationshipMapper, Relationship> implements RelationshipService {
+public class RelationshipServiceImpl implements RelationshipService {
 
 }
