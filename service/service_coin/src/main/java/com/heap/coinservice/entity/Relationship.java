@@ -22,7 +22,6 @@ import org.neo4j.ogm.annotation.*;
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="Relationship", description="")
 public class Relationship implements Serializable {
 
     @Id
@@ -37,11 +36,14 @@ public class Relationship implements Serializable {
 
     private Long toId;
 
+    private int domainId;
+
     @StartNode
     private Entity startEntity;
 
     @EndNode
     private Entity endEntity;
+
 
 
 }

@@ -24,7 +24,6 @@ import org.neo4j.ogm.annotation.NodeEntity;
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value="Entity", description="")
 public class Entity implements Serializable {
     @Id
     @GeneratedValue
@@ -35,6 +34,8 @@ public class Entity implements Serializable {
     private String bgColor;
 
     private Integer shape;
+
+    private int domainId;
 
 
 }
