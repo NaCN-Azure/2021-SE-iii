@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface EntityService  {
 
-    Entity createNode(String name,String color,int type,int domainId);
+    Entity createNode(String name, String color, int type, int domainId);
 
     List<Entity> getNodeByDomainId(int domainId);
 

@@ -21,10 +21,10 @@ import java.util.List;
 @Service
 public class EntityServiceImpl implements EntityService {
     @Autowired
-    EntityMapper entityMapper;
+    private EntityMapper entityMapper;
 
     @Override
-    public Entity createNode(String name,String color,int type,int domainId){
+    public Entity createNode(String name, String color, int type, int domainId){
         Entity entity = Entity.builder().name(name).bgColor(color).shape(type).domainId(domainId).build();
         return entityMapper.save(entity);
     }
@@ -36,7 +36,7 @@ public class EntityServiceImpl implements EntityService {
 
     @Override
     public Entity updateNode(Entity entity){
-        return entityMapper.updateNode(entity.getId(),entity.getName(),entity.getBgColor());
+        return entityMapper.updateNode(entity.getId(), entity.getName(), entity.getBgColor());
     }
 
     @Override

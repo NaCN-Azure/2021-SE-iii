@@ -30,17 +30,19 @@ public class RelationshipServiceImpl implements RelationshipService {
     EntityMapper entityMapper;
 
     @Override
-    public Relationship createLink(Long fromId,Long toId,String name){
-        Entity startnode=entityMapper.findById(fromId).get();
-        Entity endnode=entityMapper.findById(toId).get();
-        Relationship relationship= Relationship.builder().startEntity(startnode).endEntity(endnode)
-            .domainId(startnode.getDomainId()).name(name).fromId(fromId).toId(toId).type(1).build();
+    public Relationship createLink(Long fromId, Long toId, String name){
+        Entity startNode = entityMapper.findById(fromId).get();
+        Entity endNode = entityMapper.findById(toId).get();
+
+        Relationship relationship = Relationship.builder().startEntity(startNode).endEntity(endNode)
+            .domainId(startNode.getDomainId()).name(name).fromId(fromId).toId(toId).type(1).build();
+
         return relationshipMapper.save(relationship);
     }
 
     @Override
     public Relationship updateLink(Relationship relationship){
-        return relationshipMapper.updateLink(relationship.getId(),relationship.getName());
+        return relationshipMapper.updateLink(relationship.getId(), relationship.getName());
     }
 
     @Override

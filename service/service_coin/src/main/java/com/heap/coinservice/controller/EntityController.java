@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * <p>
  *  前端控制器
@@ -20,24 +22,28 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/coinservice/entity")
 public class EntityController {
     @Autowired
-    EntityService entityService;
+    private EntityService entityService;
 
-    @PostMapping("/createnode")
-    public Result createnode(@RequestParam ("name") String name, @RequestParam("color") String color, @RequestParam("type") int type, @RequestParam("domainId") int domainId){
-        return Result.ok().data("data",entityService.createNode(name,color,type,domainId));
+    @PostMapping("/createNode/{name}/{color}/{type}/{domainId}")
+    public Result createNode(@PathVariable String name, @PathVariable String color, @PathVariable int type, @PathVariable int domainId){
+        Entity entity = entityService.createNode(name,color,type,domainId);
+        return Result.ok().data("entity", entity);
     }
 
-    @PostMapping("/getnodesbydomainid")
-    public Result getNodesByDomainid(@RequestParam("domainId") int domainId){
-        return Result.ok().data("data",entityService.getNodeByDomainId(domainId));
+    @GetMapping("/getNodesByDomainId/{domainId}")
+    public Result getNodesByDomainId(@PathVariable int domainId){
+        List<Entity> list = entityService.getNodeByDomainId(domainId);
+        return Result.ok().data("nodesList", list);
     }
 
-    @PostMapping("/updatenode")
+    @PostMapping("/updateNode")
     public Result updateNode(@RequestBody Entity entity){
-        return Result.ok().data("data",entityService.updateNode(entity));
+        Entity newEntity = entityService.updateNode(entity);
+        return Result.ok().data("newEntity", newEntity);
     }
 
-    @PostMapping("/deletenode")
+    //TODO 删除方法返回值问题
+    @DeleteMapping("/deleteNode")
     public Result deleteNode(@RequestBody Entity entity){
         entityService.deleteNode(entity);
         return Result.ok().message("done!");

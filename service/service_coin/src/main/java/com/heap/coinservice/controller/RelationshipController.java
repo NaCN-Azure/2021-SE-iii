@@ -23,26 +23,29 @@ import org.springframework.web.bind.annotation.*;
 public class RelationshipController {
 
     @Autowired
-    RelationshipService relationshipService;
+    private RelationshipService relationshipService;
 
-    @PostMapping("/createlink")
-    public Result createLink(@RequestParam("fromId") Long fromId,@RequestParam("toId") Long toId,@RequestParam("name") String name){
-        return Result.ok().data("data",relationshipService.createLink(fromId,toId,name));
+    @PostMapping("/createLink/{fromId}/{toId}/{name}")
+    public Result createLink(@PathVariable Long fromId, @PathVariable Long toId, @PathVariable String name){
+        Relationship relationship = relationshipService.createLink(fromId,toId,name);
+        return Result.ok().data("relationship", relationship);
     }
 
-    @PostMapping("/updatelink")
+    @PostMapping("/updateLink")
     public Result updateLink(@RequestBody Relationship relationship){
-        return Result.ok().data("data",relationshipService.updateLink(relationship));
+        Relationship newRelationship = relationshipService.updateLink(relationship);
+        return Result.ok().data("newRelationship", newRelationship);
     }
 
-    @PostMapping("/deletelink")
+    //TODO 删除方法返回值问题
+    @PostMapping("/deleteLink")
     public Result deleteLink(@RequestBody Relationship relationship){
         relationshipService.deleteLink(relationship);
         return Result.ok().message("done!");
     }
 
-    @PostMapping("/getlinkbydomainid")
-    public Result getlinkbydomainid(@RequestParam Long domainId){
+    @GetMapping("/getLinkByDomainId/{domainId}")
+    public Result getLinkByDomainId(@PathVariable Long domainId){
         return Result.ok();
     }
 
