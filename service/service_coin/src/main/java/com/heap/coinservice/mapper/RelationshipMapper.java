@@ -23,9 +23,22 @@ import java.util.List;
 @Mapper
 public interface RelationshipMapper extends Neo4jRepository<Relationship,Long> {
 
+    /**
+     *
+     * 更新关系信息
+     * @param id name
+     * @return
+     */
     @Query("match (n)<-[r]-(m) where id(r)={0} set r.name={1} return r")
     Relationship updateLink(@Param("id") Long id,@Param("name") String name);
 
-    @Query("match [r{domainId:{0}}] return r")
-    List<Relationship> getlinkbydomainid(@Param("domainId") Long domainId);
+    /**
+     *
+     * 返回域内所有关系（包含孤立节点）
+     * @param domainId
+     * @return
+     */
+    @Query("MATCH (n{domainId:{0}})-[r]->(m{domainId:{0}}) RETURN n,m,r")
+    List<Relationship> getLinkByDomainId(@Param("domainId") int domainId);
+
 }

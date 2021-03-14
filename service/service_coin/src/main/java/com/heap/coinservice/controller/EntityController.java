@@ -21,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/coinservice/entity")
 public class EntityController {
+
     @Autowired
     private EntityService entityService;
 

@@ -1,14 +1,15 @@
 package com.heap.coinservice.controller;
 
 
-import com.heap.coinservice.entity.Entity;
+import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.entity.Relationship;
-import com.heap.coinservice.mapper.RelationshipMapper;
 import com.heap.coinservice.service.RelationshipService;
 import com.heap.commonutils.Result;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -44,10 +45,10 @@ public class RelationshipController {
     }
 
     @GetMapping("/getLinkByDomainId/{domainId}")
-    public Result getLinkByDomainId(@PathVariable Long domainId){
-        return Result.ok();
+    public Result getLinkByDomainId(@PathVariable int domainId){
+        List<Relationship> relationshipList=relationshipService.getLinkByDomainId(domainId);
+        return Result.ok().data("relationships",relationshipList);
     }
-
 
 
 }
