@@ -24,21 +24,27 @@
         <div class="edit-pane">
             <!--编辑面板头部，包括一些操作和节点信息的显示-->
             <div class="edit-tools">
-                <div class="searchInKG" v-show="domain!=''">
-                    <el-input
-                            placeholder="请输入关键词"
-                            v-model="keyName"
-                            @keyup.native.enter="searchInCurrentDomain"
-                            clearable="true"
-                    ></el-input>
+                <!-- 显示当前图谱名称，可以在这里对图谱名称进行修改 TODO-->
+                <div class="edit-tool" v-show="domain.name!=''" style="display: flex">
+                    当前图谱：<el-input v-model="domain.name" size="small" style="width: 100px"></el-input>
                 </div>
-                <span v-show="domain!=''">
-                    <span class="">选中节点：<i>{{selectedNode.name}}</i></span>
-                </span>
+                <!-- 不知道是要搜索什么 -->
+<!--                <div class="edit-tool" v-show="domain.name!=''">-->
+<!--                    <el-input-->
+<!--                            placeholder="请输入关键词"-->
+<!--                            @keyup.native.enter="searchInCurrentDomain"-->
+<!--                            clearable="true"-->
+<!--                            size="small"-->
+<!--                    ></el-input>-->
+<!--                </div>-->
+                <div class="edit-tool" v-show="domain.name!=''">
+                    <span class="">选中节点：</span>
+                </div>
                 <!-- 固定的工具 -->
                 <div class="fixed-tools">
+                    <el-button class="edit-tool" size="small" type="primary" @click="createNode">新建节点</el-button>
                     <el-dropdown>
-                        <el-button size="small">
+                        <el-button size="small" class="edit-tool">
                             导出<i class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
                         <el-dropdown-menu slot="dropdown">
@@ -47,6 +53,12 @@
                     </el-dropdown-menu>
                     </el-dropdown>
                 </div>
+            </div>
+            <!-- 右边中间-图谱渲染区域 -->
+            <div class="graph">
+                <el-scrollbar style="width: 100%;height: 100%">
+
+                </el-scrollbar>
             </div>
         </div>
 
@@ -64,48 +76,46 @@
 <!--                <el-button @click="exportCSV" type="primary">确定</el-button>-->
 <!--            </el-form>-->
 <!--        </el-dialog>-->
-
-<!--        <el-dialog title="导出图片">-->
-
-<!--        </el-dialog>-->
-
-<!--        <el-dialog title="节点编辑" :visible.sync="nodeEditorVisible">-->
-<!--&lt;!&ndash;            <el-tabs>&ndash;&gt;-->
-<!--&lt;!&ndash;                <el-tab-pane label="属性编辑" name="propsEdit">&ndash;&gt;-->
-<!--                    <el-form :model="graphEntity">-->
-<!--                        <el-form-item label="节点名称">-->
-<!--                            <el-input v-model="graphEntity.name"></el-input>-->
-<!--                        </el-form-item>-->
-<!--                        <el-form-item label="选择颜色">-->
-<!--                            <el-color-picker v-model="graphEntity.color"-->
-<!--                                             :predefine="predefineColor">-->
-<!--                            </el-color-picker>-->
-<!--                        </el-form-item>-->
-<!--                        <el-form-item label="节点半径">-->
-<!--                            <el-slider v-model="graphEntity.radius"-->
-<!--                                       min="5"-->
-<!--                                       max="15"-->
-<!--                            ></el-slider>-->
-<!--                        </el-form-item>-->
-<!--                    </el-form>-->
-<!--&lt;!&ndash;                </el-tab-pane>&ndash;&gt;-->
-<!--&lt;!&ndash;            </el-tabs>&ndash;&gt;-->
-<!--        </el-dialog>-->
+        <create-node-dialog></create-node-dialog>
+        <add-domain-dialog></add-domain-dialog>
     </div>
 </template>
 
 <script>
+    import {mapGetters, mapMutations} from "vuex";
+    import CreateNodeDialog from "./components/createNodeDialog";
+    import AddDomainDialog from "./components/addDomainDialog";
+
     export default {
         name: "editor",
-        // eslint-disable-next-line vue/no-unused-components
+        components: {AddDomainDialog, CreateNodeDialog},
         data(){
             return{
-                keyName:'',
-                domain:'',
-                selectedNode:{
-                    id:'',
-                    name:'',
-                }
+                // keyName:'',
+                // domain:'',
+                // selectedNode:{
+                //     id:'',
+                //     name:'',
+                // }
+            }
+        },
+        computed:{
+            ...mapGetters([
+                'createNodeDialogVisible',
+                'addDomainDialogVisible',
+                'domain'
+            ])
+        },
+        methods:{
+            ...mapMutations([
+                'set_createNodeDialogVisible',
+                'set_addDomainDialogVisible'
+            ]),
+            createNode(){
+                this.set_createNodeDialogVisible(true)
+            },
+            addDomain(){
+                this.set_addDomainDialogVisible(true)
             }
         }
     }
@@ -120,18 +130,34 @@
         line-height: 50px;
         border-bottom: 1px solid lightgray;
     }
-    .edit-tools{
-        height: 50px;
-        line-height: 50px;
-        border-bottom: 1px solid lightgray;
+    .edit-pane{
         position: absolute;
         left: 300px;
         top: 0;
         width: 100%;
+        height: 100%;
+    }
+    .edit-tools{
+        height: 50px;
+        line-height: 50px;
+        border-bottom: 1px solid lightgray;
+        width: 100%;
         display: flex;
     }
-    /*.fixed-tools{*/
-    /*    float: right;*/
-    /*}*/
+    .fixed-tools{
+        width: 200px;
+        position: absolute;
+        right: 320px;
+        /*很离谱啊这里，为什么浏览器在看不见的地方还多了300px*/
+    }
+    .edit-tool{
+        margin-left: 20px;
+    }
+    .graph{
+        position: absolute;
+        top: 50px;
+        bottom: 0;
+        width: 100%;
+    }
 
 </style>

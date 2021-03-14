@@ -64,7 +64,7 @@
             生成图谱
         </el-button>
         <el-button @click="addRouterToEditor">
-            创建空白图谱
+            进入工作区
         </el-button>
     </div>
 </template>
