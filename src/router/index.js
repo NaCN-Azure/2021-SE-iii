@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Create from '../views/create/index'
+import Editor from '../views/editor/editor'
 
 Vue.use(VueRouter)
 const routes = [
@@ -15,9 +16,21 @@ const routes = [
   },
   {
     path: '/home',
-    name: 'create',
+    name: '首页',
     component: Create
-
+  },
+  {
+    path: '/COINHEAP',
+    name: 'layout',
+    redirect: '/editor',
+    component: () => import('@/views/layout'),
+    children:[
+      {
+        path:'/editor',
+        name:'editor',
+        component: () => import('@/views/editor/editor')
+      }
+    ]
   },
   // {
   //   path: '/',

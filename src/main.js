@@ -8,7 +8,7 @@ import store from './store'
 
 Vue.config.devtools = true
 
-import '@/permission'
+// import '@/permission'
 Vue.config.productionTip = false
 const options = {
   namespace: 'pro__',

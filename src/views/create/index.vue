@@ -63,6 +63,9 @@
         <el-button style="margin-top: 10px;" @click="submitUpload">
             生成图谱
         </el-button>
+        <el-button @click="addRouterToEditor">
+            创建空白图谱
+        </el-button>
     </div>
 </template>
 
@@ -78,6 +81,9 @@
         methods:{
             submitUpload(){
                 this.$refs.upload.submit();
+            },
+            addRouterToEditor(){
+                this.$router.push('/editor');
             }
         }
     }
@@ -88,8 +94,6 @@
         margin: 0;
         padding: 0;
         overflow: hidden;
-        background-size: 100% 100%;
-        background-image: url("../../assets/kg-background4.jpg");
     }
 .title{
     padding-top: 8%;
@@ -105,7 +109,9 @@
     right: 0;
     height: auto;
     width: 100%;
-    position: absolute;
+    position: fixed;
+    background-size: 100% 100%;
+    background-image: url("../../assets/kg-background4.jpg");
 }
 .uploading {
     margin-top: 10px;
