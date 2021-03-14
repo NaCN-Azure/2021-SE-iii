@@ -24,6 +24,7 @@ public class EntityController {
     @Autowired
     private EntityService entityService;
 
+    //TODO 这里是不是能够新增一个用户创建的节点实体类？
     @PostMapping("/createNode/{name}/{color}/{type}/{domainId}")
     public Result createNode(@PathVariable String name, @PathVariable String color, @PathVariable int type, @PathVariable int domainId){
         Entity entity = entityService.createNode(name,color,type,domainId);
