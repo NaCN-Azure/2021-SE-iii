@@ -4,14 +4,14 @@ const api = {
     relationshipPre: '/coinservice/relationship'
 }
 
-export function createLink(fromId, toId, name){
+export function createLinkAPI(fromId, toId, name){
     return axios({
         url: `${api.relationshipPre}/createLink/${fromId}/${toId}/${name}`,
         method: 'post'
     })
 }
 
-export function updateLink(relationship){
+export function updateLinkAPI(relationship){
     return axios({
         url: `${api.relationshipPre}/updateLink`,
         method: 'post',
@@ -20,7 +20,7 @@ export function updateLink(relationship){
 }
 
 //TODO
-export function deleteLink(relationship){
+export function deleteLinkAPI(relationship){
     return axios({
         url: `${api.relationshipPre}/deleteLink`,
         method: 'post',
