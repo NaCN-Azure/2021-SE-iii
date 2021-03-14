@@ -15,5 +15,5 @@ public interface RelationshipService {
 
     Relationship updateLink(Relationship relationship);
 
-    void deleteLink(Relationship relationship);
+    boolean deleteLink(Relationship relationship);
 }

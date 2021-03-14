@@ -9,6 +9,7 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -40,7 +41,16 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public void deleteNode(Entity entity){
-        entityMapper.delete(entity);
+    public boolean deleteNode(Entity entity){
+        Long id = entity.getId();
+        Optional<Entity> check = entityMapper.findById(id);
+
+        if(check.isPresent()) {
+            entityMapper.delete(entity);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

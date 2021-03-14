@@ -37,11 +37,10 @@ public class RelationshipController {
         return Result.ok().data("newRelationship", newRelationship);
     }
 
-    //TODO 删除方法返回值问题
     @PostMapping("/deleteLink")
     public Result deleteLink(@RequestBody Relationship relationship){
-        relationshipService.deleteLink(relationship);
-        return Result.ok().message("done!");
+        boolean flag = relationshipService.deleteLink(relationship);
+        return flag ? Result.ok() : Result.error().message("删除失败");
     }
 
     @GetMapping("/getLinkByDomainId/{domainId}")

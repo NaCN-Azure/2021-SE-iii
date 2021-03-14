@@ -24,10 +24,9 @@ public class EntityController {
     @Autowired
     private EntityService entityService;
 
-    //TODO 这里是不是能够新增一个用户创建的节点实体类？
     @PostMapping("/createNode/{name}/{color}/{type}/{domainId}")
     public Result createNode(@PathVariable String name, @PathVariable String color, @PathVariable int type, @PathVariable int domainId){
-        Entity entity = entityService.createNode(name,color,type,domainId);
+        Entity entity = entityService.createNode(name, color, type, domainId);
         return Result.ok().data("entity", entity);
     }
 
@@ -43,11 +42,10 @@ public class EntityController {
         return Result.ok().data("newEntity", newEntity);
     }
 
-    //TODO 删除方法返回值问题
     @DeleteMapping("/deleteNode")
     public Result deleteNode(@RequestBody Entity entity){
-        entityService.deleteNode(entity);
-        return Result.ok().message("done!");
+        boolean flag = entityService.deleteNode(entity);
+        return flag ? Result.ok() : Result.error().message("删除失败");
     }
 
 }

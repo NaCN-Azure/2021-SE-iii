@@ -21,6 +21,6 @@ public interface EntityService  {
 
     Entity updateNode(Entity entity);
 
-    void deleteNode(Entity entity);
+    boolean deleteNode(Entity entity);
 
 }

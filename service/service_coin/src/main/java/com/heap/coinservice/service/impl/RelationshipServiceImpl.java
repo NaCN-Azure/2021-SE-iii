@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>
@@ -46,8 +47,17 @@ public class RelationshipServiceImpl implements RelationshipService {
     }
 
     @Override
-    public void deleteLink(Relationship relationship){
-        relationshipMapper.delete(relationship);
+    public boolean deleteLink(Relationship relationship){
+        Long id = relationship.getId();
+        Optional<Relationship> check = relationshipMapper.findById(id);
+
+        if(check.isPresent()) {
+            relationshipMapper.delete(relationship);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }
