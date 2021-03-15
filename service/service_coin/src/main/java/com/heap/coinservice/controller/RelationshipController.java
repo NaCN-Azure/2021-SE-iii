@@ -21,6 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/coinservice/relationship")
+@CrossOrigin
 public class RelationshipController {
 
     @Autowired
