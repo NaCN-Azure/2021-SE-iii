@@ -19,11 +19,17 @@ export function updateLinkAPI(relationship){
     })
 }
 
-//TODO
 export function deleteLinkAPI(relationship){
     return axios({
         url: `${api.relationshipPre}/deleteLink`,
         method: 'post',
         data: relationship
+    })
+}
+
+export function getLinkByDomainIdAPI(){
+    return axios({
+        url: `${api.relationshipPre}/getLinkByDomainId/${domainId}`,
+        method: 'delete'
     })
 }

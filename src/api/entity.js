@@ -27,11 +27,10 @@ export function updateNodeAPI(entity) {
     })
 }
 
-//TODO
 export function deleteNodeAPI(entity){
     return axios({
         url: `${api.entityPre}/deleteNode`,
-        method: 'post',
+        method: 'delete',
         data: entity
     })
 }
