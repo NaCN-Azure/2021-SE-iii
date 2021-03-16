@@ -3,7 +3,7 @@
 <mapper namespace="com.heap.coinservice.mapper.DomainMapper">
 
 
-    <insert id="createDomain" parameterType="com.heap.coinservice.entity.Domain" useGeneratedKeys="true" keyProperty="id">
+    <insert id="createDomain" parameterType="Domain" useGeneratedKeys="true" keyProperty="id">
         insert into Domain(name) values (#{name})
     </insert>
 

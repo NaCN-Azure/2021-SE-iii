@@ -39,7 +39,7 @@ public class RelationshipController {
         return Result.ok().data("newRelationship", newRelationship);
     }
 
-    @PostMapping("/deleteLink")
+    @DeleteMapping("/deleteLink")
     public Result deleteLink(@RequestBody Relationship relationship){
         boolean flag = relationshipService.deleteLink(relationship);
         return flag ? Result.ok() : Result.error().message("删除失败");

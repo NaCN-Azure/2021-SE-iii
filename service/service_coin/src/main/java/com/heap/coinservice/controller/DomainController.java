@@ -16,7 +16,8 @@ public class DomainController {
 
     @PostMapping("/createDomain")
     public Result createDomain(@RequestBody Domain domain) {
-        return Result.ok().data("domain",domainService.createDomain(domain));
+        domainService.createDomain(domain);
+        return Result.ok().message("创建成功");
     }
 
     @PostMapping("/updateDomain")

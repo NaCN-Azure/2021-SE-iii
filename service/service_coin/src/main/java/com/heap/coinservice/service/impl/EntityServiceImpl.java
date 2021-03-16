@@ -46,7 +46,8 @@ public class EntityServiceImpl implements EntityService {
         Optional<Entity> check = entityMapper.findById(id);
 
         if(check.isPresent()) {
-            entityMapper.delete(entity);
+//            entityMapper.delete(entity);
+            entityMapper.deleteNodeAndLink(id);
             return true;
         }
         else {

@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public interface DomainService {
 
-     Domain createDomain(Domain domain);
+     int createDomain(Domain domain);
 
      void deleteDomain(int domainId);
 

@@ -32,7 +32,7 @@ public class FileController {
     public Result getCsvFile(@RequestParam(value="file",required = true) MultipartFile file) throws IOException {
         List<List<String>> content=FileUtil.readCsv(file);
         Domain csvDomain=Domain.builder().name(file.getOriginalFilename()).build();
-        domainService.createDomain(csvDomain);
-        return Result.ok().data("csvGraph",fileService.createGraphByCsv(content,csvDomain.getId()));
+        int domainId=domainService.createDomain(csvDomain);
+        return Result.ok().data("csvGraph",fileService.createGraphByCsv(content,domainId));
     }
 }
