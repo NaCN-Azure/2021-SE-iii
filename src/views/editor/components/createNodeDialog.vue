@@ -23,7 +23,8 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="所属图谱">
-                <el-select v-model="createNodeParams.domainId" placeholder="请从现有图谱中选择">
+                <!-- 默认只能在当前选中的图谱中添加节点 -->
+                <el-select disabled v-model="createNodeParams.domainId" placeholder="请从现有图谱中选择">
                     <el-option
                         v-for="item in domainList"
                         :key="item.id"

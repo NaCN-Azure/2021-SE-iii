@@ -27,7 +27,7 @@ export function deleteLinkAPI(relationship){
     })
 }
 
-export function getLinkByDomainIdAPI(){
+export function getLinkByDomainIdAPI(domainId){
     return axios({
         url: `${api.relationshipPre}/getLinkByDomainId/${domainId}`,
         method: 'get'

@@ -34,3 +34,11 @@ export function deleteNodeAPI(entity){
         data: entity
     })
 }
+
+export function testAPI() {
+    return axios({
+        url:`${api.entityPre}/test`,
+        method:'get',
+    })
+
+}

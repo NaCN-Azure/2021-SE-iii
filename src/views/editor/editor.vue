@@ -57,7 +57,7 @@
             <!-- 右边中间-图谱渲染区域 -->
             <div class="graph">
                 <el-scrollbar style="width: 100%;height: 100%">
-
+                    <show-graph></show-graph>
                 </el-scrollbar>
             </div>
         </div>
@@ -85,10 +85,12 @@
     import {mapGetters, mapMutations} from "vuex";
     import CreateNodeDialog from "./components/createNodeDialog";
     import AddDomainDialog from "./components/addDomainDialog";
+    import {testAPI} from "../../api/entity";
+    import showGraph from "./components/showGraph";
 
     export default {
         name: "editor",
-        components: {AddDomainDialog, CreateNodeDialog},
+        components: {AddDomainDialog, CreateNodeDialog,showGraph},
         data(){
             return{
                 // keyName:'',
@@ -116,7 +118,7 @@
             },
             addDomain(){
                 this.set_addDomainDialogVisible(true)
-            }
+            },
         }
     }
 </script>

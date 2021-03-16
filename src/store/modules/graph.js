@@ -1,6 +1,6 @@
 import { message } from "element-ui";
-import {createNodeAPI, getNodesByDomainIdAPI, updateNodeAPI} from "../../api/entity";
-import {createLinkAPI, updateLinkAPI} from "../../api/relationship";
+import {createNodeAPI, getNodesByDomainIdAPI, testAPI, updateNodeAPI} from "../../api/entity";
+import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../api/relationship";
 
 const graph = {
     state: {
@@ -106,6 +106,15 @@ const graph = {
                 message.error('获取图谱节点失败')
             }
         },
+        getLinksByDomainId: async({ state, commit }) => {
+            const res = await getLinkByDomainIdAPI(state.domain.id)
+            if(res) {
+                commit('set_linkList',res)
+                // 节点获取成功，下一步更新图谱
+            }else{
+                message.error('获取图谱关系失败')
+            }
+        },
         createNode: async ({ state, commit, dispatch }) => {
             const res = await createNodeAPI(
                 state.createNodeParams.name,
@@ -181,6 +190,23 @@ const graph = {
             }
         },
         // updateGraph
+        // createDomain
+        test: async ({ state,commit}) => {
+            const res = await testAPI()
+            if(res){
+                commit('set_nodeList',res.data);
+                this.$message({
+                    message: res.data,
+                    type: 'success'
+                })
+            }else{
+                this.$message({
+                    message: 'test failed!',
+                    type:'error'
+                })
+            }
+
+        }
 
     }
 }

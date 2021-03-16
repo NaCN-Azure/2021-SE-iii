@@ -10,8 +10,10 @@
                 csv文件格式：节点-节点-关系 三元组
                 <el-upload
                         drag
+                        action="http://localhost:8080/coinservice/file/getCsv"
                         class="uploading"
-                        on-success="csvsuccess"
+                        on-success="handleCsvSuccess"
+                        data="uploadParam"
                         accept=".csv"
                         auto-upload="false"
                         ref="upload"
@@ -28,7 +30,6 @@
                         on-success="jsonsuccess"
                         accept=".json"
                         auto-upload="false"
-                        ref="upload"
                 >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -38,11 +39,11 @@
                 xml文件格式：
                 <el-upload
                         drag
+                        :action="uploadUrl"
                         class="uploading"
                         on-success="xmlsuccess"
                         accept=".xml"
                         auto-upload="false"
-                        ref="upload"
                 >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -66,24 +67,65 @@
         <el-button @click="addRouterToEditor">
             进入工作区
         </el-button>
+        <el-button @click="testt">测试</el-button>
     </div>
 </template>
 
 <script>
+    import {testAPI} from "../../api/entity";
+    import {mapActions, mapGetters} from "vuex";
+
     export default {
         name: "index.vue",
         data(){
             return{
                 createType: 'importCSV',
                 extractedText:'',
+                uploadParam:{},
+                uploadUrl:'localhost:8080/coinservice/file/getCsv'
             }
         },
+        computed:{
+            ...mapGetters([
+                'nodeList'
+            ])
+        },
         methods:{
+            ...mapActions([
+                'test'
+            ]),
+            handleCsvSuccess(){
+                this.$refs.upload.clearFiles();
+                this.$message({
+                    message:'导入中',
+                    type:'success'
+                })
+            },
             submitUpload(){
+                console.log('submiting');
                 this.$refs.upload.submit();
             },
             addRouterToEditor(){
                 this.$router.push('/editor');
+            },
+            testt(){
+                console.log('this is test');
+                var res = testAPI();
+                if(res){
+                    console.log(res);
+                    this.$message({
+                        message:'test success',
+                        type:'success'
+                    })
+                }else{
+                    this.$message({
+                        message:'test fail',
+                        type:'error'
+                    })
+
+                }
+                // this.test();
+
             }
         }
     }
