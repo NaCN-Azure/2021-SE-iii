@@ -34,7 +34,7 @@ public interface RelationshipMapper extends Neo4jRepository<Relationship,Long> {
 
     /**
      *
-     * 返回域内所有关系（此处不包含孤立节点）
+     * 返回域内所有关系（包含孤立节点）
      * @param domainId
      * @return
      */
