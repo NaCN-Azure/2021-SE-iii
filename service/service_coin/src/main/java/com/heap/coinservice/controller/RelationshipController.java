@@ -20,6 +20,7 @@ import java.util.List;
  * @since 2021-03-07
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/coinservice/relationship")
 public class RelationshipController {
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heap.coinservice.mapper.DomainMapper">
+
+
+    <insert id="createDomain" parameterType="com.heap.coinservice.entity.Domain" useGeneratedKeys="true" keyProperty="id">
+        insert into Domain(name) values (#{name})
+    </insert>
+
+    <update id="updateDomain">
+        update Domain set name=#{name} where id=#{id}
+    </update>
+
+    <delete id="deleteDomain">
+        delete from Domain where id=#{id}
+    </delete>
+
+    <select id="selectDomain" resultMap="Domain">
+        select * from Domain where id=#{id}
+    </select>
+
+    <select id="selectAllDomain" resultMap="Domain">
+        select * from Domain
+    </select>
+
+    <resultMap id="domain" type="com.heap.coinservice.entity.Domain">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+    </resultMap>
+
+</mapper>
