@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>service_coin</artifactId>
+    <artifactId>servicecoin</artifactId>
 
     <dependencies>
 
