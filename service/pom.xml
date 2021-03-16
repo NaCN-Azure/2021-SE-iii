@@ -12,7 +12,7 @@
     <artifactId>service</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>servicecoin</module>
+        <module>service_coin</module>
     </modules>
 
     <dependencies>
