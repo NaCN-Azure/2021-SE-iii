@@ -20,7 +20,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/coinservice/entity")
-@CrossOrigin
 public class EntityController {
 
     @Autowired
