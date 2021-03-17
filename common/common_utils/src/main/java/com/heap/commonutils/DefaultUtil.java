@@ -6,6 +6,4 @@ public class DefaultUtil {
 
     public static int DEFAULT_TYPE=1;
 
-
-
 }

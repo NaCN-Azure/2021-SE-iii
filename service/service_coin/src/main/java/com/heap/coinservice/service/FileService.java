@@ -1,9 +1,11 @@
 package com.heap.coinservice.service;
 
-import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
+import javax.xml.transform.TransformerConfigurationException;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -18,5 +20,7 @@ import java.util.List;
 public interface FileService {
 
     List<Relationship> createGraphByCsv(List<List<String>> content,int domainId);
+
+    boolean exportGraphXml(int domainId) throws TransformerConfigurationException, FileNotFoundException, SAXException;
 
 }
