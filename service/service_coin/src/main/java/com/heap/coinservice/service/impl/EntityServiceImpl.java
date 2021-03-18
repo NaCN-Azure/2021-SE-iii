@@ -44,9 +44,10 @@ public class EntityServiceImpl implements EntityService {
     public boolean deleteNode(Entity entity){
         Long id = entity.getId();
         Optional<Entity> check = entityMapper.findById(id);
+        System.out.println("id:"+id);
         if(check.isPresent()) {
 //            entityMapper.delete(entity);
-            entityMapper.deleteNodeWithLink(entity.getId());
+            entityMapper.deleteNodeWithLink(id);
             return true;
         }
         else {

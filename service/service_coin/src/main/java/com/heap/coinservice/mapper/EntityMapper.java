@@ -56,6 +56,6 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      * 删除节点及其附属节点
      * @param id
      */
-    @Query("MATCH (n)-[r]-() WHERE id(n) = {0} DELETE r")
+    @Query("MATCH (n)-[r]-() WHERE id(n) = {0} DELETE n,r")
     void deleteNodeWithLink(@Param("id") Long id);
 }
