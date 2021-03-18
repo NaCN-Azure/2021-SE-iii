@@ -293,7 +293,7 @@
                     bgColor:'',
                     shape:0,
                     // description:'', //好像没看到后端的方法可以添加描述的
-                    domainId:'',
+                    domainId:0,
                 },
                 createLinkParams:{
                     id:'',
@@ -441,18 +441,13 @@
                 this.createNodeDialogVisible = false;
             },
             submitCreateNode(){
-                createNodeAPI(this.createNodeParams.name,
-                    this.createNodeParams.bgColor,
-                    this.createNodeParams.shape,
-                    this.createNodeParams.domainId
-                ).then(res => {
-                    if(res.data.code == 200){
-                        this.$message({
-                            message:'添加成功',
-                            type:'success'
-                        })
-                        this.selectDomainById(this.createNodeParams.domainId);
-                    }
+                createNodeAPI(this.createNodeParams).then(res => {
+                    // console.log(res)
+                    this.$message({
+                        message:'添加成功',
+                        type:'success'
+                    })
+                    this.selectDomainById(this.createNodeParams.domainId);
                 })
             },
 
