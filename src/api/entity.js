@@ -7,7 +7,7 @@ const api = {
 //TODO，前端可不可以直接传一个对象回去？和后端讨论ing
 export function createNodeAPI(name, color, type, domainId){
     return axios({
-        url: `${api.entityPre}/createnode/${name}/${color}/${type}/${domainId}`,
+        url: `${api.entityPre}/createNode/${name}/${color}/${type}/${domainId}`,
         method: 'post'
     })
 }

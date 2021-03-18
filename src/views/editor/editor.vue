@@ -27,7 +27,7 @@
                                 <el-tag
                                         closable
                                         effect="light"
-                                        style="margin-left:3px;width: 98%; font-size: 20px"
+                                        style="margin-left:3px;width: 98%; font-size: 20px;cursor: pointer"
                                         @close="deleteDomain(scope.row.id)"
                                         @click="selectDomain(scope.row)"
                                 >{{scope.row.name}}</el-tag>
@@ -68,7 +68,7 @@
                     <el-dropdown>
                         <el-button size="small" class="edit-tool">
                             导出<i class="el-icon-arrow-down el-icon--right"></i>
-                        </el-button>    
+                        </el-button>
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="exportPic">导出图片</el-dropdown-item>
                             <el-dropdown-item>导出CSV</el-dropdown-item>
@@ -109,19 +109,19 @@
 
             <!-- 编辑节点对话框 -->
             <el-dialog
-                    :visible.sync="this.editNodeFormVisible"
+                    :visible.sync="editNodeFormVisible"
                     title="编辑节点"
             >
-                <el-form :model="this.editNodeParams">
+                <el-form>
                     <el-form-item label="节点名称">
-                        <el-input v-model="this.editNodeParams.name" style="width: 330px"></el-input>
+                        <el-input v-model="editNodeParams.name" style="width: 330px"></el-input>
                     </el-form-item>
                     <el-form-item label="选择颜色">
-                        <el-color-picker v-model="this.editNodeParams.bgColor">
+                        <el-color-picker v-model="editNodeParams.bgColor">
                         </el-color-picker>
                     </el-form-item>
                     <el-form-item label="选择形状">
-                        <el-select disabled v-model="this.editNodeParams.shape" placeholder="请选择">
+                        <el-select disabled v-model="editNodeParams.shape" placeholder="请选择">
                             <el-option
                                     v-for="item in shapes"
                                     :key="item.key"
@@ -132,7 +132,7 @@
                     </el-form-item>
                     <el-form-item label="所属图谱">
                         <!-- 默认只能在当前选中的图谱中添加节点 -->
-                        <el-select disabled v-model="this.editNodeParams.domainId" placeholder="请从现有图谱中选择">
+                        <el-select disabled v-model="editNodeParams.domainId" placeholder="请从现有图谱中选择">
                             <el-option
                                     v-for="item in domainList"
                                     :key="item.id"
@@ -151,16 +151,16 @@
 
             <!-- 编辑关系对话框 -->
             <el-dialog
-                    :visible.sync="this.editLinkFormVisible"
+                    :visible.sync="editLinkFormVisible"
                     title="编辑关系"
             >
-                <el-form :model="this.editLinkParams">
+                <el-form :model="editLinkParams">
                     <el-form-item label="关系名称">
-                        <el-input v-model="this.editLinkParams.name" style="width: 330px"></el-input>
+                        <el-input v-model="editLinkParams.name" style="width: 330px"></el-input>
                     </el-form-item>
                     <el-form-item label="所属图谱">
                         <!-- 默认只能在当前选中的图谱中添加节点 -->
-                        <el-select disabled v-model="this.editLinkParams.domainId" placeholder="请从现有图谱中选择">
+                        <el-select disabled v-model="editLinkParams.domainId" placeholder="请从现有图谱中选择">
                             <el-option
                                     v-for="item in domainList"
                                     :key="item.id"
@@ -180,14 +180,14 @@
 
         <!-- 新建图谱对话框 -->
         <el-dialog
-                :visible.sync="this.addDomainDialogVisible"
+                :visible.sync="addDomainDialogVisible"
                 title="新建图谱"
         >
-            <el-tabs type="border-card" v-model="this.addDomainType">
+            <el-tabs type="border-card" v-model="addDomainType">
                 <el-tab-pane label="创建空白图谱" name="empty">
                     <el-form>
                         <el-form-item label="图谱名称">
-                            <el-input v-model="this.addDomainParams.name"></el-input>
+                            <el-input v-model="addDomainParams.name"></el-input>
                         </el-form-item>
                     </el-form>
                 </el-tab-pane>
@@ -196,7 +196,7 @@
                     <el-upload
                             drag
                             class="uploading"
-                            action="http://localhost:8080/coinservice/file/getCsv"
+                            action="http://localhost:8003/coinservice/file/getCsv"
                             on-success="csvsuccess"
                             accept=".csv"
                             auto-upload="false"
@@ -215,19 +215,19 @@
 
         <!-- 创建节点对话框 -->
         <el-dialog
-                :visible.sync="this.createNodeDialogVisible"
+                :visible.sync="createNodeDialogVisible"
                 title="创建节点"
         >
-            <el-form :model="this.createNodeParams">
+            <el-form :model="createNodeParams">
                 <el-form-item label="节点名称">
-                    <el-input v-model="this.createNodeParams.name" style="width: 330px"></el-input>
+                    <el-input v-model="createNodeParams.name" style="width: 330px"></el-input>
                 </el-form-item>
                 <el-form-item label="选择颜色">
-                    <el-color-picker v-model="this.createNodeParams.bgColor">
+                    <el-color-picker v-model="createNodeParams.bgColor">
                     </el-color-picker>
                 </el-form-item>
                 <el-form-item label="选择形状">
-                    <el-select disabled v-model="this.createNodeParams.shape" placeholder="请选择">
+                    <el-select disabled v-model="createNodeParams.shape" placeholder="请选择">
                         <el-option
                                 v-for="item in this.shapes"
                                 :key="item.key"
@@ -238,7 +238,7 @@
                 </el-form-item>
                 <el-form-item label="所属图谱">
                     <!-- 默认只能在当前选中的图谱中添加节点 -->
-                    <el-select disabled v-model="this.createNodeParams.domainId" placeholder="请从现有图谱中选择">
+                    <el-select disabled v-model="createNodeParams.domainId" placeholder="请从现有图谱中选择">
                         <el-option
                                 v-for="item in domainList"
                                 :key="item.id"
@@ -293,7 +293,7 @@
                     bgColor:'',
                     shape:0,
                     // description:'', //好像没看到后端的方法可以添加描述的
-                    domainId:''
+                    domainId:'',
                 },
                 createLinkParams:{
                     id:'',
@@ -304,7 +304,7 @@
                     domainId:'',
                 },
                 addDomainParams: {
-                    id:'',
+                    id:1,
                     name:'',
                 },
                 createNodeDialogVisible: false,
@@ -353,7 +353,7 @@
             }
         },
         created(){
-            // this.getAllDomains();
+            this.getAllDomains();
         },
         mounted(){
             svg = d3.select('svg')
@@ -378,6 +378,7 @@
         },
         methods:{
             createNode(){
+                this.createNodeParams.domainId = this.domain.id;
                 this.createNodeDialogVisible = true;
             },
             addDomain(){
@@ -385,16 +386,27 @@
             },
             // 选择domain，展示它的图谱
             selectDomain(domain){
-                this.domain = domain
+                this.domain = domain;
                 getLinkByDomainIdAPI(this.domain.id).then(res => {
+                    // console.log(res);
                     this.relationships = res.data.data.relationships;
+                    console.log(this.relationships);
+                    this.updateGraph();
                 });
-                this.updateGraph();
+            },
+            // 其他方法更新图谱时使用
+            selectDomainById(domainId){
+                getLinkByDomainIdAPI(domainId).then(res => {
+                    // console.log(res);
+                    this.relationships = res.data.data.relationships;
+                    console.log(this.relationships);
+                    this.updateGraph();
+                });
             },
             deleteDomain(domainId){
                 deleteDomainAPI(domainId).then(res => {
                     console.log(res);
-                    if(res){
+                    if(res.data.code == 200){
                         this.$message({
                             message:'删除成功',
                             type:'success',
@@ -410,9 +422,9 @@
                             type:'error'
                         })
                     }
+                    this.getAllDomains();
+                    this.reload();
                 });
-                this.getAllDomains();
-                this.reload();
             },
             getAllDomains(){
                 selectAllDomainAPI().then(res => {
@@ -430,12 +442,14 @@
                     this.createNodeParams.shape,
                     this.createNodeParams.domainId
                 ).then(res => {
-                    this.$message({
-                        message:'添加成功',
-                        type:'success'
-                    })
+                    if(res.data.code == 200){
+                        this.$message({
+                            message:'添加成功',
+                            type:'success'
+                        })
+                        this.selectDomainById(this.createNodeParams.domainId);
+                    }
                 })
-                this.selectDomain(this.createNodeParams.domainId);
             },
 
 
@@ -444,9 +458,22 @@
                 this.addDomainDialogVisible = false;
             },
             submitCreateDomain(){
-                createDomainAPI(this.addDomainParams).then(res => {
-                    this.getAllDomains()
-                })
+                if(this.addDomainType == 'empty'){
+                    createDomainAPI(this.addDomainParams).then(res => {
+                        if(res.data.code == 200){
+                            this.$message({
+                                message:'添加成功',
+                                type: 'success'
+                            })
+                        }else{
+                            this.$message({
+                                message:'添加失败',
+                                type: 'error'
+                            })
+                        }
+                    })
+                }
+                this.getAllDomains()
                 this.reload();
             },
 
@@ -503,23 +530,24 @@
                 return links;
             },
             editNode(){
-                console.log(this.selectedNode);
+                // console.log(this.selectedNode);
                 this.editNodeParams = this.selectedNode; // 编辑节点表单初始值即为选中节点属性值
                 console.log(this.editNodeParams);
                 this.editNodeFormVisible = true;
                 $('#node-custom-menu').hide();
             },
             addLink(){
-
+                $('#node-custom-menu').hide();
 
             },
             deleteNode(){
                 deleteNodeAPI(this.selectedNode).then(res => {
-                    if(res){
+                    if(res.data.code == 200){
                         this.$message({
                             message:'删除成功',
                             type:'success'
                         })
+                        this.selectDomainById(this.selectedNode.domainId);
                     }else{
                         this.$message({
                             message:'删除失败',
@@ -527,18 +555,20 @@
                         })
                     }
                 })
-                this.selectDomain(this.selectedNode.domainId);
+                $('#node-custom-menu').hide();
             },
             cancelEditNode(){
                 this.editNodeFormVisible = false;
             },
             submitEditNode(){
                 updateNodeAPI(this.editNodeParams).then(res => {
-                    if(res){
+                    if(res.data.code == 200){
                         this.$message({
                             message: '修改成功',
                             type: 'success'
-                        })
+                        });
+                        this.editNodeFormVisible = false
+                        this.selectDomainById(this.editNodeParams.domainId);
                     }else{
                         this.$message({
                             message: '修改失败',
@@ -546,7 +576,6 @@
                         })
                     }
                 });
-                this.selectDomain(this.editNodeParams.domainId);
             },
             editLink(){
                 console.log(this.selectedLink);
@@ -557,11 +586,12 @@
             },
             deleteLink(){
                 deleteLinkAPI(this.selectedLink).then(res => {
-                    if(res){
+                    if(res.data.code == 200){
                         this.$message({
                             message: '删除成功',
                             type: 'success'
                         })
+                        this.selectDomainById(this.selectedLink.domainId);
                     }else{
                         this.$message({
                             message: '删除失败',
@@ -569,18 +599,20 @@
                         })
                     }
                 });
-                this.selectDomain(this.selectedLink.domainId);
+                $('#link-custom-menu').hide();
             },
             cancelEditLink(){
                 this.editLinkFormVisible = false;
             },
             submitEditLink(){
                 updateLinkAPI(this.editLinkParams).then(res => {
-                    if(res){
+                    if(res.data.code == 200){
                         this.$message({
                             message: '修改成功',
                             type: 'success'
                         })
+                        this.editLinkFormVisible = false;
+                        this.selectDomainById(this.editLinkParams.domainId);
                     }else{
                         this.$message({
                             message: '修改失败',
@@ -588,136 +620,7 @@
                         })
                     }
                 });
-                this.selectDomain(this.editLinkParams.domainId);
             },
-            // showGraph(){
-            //     var _this = this;
-            //     let svg = d3.select('svg')
-            //     let width = +svg.attr('width')
-            //     let height = +svg.attr('height')
-            //     const g = svg.append('g') // svg中创建g元素，node和link放在g中
-            //
-            //     svg.call(d3.zoom().on('zoom',function () {
-            //         g.attr('transform',d3.event.transform)
-            //     }))
-            //
-            //     // 提取出d3可以解析的节点和关系数组
-            //     var nodesData = this.getNodesFromRelationships(_this.relationships);
-            //     var linksData = this.getLinksFromRelationships(_this.relationships);
-            //
-            //     console.log(nodesData);
-            //     console.log(linksData);
-            //
-            //     var simulation = d3.forceSimulation()
-            //         .nodes(nodesData)
-            //         .force('charge', d3.forceManyBody().strength(-100))
-            //         .force('collide', d3.forceCollide().strength(-30))
-            //         .force('center', d3.forceCenter(width / 2, height / 2))
-            //
-            //     var node = g.append('g')
-            //         .attr('class', 'nodes')
-            //         .selectAll('circle')
-            //         .data(nodesData)
-            //         .enter()
-            //         .append('circle')
-            //         .attr('r', 20)
-            //         .attr('fill', (d) => {return d.bgColor})
-            //
-            //     node.on("contextmenu",function (d) {
-            //         // var position = d3.mouse(this)
-            //         console.log(d);
-            //         var cc = $(this).offset();
-            //         _this.selectedNode.id = d.id;
-            //         _this.selectedNode.name = d.name;
-            //         _this.selectedNode.bgColor = d.bgColor;
-            //         _this.selectedNode.shape = d.shape;
-            //         _this.selectedNode.domainId = d.domainId;
-            //         d3.select('#node-custom-menu')
-            //             .style('position','absolute')
-            //             .style('left', cc.left -250 + "px")
-            //             .style('top', cc.top -130+ "px")
-            //             .style('display','block');
-            //         d3.event.preventDefault(); // 禁止系统默认右键
-            //         d3.event.stopPropagation(); // 禁止空白处右键
-            //     });
-            //
-            //     var link = g.append('g')
-            //         .attr('class', 'links')
-            //         .selectAll('line')
-            //         .data(linksData)
-            //         .enter()
-            //         .append('line')
-            //         .attr('stroke-width', 15) // 关系宽度大一些才能右键出编辑菜单
-            //         .attr('marker-end',"url(#arrow)")
-            //         .style('stroke', this.linkColor)
-            //
-            //     link.on("contextmenu",function(d){
-            //         var cc = $(this).offset();
-            //         d3.select('#link-custom-menu')
-            //             .style('position','absolute')
-            //             .style('left',cc.left-250+"px")
-            //             .style('top',cc.top-130+"px")
-            //             .style('display','block')
-            //         d3.event.preventDefault(); // 禁止系统默认右键
-            //         d3.event.stopPropagation(); // 禁止空白处右键
-            //     })
-            //
-            //     var nodeText = g.append('g')
-            //         .attr("class", "nodeText")
-            //         .selectAll("text")
-            //         .data(nodesData)
-            //         .enter()
-            //         .append("text")
-            //         .style("fill","black")
-            //         .attr("dx",5)
-            //         .attr("dy",20) // 在节点右下角显示文字
-            //         .text((d) => { return d.name });
-            //
-            //     var linkText = g.append('g')
-            //         .attr("class","linkText")
-            //         .selectAll("text")
-            //         .data(linksData)
-            //         .enter()
-            //         .append("text")
-            //         .text((d) => {return d.name})
-            //
-            //     simulation.on('tick', tickAction)
-            //
-            //     // 每tick更新图谱
-            //     function tickAction () {
-            //         node
-            //             .attr('cx', (d) => { return d.x })
-            //             .attr('cy', (d) => { return d.y })
-            //
-            //         link
-            //             .attr('x1', (d) => { return d.source.x })
-            //             .attr('y1', (d) => { return d.source.y })
-            //             .attr('x2', (d) => { return d.target.x })
-            //             .attr('y2', (d) => { return d.target.y })
-            //         nodeText
-            //             .attr('x', (d) => { return d.x })
-            //             .attr('y', (d) => { return d.y })
-            //         linkText
-            //             .attr('x', (d) => { return (d.source.x + d.target.x) / 2})
-            //             .attr('y', (d) => { return (d.source.y + d.target.y) / 2})
-            //     }
-            //
-            //     node.call(d3.drag().on("start",dragStarted)
-            //         .on("drag",dragged)
-            //         .on("end",dragended)
-            //     )
-            //
-            //     var linkForce = d3.forceLink(linksData)
-            //         .id((d) => { return d.id })
-            //         .distance(150)
-            //
-            //     simulation.force('links', linkForce)
-            //
-            //     // 为关系添加箭头
-            //
-            //
-            // },
-
             // 监听拖拽开始
             dragStarted(d) {
                 if(!d3.event.active)
@@ -789,9 +692,11 @@
                     var cc = $(this).offset();
                     _this.selectedLink.id = d.id;
                     _this.selectedLink.name = d.name;
-                    _this.selectedLink.fromId = d.source;
-                    _this.selectedLink.toId = d.target;
+                    _this.selectedLink.fromId = d.source.id;
+                    _this.selectedLink.toId = d.target.id;
                     _this.selectedLink.domainId = d.domainId;
+                    console.log("selectedLink");
+                    console.log(_this.selectedLink);
                     d3.select('#link-custom-menu')
                         .style('position','absolute')
                         .style('left',cc.left-250+"px")
@@ -839,21 +744,22 @@
                 var linkTextEnter = linktext.enter().append('text')
                     .attr("class","linkText")
                     .style('fill','#e3af85')
-                    .style('font-size','10px')
+                    .style('font-size','20px')
                     .text(function(d){
                         return d.name;
                     })
+                return linkTextEnter
             },
             updateGraph(){
-                this.nodesData = this.getNodesFromRelationships(_this.relationships);
-                this.linksData = this.getLinksFromRelationships(_this.relationships);
+                this.nodesData = this.getNodesFromRelationships(this.relationships);
+                this.linksData = this.getLinksFromRelationships(this.relationships);
                 var _this = this;
-                var link = links.selectAll('line').data(this.linksData);
+                var link = links.selectAll('line').data(this.linksData,function(d){ return d.id});
                 link.exit().remove();
                 var linkEnter = this.drawLink(link);
                 link = linkEnter.merge(link);
 
-                var linktext = linkText.selectAll("text").data(this.linksData)
+                var linktext = linkText.selectAll("text").data(this.linksData,function(d){return d.id})
                 linktext.exit().remove();
                 var linkTextEnter = this.drawLinkText(linktext);
                 linktext = linkTextEnter.merge(linktext).text(function(d){ return d.name});
@@ -863,11 +769,12 @@
                 var nodeEnter = this.drawNode(node);
                 node = nodeEnter.merge(node).text(function(d){ return d.name;});
                 node.attr("fill",function(d){
-                    if(typeof(d.bgColor)!="undefined"&& d.bgColor != ''){
-                        return d.bgColor
+                    if(typeof(d.bgColor)!="undefined" && d.bgColor != ''){
+                        return d.bgColor;
                     }
-                    return "#ff4500";
+                    return "#5290F2"
                 });
+                node.attr('r', 30);
                 node.style("opacity",0.8);
                 node.append("title")
                     .text(function (d) {
@@ -897,10 +804,10 @@
                         .attr('y1', (d) => { return d.source.y })
                         .attr('x2', (d) => { return d.target.x })
                         .attr('y2', (d) => { return d.target.y })
-                    nodeText
+                    nodetext
                         .attr('x', (d) => { return d.x })
                         .attr('y', (d) => { return d.y })
-                    linkText
+                    linktext
                         .attr('x', (d) => { return (d.source.x + d.target.x) / 2})
                         .attr('y', (d) => { return (d.source.y + d.target.y) / 2})
                 }
@@ -947,7 +854,7 @@
                 option = option || {};
 
                 canvas.width = parseFloat(svgDom.getAttribute('width')); //  * pixelRatio
-                canvas.height = parseFloat(svgDom.getAttribute('height')); //  * pixelRatio 
+                canvas.height = parseFloat(svgDom.getAttribute('height')); //  * pixelRatio
                 img.src = path;
                 img.onload = function () {
                     // 增加底色
@@ -1008,9 +915,12 @@
             $('#node-custom-menu').hide();
             event.preventDefault();
         });
-        $("#link_custom_menu").bind("mouseleave", function(event){
+        $("#link-custom-menu").bind("mouseleave", function(event){
             $(this).hide();
         });
+        $('#node-custom-menu').bind("mouseleave",function(event){
+            $(this).hide();
+        })
     })
 </script>
 

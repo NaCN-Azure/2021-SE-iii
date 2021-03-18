@@ -10,7 +10,7 @@
                 csv文件格式：节点-节点-关系 三元组
                 <el-upload
                         drag
-                        action="http://localhost:8080/coinservice/file/getCsv"
+                        action="http://localhost:8003/coinservice/file/getCsv"
                         class="uploading"
                         on-success="handleCsvSuccess"
                         data="uploadParam"
