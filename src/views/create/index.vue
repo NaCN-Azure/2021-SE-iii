@@ -15,7 +15,7 @@
                         on-success="handleCsvSuccess"
                         data="uploadParam"
                         accept=".csv"
-                        auto-upload="false"
+                        auto-upload=false
                         ref="upload"
                 >
                     <i class="el-icon-upload"></i>

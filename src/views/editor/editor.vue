@@ -197,9 +197,8 @@
                             drag
                             class="uploading"
                             action="http://localhost:8003/coinservice/file/getCsv"
-                            on-success="csvsuccess"
                             accept=".csv"
-                            auto-upload="false"
+                            auto-upload=false
                             ref="upload"
                     >
                         <i class="el-icon-upload"></i>
@@ -368,7 +367,7 @@
                 .force('charge', d3.forceManyBody().strength(-100))
                 .force('collide', d3.forceCollide().strength(-30))
                 .force('center', d3.forceCenter(width / 2, height / 2))
-                .force('link', d3.forceLink().distance(220).id(function (d) {
+                .force('link', d3.forceLink().distance(300).id(function (d) {
                     return d.id;
                 }));
 
@@ -479,6 +478,13 @@
                             })
                         }
                     })
+                }else{
+                    this.addDomainDialogVisible = false
+                    this.$message({
+                        message:'添加成功',
+                        type:'success'
+                    })
+                    this.getAllDomains()
                 }
             },
 
@@ -680,6 +686,13 @@
                     d3.event.preventDefault(); // 禁止系统默认右键
                     d3.event.stopPropagation(); // 禁止空白处右键
                 });
+                nodeEnter.on('mouseenter',function (d) {
+                    d3.select(this).style("stroke-width","10")
+                        .style("stroke","#C6C1C5")
+                })
+                nodeEnter.on('mouseleave',function (d) {
+                    d3.select(this).style("stroke-width","0")
+                })
                 nodeEnter.call(d3.drag()
                     .on("start",this.dragStarted)
                     .on("drag",this.dragged)
@@ -691,7 +704,7 @@
                 var _this = this;
                 var linkEnter = links.enter().append("line")
                     .attr("stroke-width",3)
-                    .attr("stroke","#fce6d4")
+                    .attr("stroke","#A8BFC2")
                     .attr("marker-end","url(#arrow)");
                 linkEnter.on("contextmenu",function(d){
                     var cc = $(this).offset();
@@ -704,8 +717,8 @@
                     console.log(_this.selectedLink);
                     d3.select('#link-custom-menu')
                         .style('position','absolute')
-                        .style('left',cc.left-250+"px")
-                        .style('top',cc.top-130+"px")
+                        .style('left',cc.left-300+"px")
+                        .style('top',cc.top-80+"px")
                         .style('display','block')
                     d3.event.preventDefault(); // 禁止系统默认右键
                     d3.event.stopPropagation(); // 禁止空白处右键
@@ -715,7 +728,14 @@
             drawNodeText(nodetext){
                 var _this = this;
                 var nodeTextEnter = nodetext.enter().append("text")
-                    .style("fill","#fff")
+                    .style("fill",function (d) {
+                        if(d.bgColor == "#ffffff"){
+                            return "#000000"
+                        }
+                        else{
+                            return "#ffffff"
+                        }
+                    })
                     .attr("class","nodeText")
                     .attr("dy",4)
                     .attr("text-anchor","middle")
@@ -748,7 +768,7 @@
             drawLinkText(linktext){
                 var linkTextEnter = linktext.enter().append('text')
                     .attr("class","linkText")
-                    .style('fill','#e3af85')
+                    .style('fill','#827980')
                     .style('font-size','20px')
                     .text(function(d){
                         return d.name;
@@ -779,7 +799,7 @@
                     }
                     return "#5290F2"
                 });
-                node.attr('r', 30);
+                node.attr('r', 40);
                 node.style("opacity",0.8);
                 node.append("title")
                     .text(function (d) {
@@ -820,6 +840,13 @@
                 svg.call(d3.zoom().on("zoom", function() {
                     svg.selectAll("g").attr("transform", d3.event.transform);
                 }));
+
+                // 点击空白处，关闭点开的菜单
+                svg.on("click",function () {
+                    $('#link-custom-menu').hide();
+                    $('#node-custom-menu').hide();
+                })
+
             },
 
             //=================================导出图片部分=============================
@@ -913,20 +940,6 @@
 
         }
     }
-
-    $(function () {
-        $(".graph-container").bind("click", function (event) {
-            $('#link-custom-menu').hide();
-            $('#node-custom-menu').hide();
-            event.preventDefault();
-        });
-        $("#link-custom-menu").bind("mouseleave", function(event){
-            $(this).hide();
-        });
-        $('#node-custom-menu').bind("mouseleave",function(event){
-            $(this).hide();
-        })
-    })
 </script>
 
 <style scoped>
