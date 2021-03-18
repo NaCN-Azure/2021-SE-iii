@@ -69,7 +69,7 @@ public class FileServiceImpl implements FileService {
             TransformerHandler handler = factory.newTransformerHandler();
             Transformer transformer = handler.getTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            Result res = new StreamResult(new FileOutputStream("example.xml"));
+            Result res = new StreamResult(new FileOutputStream(domainName+".xml"));
             handler.setResult(res);
             handler.startDocument();
             AttributesImpl attributes = new AttributesImpl();

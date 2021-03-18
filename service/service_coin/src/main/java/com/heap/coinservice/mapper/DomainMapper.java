@@ -62,4 +62,12 @@ public interface DomainMapper  {
     @Select("select last_insert_id()")
     int lastInsertId();
 
+    /**
+     * 根据名字查找域名个数
+     * @param name
+     * @return
+     */
+    @Select("select * from domain where name = #{name}")
+    Domain selectDomainByName(@Param("name") String name);
+
 }

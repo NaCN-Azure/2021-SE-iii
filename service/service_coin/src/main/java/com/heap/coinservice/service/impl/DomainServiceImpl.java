@@ -36,8 +36,14 @@ public class DomainServiceImpl implements DomainService {
 
     @Override
     public int createDomain(Domain domain){
-        domainMapper.createDomain(domain);
-        return domainMapper.lastInsertId();
+        Domain checkDomain=domainMapper.selectDomainByName(domain.getName());
+        if(checkDomain!=null){
+            return -1;
+        }
+        else {
+            domainMapper.createDomain(domain);
+            return domainMapper.lastInsertId();
+        }
     }
 
     @Override
