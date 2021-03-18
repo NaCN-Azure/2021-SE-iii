@@ -1,5 +1,4 @@
 package com.heap.commonutils;
-
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.relation.Relation;
@@ -14,6 +13,8 @@ public class FileUtil {
 
     public static String FILEPATH="./";
 
+    public static String FILENAME="example";
+
     public static List<List<String>> readCsv(MultipartFile file) throws IOException {
         List<List<String>> rowList = new ArrayList<List<String>>();
         String charset = "utf-8";
@@ -26,5 +27,11 @@ public class FileUtil {
         }
         return rowList;
     }
+
+    //public static boolean exportGraphXML(List<Relationship> relationships,Domain domain)
+
+    //public static boolean exportGraphCSV(List<Relationship> relationships,Domain domain)
+
+    //public static boolean exportGraphJSON(List<Relationship> relationships,Domain domain)
 
 }

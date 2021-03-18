@@ -30,7 +30,7 @@ public class FileController {
         List<List<String>> content=FileUtil.readCsv(file);
         Domain csvDomain=Domain.builder().name(file.getOriginalFilename()).build();
         int domainId=domainService.createDomain(csvDomain);
-        return Result.ok().data("csvGraph",fileService.createGraphByCsv(content,domainId));
+        return fileService.createGraphByCsv(content,domainId)?Result.ok().message("导入成功"):Result.error().message("导入失败");
     }
 
     @GetMapping(value="/exportXml/{domainId}",produces = "application/json;charset=UTF-8")

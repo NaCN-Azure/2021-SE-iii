@@ -51,6 +51,11 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
     @Query("match (n{domainId:{0}}) where not (n)–[]-() return n")
     List<Entity> getUnLinkNodes(@Param("domainId") int domainId);
 
+    /**
+     *
+     * 删除节点及其附属节点
+     * @param id
+     */
     @Query("MATCH (n)-[r]-() WHERE id(n) = {0} DELETE r")
     void deleteNodeWithLink(@Param("id") Long id);
 }

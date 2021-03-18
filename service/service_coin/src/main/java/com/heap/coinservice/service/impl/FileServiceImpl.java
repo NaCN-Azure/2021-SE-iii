@@ -43,15 +43,21 @@ public class FileServiceImpl implements FileService {
     private DomainService domainService;
 
     @Override
-    public List<Relationship> createGraphByCsv(List<List<String>> content,int domainId){
-        int size=content.size();
-        for(int i=0;i<size;i++){
-            List<String> points=content.get(i);
-            Entity startNode=entityService.createNode(points.get(0), DefaultUtil.DEFAULT_COLOR,DefaultUtil.DEFAULT_TYPE,domainId);
-            Entity endNode=entityService.createNode(points.get(1), DefaultUtil.DEFAULT_COLOR,DefaultUtil.DEFAULT_TYPE,domainId);
-            relationshipService.createLink(startNode.getId(),endNode.getId(),points.get(2));
+    public boolean createGraphByCsv(List<List<String>> content,int domainId){
+        try {
+            int size = content.size();
+            for (int i = 0; i < size; i++) {
+                List<String> points = content.get(i);
+                Entity startNode = entityService.createNode(points.get(0), DefaultUtil.DEFAULT_COLOR, DefaultUtil.DEFAULT_TYPE, domainId);
+                Entity endNode = entityService.createNode(points.get(1), DefaultUtil.DEFAULT_COLOR, DefaultUtil.DEFAULT_TYPE, domainId);
+                relationshipService.createLink(startNode.getId(), endNode.getId(), points.get(2));
+            }
+            return true;
         }
-        return relationshipService.getLinkByDomainId(domainId);
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
