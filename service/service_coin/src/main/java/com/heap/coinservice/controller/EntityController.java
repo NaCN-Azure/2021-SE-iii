@@ -26,10 +26,10 @@ public class EntityController {
     @Autowired
     private EntityService entityService;
 
-    @PostMapping("/createNode/{name}/{color}/{type}/{domainId}")
-    public Result createNode(@PathVariable String name, @PathVariable String color, @PathVariable int type, @PathVariable int domainId){
-        Entity entity = entityService.createNode(name, color, type, domainId);
-        return Result.ok().data("entity", entity);
+    @PostMapping("/createNode")
+    public Result createNode(@RequestBody Entity entity){
+        Entity newEntity = entityService.createNode(entity.getName(), entity.getBgColor(), entity.getShape(), entity.getDomainId());
+        return Result.ok().data("entity", newEntity);
     }
 
     @GetMapping("/getNodesByDomainId/{domainId}")
