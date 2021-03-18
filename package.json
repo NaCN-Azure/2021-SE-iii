@@ -34,6 +34,7 @@
     "d3": "^4.13.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.1.2",
+    "jquery": "^3.6.0",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.43.0"
   },

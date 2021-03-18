@@ -20,6 +20,7 @@ const getters = {
   nodeList: state => state.graph.nodeList,
   linkList: state => state.graph.linkList,
   shapes: state => state.graph.shapes,
+  testdata: state => state.graph.testdata,
   createNodeParams: state => state.graph.createNodeParams,
   updateNodeParams: state => state.graph.updateNodeParams,
   createLinkParams: state => state.graph.createLinkParams,
@@ -31,5 +32,5 @@ const getters = {
   createLinkDialogVisible: state => state.graph.updateLinkDialogVisible,
   addDomainDialogVisible: state => state.graph.addDomainDialogVisible,
   }
-  
+
   export default getters

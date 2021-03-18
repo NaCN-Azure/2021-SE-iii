@@ -77,55 +77,52 @@
 
     export default {
         name: "index.vue",
-        data(){
-            return{
+        data() {
+            return {
                 createType: 'importCSV',
-                extractedText:'',
-                uploadParam:{},
-                uploadUrl:'localhost:8080/coinservice/file/getCsv'
+                extractedText: '',
+                uploadParam: {},
             }
         },
-        computed:{
+        computed: {
             ...mapGetters([
-                'nodeList'
+                'nodeList',
+                'testdata',
             ])
         },
-        methods:{
+        methods: {
             ...mapActions([
                 'test'
             ]),
-            handleCsvSuccess(){
+            handleCsvSuccess() {
                 this.$refs.upload.clearFiles();
                 this.$message({
-                    message:'导入中',
-                    type:'success'
+                    message: '导入中',
+                    type: 'success'
                 })
             },
-            submitUpload(){
+            submitUpload() {
                 console.log('submiting');
                 this.$refs.upload.submit();
-            },
-            addRouterToEditor(){
                 this.$router.push('/editor');
             },
-            testt(){
+            addRouterToEditor() {
+                this.$router.push('/editor');
+            },
+            testt() {
                 console.log('this is test');
-                var res = testAPI();
-                if(res){
+                testAPI().then(res => {
                     console.log(res);
-                    this.$message({
-                        message:'test success',
-                        type:'success'
-                    })
-                }else{
-                    this.$message({
-                        message:'test fail',
-                        type:'error'
-                    })
-
-                }
+                    console.log(res.data);
+                    console.log(res.data.data);
+                    console.log(res.data.code);
+                })
+                // testAPI().then(res => {
+                //     this.extractedText = res.data;
+                //     console.log(this.extractedText);
+                // })
                 // this.test();
-
+                // console.log(this.testdata);
             }
         }
     }

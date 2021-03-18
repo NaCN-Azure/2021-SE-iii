@@ -14,6 +14,28 @@
                             type="primary"
                     ></el-button>
                 </div>
+                <div class="domain-table" style="margin-top: 10px">
+                    <el-table
+                            :data="domainList"
+                            style="width:100%"
+                            :show-header="false"
+                            :row-style="{height:'30px'}"
+                            :cell-style="{padding:'8px'}"
+                    >
+                        <el-table-column>
+                            <template slot-scope="scope">
+                                <el-tag
+                                        closable
+                                        effect="light"
+                                        style="margin-left:3px;width: 98%; font-size: 20px"
+                                        @close="deleteDomain(scope.row.id)"
+                                        @click="selectDomain(scope.row)"
+                                >{{scope.row.name}}</el-tag>
+                            </template>
+                        </el-table-column>
+
+                    </el-table>
+                </div>
                 <!-- 添加搜索图谱功能 -->
 <!--                <div class="search-domain">-->
 <!--                </div>-->
@@ -57,70 +79,850 @@
             <!-- 右边中间-图谱渲染区域 -->
             <div class="graph">
                 <el-scrollbar style="width: 100%;height: 100%">
-                    <show-graph></show-graph>
+<!--                    <show-graph v-bind:relationships="relationships"></show-graph>-->
+                    <svg width="960" height="600"></svg>
                 </el-scrollbar>
             </div>
+
+            <!-- 节点操作 -->
+            <ul class="el-dropdown-menu el-popper" id="node-custom-menu" style="display: none">
+                <li class="el-dropdown-menu__item" @click="editNode">
+                    <span>编辑</span>
+                </li>
+                <li  class="el-dropdown-menu__item" @click="addLink">
+                    <span class="pl-15">添加关系</span>
+                </li>
+                <li class="el-dropdown-menu__item" @click="deleteNode">
+                    <span class="pl-15">删除</span>
+                </li>
+            </ul>
+
+            <!-- 关系操作 -->
+            <ul class="el-dropdown-menu el-popper" id="link-custom-menu" style="display: none">
+                <li class="el-dropdown-menu__item" @click="editLink">
+                    <span>编辑</span>
+                </li>
+                <li class="el-dropdown-menu__item" @click="deleteLink">
+                    <span class="pl-15">删除</span>
+                </li>
+            </ul>
+
+            <!-- 编辑节点对话框 -->
+            <el-dialog
+                    :visible.sync="this.editNodeFormVisible"
+                    title="编辑节点"
+            >
+                <el-form :model="this.editNodeParams">
+                    <el-form-item label="节点名称">
+                        <el-input v-model="this.editNodeParams.name" style="width: 330px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="选择颜色">
+                        <el-color-picker v-model="this.editNodeParams.bgColor">
+                        </el-color-picker>
+                    </el-form-item>
+                    <el-form-item label="选择形状">
+                        <el-select disabled v-model="this.editNodeParams.shape" placeholder="请选择">
+                            <el-option
+                                    v-for="item in shapes"
+                                    :key="item.key"
+                                    :label="item.label"
+                                    :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="所属图谱">
+                        <!-- 默认只能在当前选中的图谱中添加节点 -->
+                        <el-select disabled v-model="this.editNodeParams.domainId" placeholder="请从现有图谱中选择">
+                            <el-option
+                                    v-for="item in domainList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="cancelEditNode">取消</el-button>
+                    <el-button @click="submitEditNode" type="primary">确认</el-button>
+                </span>
+            </el-dialog>
+
+            <!-- 编辑关系对话框 -->
+            <el-dialog
+                    :visible.sync="this.editLinkFormVisible"
+                    title="编辑关系"
+            >
+                <el-form :model="this.editLinkParams">
+                    <el-form-item label="关系名称">
+                        <el-input v-model="this.editLinkParams.name" style="width: 330px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="所属图谱">
+                        <!-- 默认只能在当前选中的图谱中添加节点 -->
+                        <el-select disabled v-model="this.editLinkParams.domainId" placeholder="请从现有图谱中选择">
+                            <el-option
+                                    v-for="item in domainList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="cancelEditLink">取消</el-button>
+                    <el-button @click="submitEditLink" type="primary">确认</el-button>
+                </span>
+            </el-dialog>
         </div>
 
-<!--        &lt;!&ndash; 对话框 &ndash;&gt;-->
-<!--        <el-dialog title="导出csv" :visible.sync="exportFormVisible">-->
-<!--            <el-form>-->
-<!--                <el-form-item label="选择图谱"-->
-<!--                              label-width="">-->
-<!--                    <el-autocomplete-->
-<!--                              v-model="domain"-->
-<!--                              :fetch-suggestion="domainSearch"-->
-<!--                              placeholder="请输入图谱名称">-->
-<!--                    </el-autocomplete>-->
-<!--                </el-form-item>-->
-<!--                <el-button @click="exportCSV" type="primary">确定</el-button>-->
-<!--            </el-form>-->
-<!--        </el-dialog>-->
-        <create-node-dialog></create-node-dialog>
-        <add-domain-dialog></add-domain-dialog>
+        <!-- 新建图谱对话框 -->
+        <el-dialog
+                :visible.sync="this.addDomainDialogVisible"
+                title="新建图谱"
+        >
+            <el-tabs type="border-card" v-model="this.addDomainType">
+                <el-tab-pane label="创建空白图谱" name="empty">
+                    <el-form>
+                        <el-form-item label="图谱名称">
+                            <el-input v-model="this.addDomainParams.name"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+                <el-tab-pane name="import" label="导入文件">
+                    csv文件格式：节点-节点-关系 三元组
+                    <el-upload
+                            drag
+                            class="uploading"
+                            action="http://localhost:8080/coinservice/file/getCsv"
+                            on-success="csvsuccess"
+                            accept=".csv"
+                            auto-upload="false"
+                            ref="upload"
+                    >
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                    </el-upload>
+                </el-tab-pane>
+            </el-tabs>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="cancelCreateDomain">取消</el-button>
+            <el-button @click="submitCreateDomain" type="primary">确认</el-button>
+        </span>
+        </el-dialog>
+
+        <!-- 创建节点对话框 -->
+        <el-dialog
+                :visible.sync="this.createNodeDialogVisible"
+                title="创建节点"
+        >
+            <el-form :model="this.createNodeParams">
+                <el-form-item label="节点名称">
+                    <el-input v-model="this.createNodeParams.name" style="width: 330px"></el-input>
+                </el-form-item>
+                <el-form-item label="选择颜色">
+                    <el-color-picker v-model="this.createNodeParams.bgColor">
+                    </el-color-picker>
+                </el-form-item>
+                <el-form-item label="选择形状">
+                    <el-select disabled v-model="this.createNodeParams.shape" placeholder="请选择">
+                        <el-option
+                                v-for="item in this.shapes"
+                                :key="item.key"
+                                :label="item.label"
+                                :value="item.key">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所属图谱">
+                    <!-- 默认只能在当前选中的图谱中添加节点 -->
+                    <el-select disabled v-model="this.createNodeParams.domainId" placeholder="请从现有图谱中选择">
+                        <el-option
+                                v-for="item in domainList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="cancelCreateNode">取消</el-button>
+                <el-button @click="submitCreateNode" type="primary">确认</el-button>
+        </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-    import {mapGetters, mapMutations} from "vuex";
-    import CreateNodeDialog from "./components/createNodeDialog";
-    import AddDomainDialog from "./components/addDomainDialog";
-    import {testAPI} from "../../api/entity";
-    import showGraph from "./components/showGraph";
+    import * as d3 from 'd3';
+    import $ from 'jquery';
+    import {createNodeAPI, deleteNodeAPI, testAPI, updateNodeAPI} from "../../api/entity";
+    import {createDomainAPI, deleteDomainAPI, selectAllDomainAPI} from "../../api/domain";
+    import {deleteLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../api/relationship";
 
+    var simulation;
+    var nodes;
+    var links;
+    var nodeText;
+    var linkText;
+    var svg;
     export default {
         name: "editor",
-        components: {AddDomainDialog, CreateNodeDialog,showGraph},
+        inject:['reload'],
         data(){
             return{
-                // keyName:'',
-                // domain:'',
-                // selectedNode:{
-                //     id:'',
-                //     name:'',
-                // }
+                domainList : [{
+                    id:1,
+                    name:'domain1',
+                },{
+                    id:2,
+                    name: 'domain2',
+                }],
+                domain:{
+                    id:'',
+                    name:''
+                },
+                relationships:[],
+                addDomainType:'empty',
+                createNodeParams:{
+                    name:'',
+                    bgColor:'',
+                    shape:0,
+                    // description:'', //好像没看到后端的方法可以添加描述的
+                    domainId:''
+                },
+                createLinkParams:{
+                    id:'',
+                    name:'',
+                    type:'',
+                    fromId:'',
+                    toId:'',
+                    domainId:'',
+                },
+                addDomainParams: {
+                    id:'',
+                    name:'',
+                },
+                createNodeDialogVisible: false,
+                createLinkDialogVisible: false,
+                addDomainDialogVisible:false,
+                shapes:[
+                    {key:0,label:'圆形'}
+                ],
+
+                // 选中要进行操作的节点
+                selectedNode:{
+                    id:'',
+                    name:'',
+                    bgColor:'',
+                    shape:'',
+                    domainId:'',
+                },
+                editNodeFormVisible:false,
+                addLinkFormVisible:false,
+                editNodeParams:{
+                    id:'',
+                    name:'',
+                    bgColor:'',
+                    shape:'',
+                    domainId:'',
+                },
+                selectedLink:{
+                    id:'',
+                    name:'',
+                    type:1, // 能被选中的关系一定type是1
+                    fromId:'',
+                    toId:'',
+                    domainId:'',
+                },
+                editLinkFormVisible: false,
+                editLinkParams: {
+                    id:'',
+                    name:'',
+                    type:'',
+                    fromId:'',
+                    toId:'',
+                },
+                // 要被渲染的nodes和links数组
+                nodesData:[],
+                linksData:[],
             }
         },
-        computed:{
-            ...mapGetters([
-                'createNodeDialogVisible',
-                'addDomainDialogVisible',
-                'domain'
-            ])
+        created(){
+            // this.getAllDomains();
+        },
+        mounted(){
+            svg = d3.select('svg')
+            var width = +svg.attr('width')
+            var height = +svg.attr('height')
+            const g = svg.append('g') // svg中创建g元素，node和link放在g中
+
+            simulation = d3.forceSimulation()
+                .force('charge', d3.forceManyBody().strength(-100))
+                .force('collide', d3.forceCollide().strength(-30))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('link', d3.forceLink().distance(220).id(function (d) {
+                    return d.id;
+                }));
+
+            links = g.append('g').attr("class","link");
+            linkText = g.append('g').attr("class","linkText");
+            nodes = g.append('g').attr("class","node");
+            nodeText = g.append("g").attr("class","nodeText");
+
+            this.addMarker();
         },
         methods:{
-            ...mapMutations([
-                'set_createNodeDialogVisible',
-                'set_addDomainDialogVisible'
-            ]),
             createNode(){
-                this.set_createNodeDialogVisible(true)
+                this.createNodeDialogVisible = true;
             },
             addDomain(){
-                this.set_addDomainDialogVisible(true)
+                this.addDomainDialogVisible = true;
             },
+            // 选择domain，展示它的图谱
+            selectDomain(domain){
+                this.domain = domain
+                getLinkByDomainIdAPI(this.domain.id).then(res => {
+                    this.relationships = res.data.data.relationships;
+                });
+                this.updateGraph();
+            },
+            deleteDomain(domainId){
+                deleteDomainAPI(domainId).then(res => {
+                    console.log(res);
+                    if(res){
+                        this.$message({
+                            message:'删除成功',
+                            type:'success',
+                        });
+                        // 删除正在显示的domain，刷新
+                        if(domainId == this.domain.id){
+                            this.relationships = [];
+                            this.updateGraph();
+                        }
+                    }else{
+                        this.$message({
+                            message:'删除失败',
+                            type:'error'
+                        })
+                    }
+                });
+                this.getAllDomains();
+                this.reload();
+            },
+            getAllDomains(){
+                selectAllDomainAPI().then(res => {
+                    this.domainList = res.data.data.domain;
+                })
+            },
+
+            /* ===============================createNodeDialog====================================== */
+            cancelCreateNode(){
+                this.createNodeDialogVisible = false;
+            },
+            submitCreateNode(){
+                createNodeAPI(this.createNodeParams.name,
+                    this.createNodeParams.bgColor,
+                    this.createNodeParams.shape,
+                    this.createNodeParams.domainId
+                ).then(res => {
+                    this.$message({
+                        message:'添加成功',
+                        type:'success'
+                    })
+                })
+                this.selectDomain(this.createNodeParams.domainId);
+            },
+
+
+            /* ============================addDomainDialog========================== */
+            cancelCreateDomain(){
+                this.addDomainDialogVisible = false;
+            },
+            submitCreateDomain(){
+                createDomainAPI(this.addDomainParams).then(res => {
+                    this.getAllDomains()
+                })
+                this.reload();
+            },
+
+
+
+
+            /* ==========================showGraph================================== */
+            // 从前端返回的relationships数组中获取nodes
+            getNodesFromRelationships (relationships) {
+                /*
+                nodes格式示例：{"id": 114,
+                        "name": "JKL",
+                        "bgColor": "1",
+                        "shape": 1,
+                        "domainId": 1}
+                 */
+                var nodes = [];
+                relationships.forEach(function (relationship) {
+                    if(relationship.type == 1){
+                        // 正常关系
+                        nodes.push(relationship.startEntity);
+                        nodes.push(relationship.endEntity);
+                    }else{
+                        // 孤立节点
+                        nodes.push(relationship.startEntity);
+                    }
+                });
+                return nodes;
+            },
+            // 从前端返回的relationships数组中获取links
+            getLinksFromRelationships(relationships){
+                /*
+                links格式示例：{"id": null,
+                    "name": null,
+                    "source": 114,
+                    "target": 114,
+                    "domainId": 1,}
+                 */
+                var links = [];
+                relationships.forEach(function (relationship) {
+                    if(relationship.type == 1){
+                        var link = {}
+                        link.id = relationship.id;
+                        link.name = relationship.name;
+                        link.source = relationship.fromId;
+                        link.target = relationship.toId;
+                        link.domainId = relationship.domainId;
+                        links.push(link);
+                    }else{
+                        // -1表示孤立点，不用加入links数组
+                        // do nothing
+                    }
+                });
+                return links;
+            },
+            editNode(){
+                console.log(this.selectedNode);
+                this.editNodeParams = this.selectedNode; // 编辑节点表单初始值即为选中节点属性值
+                console.log(this.editNodeParams);
+                this.editNodeFormVisible = true;
+                $('#node-custom-menu').hide();
+            },
+            addLink(){
+
+
+            },
+            deleteNode(){
+                deleteNodeAPI(this.selectedNode).then(res => {
+                    if(res){
+                        this.$message({
+                            message:'删除成功',
+                            type:'success'
+                        })
+                    }else{
+                        this.$message({
+                            message:'删除失败',
+                            type:'error'
+                        })
+                    }
+                })
+                this.selectDomain(this.selectedNode.domainId);
+            },
+            cancelEditNode(){
+                this.editNodeFormVisible = false;
+            },
+            submitEditNode(){
+                updateNodeAPI(this.editNodeParams).then(res => {
+                    if(res){
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        })
+                    }else{
+                        this.$message({
+                            message: '修改失败',
+                            type:'error'
+                        })
+                    }
+                });
+                this.selectDomain(this.editNodeParams.domainId);
+            },
+            editLink(){
+                console.log(this.selectedLink);
+                this.editLinkParams = this.selectedLink; // 编辑节点表单初始值即为选中节点属性值
+                console.log(this.editLinkParams);
+                this.editLinkFormVisible = true;
+                $('#link-custom-menu').hide();
+            },
+            deleteLink(){
+                deleteLinkAPI(this.selectedLink).then(res => {
+                    if(res){
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        })
+                    }else{
+                        this.$message({
+                            message: '删除失败',
+                            type:'error'
+                        })
+                    }
+                });
+                this.selectDomain(this.selectedLink.domainId);
+            },
+            cancelEditLink(){
+                this.editLinkFormVisible = false;
+            },
+            submitEditLink(){
+                updateLinkAPI(this.editLinkParams).then(res => {
+                    if(res){
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        })
+                    }else{
+                        this.$message({
+                            message: '修改失败',
+                            type:'error'
+                        })
+                    }
+                });
+                this.selectDomain(this.editLinkParams.domainId);
+            },
+            // showGraph(){
+            //     var _this = this;
+            //     let svg = d3.select('svg')
+            //     let width = +svg.attr('width')
+            //     let height = +svg.attr('height')
+            //     const g = svg.append('g') // svg中创建g元素，node和link放在g中
+            //
+            //     svg.call(d3.zoom().on('zoom',function () {
+            //         g.attr('transform',d3.event.transform)
+            //     }))
+            //
+            //     // 提取出d3可以解析的节点和关系数组
+            //     var nodesData = this.getNodesFromRelationships(_this.relationships);
+            //     var linksData = this.getLinksFromRelationships(_this.relationships);
+            //
+            //     console.log(nodesData);
+            //     console.log(linksData);
+            //
+            //     var simulation = d3.forceSimulation()
+            //         .nodes(nodesData)
+            //         .force('charge', d3.forceManyBody().strength(-100))
+            //         .force('collide', d3.forceCollide().strength(-30))
+            //         .force('center', d3.forceCenter(width / 2, height / 2))
+            //
+            //     var node = g.append('g')
+            //         .attr('class', 'nodes')
+            //         .selectAll('circle')
+            //         .data(nodesData)
+            //         .enter()
+            //         .append('circle')
+            //         .attr('r', 20)
+            //         .attr('fill', (d) => {return d.bgColor})
+            //
+            //     node.on("contextmenu",function (d) {
+            //         // var position = d3.mouse(this)
+            //         console.log(d);
+            //         var cc = $(this).offset();
+            //         _this.selectedNode.id = d.id;
+            //         _this.selectedNode.name = d.name;
+            //         _this.selectedNode.bgColor = d.bgColor;
+            //         _this.selectedNode.shape = d.shape;
+            //         _this.selectedNode.domainId = d.domainId;
+            //         d3.select('#node-custom-menu')
+            //             .style('position','absolute')
+            //             .style('left', cc.left -250 + "px")
+            //             .style('top', cc.top -130+ "px")
+            //             .style('display','block');
+            //         d3.event.preventDefault(); // 禁止系统默认右键
+            //         d3.event.stopPropagation(); // 禁止空白处右键
+            //     });
+            //
+            //     var link = g.append('g')
+            //         .attr('class', 'links')
+            //         .selectAll('line')
+            //         .data(linksData)
+            //         .enter()
+            //         .append('line')
+            //         .attr('stroke-width', 15) // 关系宽度大一些才能右键出编辑菜单
+            //         .attr('marker-end',"url(#arrow)")
+            //         .style('stroke', this.linkColor)
+            //
+            //     link.on("contextmenu",function(d){
+            //         var cc = $(this).offset();
+            //         d3.select('#link-custom-menu')
+            //             .style('position','absolute')
+            //             .style('left',cc.left-250+"px")
+            //             .style('top',cc.top-130+"px")
+            //             .style('display','block')
+            //         d3.event.preventDefault(); // 禁止系统默认右键
+            //         d3.event.stopPropagation(); // 禁止空白处右键
+            //     })
+            //
+            //     var nodeText = g.append('g')
+            //         .attr("class", "nodeText")
+            //         .selectAll("text")
+            //         .data(nodesData)
+            //         .enter()
+            //         .append("text")
+            //         .style("fill","black")
+            //         .attr("dx",5)
+            //         .attr("dy",20) // 在节点右下角显示文字
+            //         .text((d) => { return d.name });
+            //
+            //     var linkText = g.append('g')
+            //         .attr("class","linkText")
+            //         .selectAll("text")
+            //         .data(linksData)
+            //         .enter()
+            //         .append("text")
+            //         .text((d) => {return d.name})
+            //
+            //     simulation.on('tick', tickAction)
+            //
+            //     // 每tick更新图谱
+            //     function tickAction () {
+            //         node
+            //             .attr('cx', (d) => { return d.x })
+            //             .attr('cy', (d) => { return d.y })
+            //
+            //         link
+            //             .attr('x1', (d) => { return d.source.x })
+            //             .attr('y1', (d) => { return d.source.y })
+            //             .attr('x2', (d) => { return d.target.x })
+            //             .attr('y2', (d) => { return d.target.y })
+            //         nodeText
+            //             .attr('x', (d) => { return d.x })
+            //             .attr('y', (d) => { return d.y })
+            //         linkText
+            //             .attr('x', (d) => { return (d.source.x + d.target.x) / 2})
+            //             .attr('y', (d) => { return (d.source.y + d.target.y) / 2})
+            //     }
+            //
+            //     node.call(d3.drag().on("start",dragStarted)
+            //         .on("drag",dragged)
+            //         .on("end",dragended)
+            //     )
+            //
+            //     var linkForce = d3.forceLink(linksData)
+            //         .id((d) => { return d.id })
+            //         .distance(150)
+            //
+            //     simulation.force('links', linkForce)
+            //
+            //     // 为关系添加箭头
+            //
+            //
+            // },
+
+            // 监听拖拽开始
+            dragStarted(d) {
+                if(!d3.event.active)
+                    simulation.alphaTarget(0.3).restart()
+                d.fx = d.x;
+                d.fy = d.y;
+            },
+
+            //监听拖拽中
+            dragged(d) {
+                d.fx = d3.event.x;  //fevent.x为拖拽移动时的坐标
+                d.fy = d3.event.y;
+            },
+
+            //监听拖拽结束
+            dragended(d) {
+                if (!d3.event.active) simulation.alphaTarget(0);
+                d.fx = null;        //固定坐标清空
+                d.fy = null;
+            },
+
+            addMarker(){
+                var arrowMarker = svg.append("marker")
+                    .attr("id","arrow")
+                    .attr("markerUnits","strokeWidth")
+                    .attr("markerWidth","10")//
+                    .attr("markerHeight","10")
+                    .attr("viewBox","0 0 12 12")
+                    .attr("refX","25")// 13
+                    .attr("refY","6")
+                    .attr("orient","auto");
+                var arrow_path = "M2,2 L10,6 L2,10 L6,6 L2,2";// 定义箭头形状
+                arrowMarker.append("path").attr("d",arrow_path).attr("fill","grey"); // 应该是箭头颜色，后面再改
+            },
+
+            drawNode(nodes){
+                var _this = this;
+                var nodeEnter = nodes.enter().append('circle');
+                nodeEnter.on("contextmenu", function(d){
+                    console.log(d);
+                    var cc = $(this).offset();
+                    _this.selectedNode.id = d.id;
+                    _this.selectedNode.name = d.name;
+                    _this.selectedNode.bgColor = d.bgColor;
+                    _this.selectedNode.shape = d.shape;
+                    _this.selectedNode.domainId = d.domainId;
+                    d3.select('#node-custom-menu')
+                        .style('position','absolute')
+                        .style('left', cc.left -250 + "px")
+                        .style('top', cc.top -130+ "px")
+                        .style('display','block');
+                    d3.event.preventDefault(); // 禁止系统默认右键
+                    d3.event.stopPropagation(); // 禁止空白处右键
+                });
+                nodeEnter.call(d3.drag()
+                    .on("start",this.dragStarted)
+                    .on("drag",this.dragged)
+                    .on("end",this.dragended)
+                );
+                return nodeEnter;
+            },
+            drawLink(links){
+                var _this = this;
+                var linkEnter = links.enter().append("line")
+                    .attr("stroke-width",3)
+                    .attr("stroke","#fce6d4")
+                    .attr("marker-end","url(#arrow)");
+                linkEnter.on("contextmenu",function(d){
+                    var cc = $(this).offset();
+                    _this.selectedLink.id = d.id;
+                    _this.selectedLink.name = d.name;
+                    _this.selectedLink.fromId = d.source;
+                    _this.selectedLink.toId = d.target;
+                    _this.selectedLink.domainId = d.domainId;
+                    d3.select('#link-custom-menu')
+                        .style('position','absolute')
+                        .style('left',cc.left-250+"px")
+                        .style('top',cc.top-130+"px")
+                        .style('display','block')
+                    d3.event.preventDefault(); // 禁止系统默认右键
+                    d3.event.stopPropagation(); // 禁止空白处右键
+                })
+                return linkEnter;
+            },
+            drawNodeText(nodetext){
+                var _this = this;
+                var nodeTextEnter = nodetext.enter().append("text")
+                    .style("fill","#fff")
+                    .attr("class","nodeText")
+                    .attr("dy",4)
+                    .attr("text-anchor","middle")
+                    .text(function(d){
+                        var length=d.name.length;
+                        if(d.name.length>4){
+                            var s= d.name.slice(0,4)+"...";
+                            return s;
+                        }
+                        return d.name;
+                    });
+                nodeTextEnter.on("contextmenu",function (d) {
+                        console.log(d);
+                        var cc = $(this).offset();
+                        _this.selectedNode.id = d.id;
+                        _this.selectedNode.name = d.name;
+                        _this.selectedNode.bgColor = d.bgColor;
+                        _this.selectedNode.shape = d.shape;
+                        _this.selectedNode.domainId = d.domainId;
+                        d3.select('#node-custom-menu')
+                            .style('position','absolute')
+                            .style('left', cc.left -250 + "px")
+                            .style('top', cc.top -130+ "px")
+                            .style('display','block');
+                        d3.event.preventDefault(); // 禁止系统默认右键
+                        d3.event.stopPropagation(); // 禁止空白处右键
+                });
+                return nodeTextEnter;
+            },
+            drawLinkText(linktext){
+                var linkTextEnter = linktext.enter().append('text')
+                    .attr("class","linkText")
+                    .style('fill','#e3af85')
+                    .style('font-size','10px')
+                    .text(function(d){
+                        return d.name;
+                    })
+            },
+            updateGraph(){
+                this.nodesData = this.getNodesFromRelationships(_this.relationships);
+                this.linksData = this.getLinksFromRelationships(_this.relationships);
+                var _this = this;
+                var link = links.selectAll('line').data(this.linksData);
+                link.exit().remove();
+                var linkEnter = this.drawLink(link);
+                link = linkEnter.merge(link);
+
+                var linktext = linkText.selectAll("text").data(this.linksData)
+                linktext.exit().remove();
+                var linkTextEnter = this.drawLinkText(linktext);
+                linktext = linkTextEnter.merge(linktext).text(function(d){ return d.name});
+
+                var node = nodes.selectAll("circle").data(this.nodesData);
+                node.exit().remove();
+                var nodeEnter = this.drawNode(node);
+                node = nodeEnter.merge(node).text(function(d){ return d.name;});
+                node.attr("fill",function(d){
+                    if(typeof(d.bgColor)!="undefined"&& d.bgColor != ''){
+                        return d.bgColor
+                    }
+                    return "#ff4500";
+                });
+                node.style("opacity",0.8);
+                node.append("title")
+                    .text(function (d) {
+                        return d.name;
+                    });
+
+                var nodetext = nodeText.selectAll("text").data(this.nodesData);
+                nodetext.exit().remove();
+                var nodeTextEnter = this.drawNodeText(nodetext);
+                nodetext = nodeTextEnter.merge(nodetext).text(function(d){return d.name});
+                nodetext.append("title")
+                    .text(function (d) {
+                        return d.name;
+                    });
+
+                simulation.nodes(this.nodesData).alphaTarget(0).alphaDecay(0.05).on("tick",tickAction);
+                simulation.force("link").links(this.linksData);
+                simulation.alpha(1).restart();
+                // 每tick更新图谱
+                function tickAction () {
+                    node
+                        .attr('cx', (d) => { return d.x })
+                        .attr('cy', (d) => { return d.y })
+
+                    link
+                        .attr('x1', (d) => { return d.source.x })
+                        .attr('y1', (d) => { return d.source.y })
+                        .attr('x2', (d) => { return d.target.x })
+                        .attr('y2', (d) => { return d.target.y })
+                    nodeText
+                        .attr('x', (d) => { return d.x })
+                        .attr('y', (d) => { return d.y })
+                    linkText
+                        .attr('x', (d) => { return (d.source.x + d.target.x) / 2})
+                        .attr('y', (d) => { return (d.source.y + d.target.y) / 2})
+                }
+
+                svg.call(d3.zoom().on("zoom", function() {
+                    svg.selectAll("g").attr("transform", d3.event.transform);
+                }));
+            }
+
         }
     }
+
+    $(function () {
+        $(".graph-container").bind("click", function (event) {
+            $('#link-custom-menu').hide();
+            $('#node-custom-menu').hide();
+            event.preventDefault();
+        });
+        $("#link_custom_menu").bind("mouseleave", function(event){
+            $(this).hide();
+        });
+    })
 </script>
 
 <style scoped>
@@ -160,6 +962,14 @@
         top: 50px;
         bottom: 0;
         width: 100%;
+    }
+    .domain-table >>> .el-table__row > td{
+        /* 去除表格线 */
+        border: none;
+    }
+    .domain-table >>> .el-table::before{
+        /* 去除下边框 */
+        height: 0;
     }
 
 </style>
