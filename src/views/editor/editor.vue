@@ -27,7 +27,7 @@
                                 <el-tag
                                         closable
                                         effect="light"
-                                        style="margin-left:3px;width: 98%; font-size: 20px;cursor: pointer"
+                                        style="margin-left:3px;width: 98%; font-size: 15px;cursor: pointer"
                                         @close="deleteDomain(scope.row.id)"
                                         @click="selectDomain(scope.row)"
                                 >{{scope.row.name}}</el-tag>
@@ -429,7 +429,6 @@
                         })
                     }
                     this.getAllDomains();
-                    this.reload();
                 });
             },
             getAllDomains(){
@@ -471,6 +470,8 @@
                                 message:'添加成功',
                                 type: 'success'
                             })
+                            this.addDomainDialogVisible = false
+                            this.getAllDomains()
                         }else{
                             this.$message({
                                 message:'添加失败',
@@ -479,8 +480,6 @@
                         }
                     })
                 }
-                this.getAllDomains()
-                this.reload();
             },
 
 
