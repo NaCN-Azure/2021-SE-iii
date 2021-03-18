@@ -68,9 +68,9 @@
                     <el-dropdown>
                         <el-button size="small" class="edit-tool">
                             导出<i class="el-icon-arrow-down el-icon--right"></i>
-                        </el-button>
+                        </el-button>    
                         <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>导出图片</el-dropdown-item>
+                            <el-dropdown-item @click.native="exportPic">导出图片</el-dropdown-item>
                             <el-dropdown-item>导出CSV</el-dropdown-item>
                     </el-dropdown-menu>
                     </el-dropdown>
@@ -80,7 +80,7 @@
             <div class="graph">
                 <el-scrollbar style="width: 100%;height: 100%">
 <!--                    <show-graph v-bind:relationships="relationships"></show-graph>-->
-                    <svg width="960" height="600"></svg>
+                    <svg id="kgGraph" width="960" height="600"></svg>
                 </el-scrollbar>
             </div>
 
@@ -908,7 +908,96 @@
                 svg.call(d3.zoom().on("zoom", function() {
                     svg.selectAll("g").attr("transform", d3.event.transform);
                 }));
-            }
+            },
+
+            //导出图片
+            exportPic() {
+                var svg = document.getElementById("kgGraph");
+                var img = this.export2Base64Img(svg, null, {
+                    background: '#fff'
+                });
+                img.then(function (base64src) {
+                    var oA = document.createElement("a");
+                    oA.download = Math.floor(Math.random() * 10000) + '.png';
+                    oA.style.display = 'none'
+                    oA.href = base64src;
+                    document.body.appendChild(oA);
+                    oA.click();
+                    oA.remove();
+                })
+            },
+
+            reEncode(data) {
+                return decodeURIComponent(
+                    encodeURIComponent(data).replace(/%([0-9A-F]{2})/g, (match, p1) => {
+                        const c = String.fromCharCode(`0x${p1}`);
+                        return c === '%' ? '%25' : c;
+                    })
+                )
+            },
+            export2Base64Img(svgDom, MIMEType, option) {
+                var serializer = new XMLSerializer();
+                var source = serializer.serializeToString(svgDom);
+                var path = "data:image/svg+xml;base64," + window.btoa(this.reEncode(source));
+                var canvas = document.createElement("canvas"),
+                    context = canvas.getContext("2d"),
+                    img = new Image(),
+                    pixelRatio = window.devicePixelRatio || 1,
+                    _exportPath, handler
+                option = option || {};
+
+                canvas.width = parseFloat(svgDom.getAttribute('width')); //  * pixelRatio
+                canvas.height = parseFloat(svgDom.getAttribute('height')); //  * pixelRatio 
+                img.src = path;
+                img.onload = function () {
+                    // 增加底色
+                    if (option.background) {
+                        context.beginPath();
+                        context.rect(0, 0, canvas.width, canvas.height);
+                        context.fillStyle = option.background;
+                        context.fill();
+                        context.closePath();
+                    }
+                    //
+                    context.drawImage(img, 0, 0);
+
+                    var marker = option.watermark || "";
+
+                    if (marker) {
+                        context.font = "18px 微软雅黑";
+                        context.fillStyle = "rgba(12, 0, 70, 0.5)";
+
+                        var textWidth = context.measureText(marker).width,
+                            textHegith = 50,
+                            pk = 1.2,
+                            rotate = (option.rotation || -45) * Math.PI / 180,
+                            sinReg = Math.sin(rotate),
+                            cosReg = Math.cos(rotate),
+                            width = Math.abs(canvas.width * cosReg) + Math.abs(canvas.height * sinReg),
+                            height = Math.abs(canvas.height * cosReg) + Math.abs(canvas.width * sinReg);
+
+                        var xf = Math.ceil(width / textWidth * pk);
+                        var yf = Math.ceil(height / textHegith);
+
+                        context.rotate(rotate);
+
+                        for (var i = 0; i < yf; i++) {
+                            for (var k = 0; k < xf; k++) {
+                                context.fillText(marker, textWidth * k * pk - canvas.height * cosReg, textHegith * i)
+                            }
+                        }
+                    }
+                    document.body.appendChild(canvas);
+                    _exportPath = canvas.toDataURL(MIMEType || 'image/png', 1)
+                    typeof handler === 'function' && handler(_exportPath)
+                    document.body.removeChild(canvas)
+                }
+
+                return new Promise(function (resolve, reject) {
+                    handler = resolve
+                })
+            },
+            //==========导出图片部分结束============
 
         }
     }
