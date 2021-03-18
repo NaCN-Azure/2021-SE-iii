@@ -1,25 +1,52 @@
+pipeline {
+    agent any
 
-node {
-   def mvnHome
-   def workspace = pwd()
-   stage('Preparation') { // for display purposes
-      // Get some code from a GitHub repository
-      git 'http://192.168.161.118:8080/git/demo.git'
-      // Get the Maven tool.
-      // ** NOTE: This 'M3' Maven tool must be configured
-      // ** in the global configuration.
-      mvnHome = tool 'M3'
-   }
-   stage('Build') {
-      // Run the maven build
-      if (isUnix()) {
-         sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+    stages {
+        stage('Maven Build') {
+            steps{
+                echo 'Maven Build and Cobertura Stage'
+                sh '/opt/apache-maven-3.6.3/bin/mvn clean -DskipTests=true package'
+            }
+	    }
 
-      } else {
-         bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
-      }
-   }
-   stage('Deploy') {
-      sh "'/scripts/deploy.sh' ${workspace} deploy"
-   }
+	     stage('Jacoco Report') {
+                    steps{
+                        echo 'Jacoco Stage'
+                        sh '/opt/apache-maven-3.6.3/bin/mvn test'
+                    }
+                }
+
+	    stage('Image Clear'){
+	        steps{
+	            echo 'Image Clear Stage'
+	            sh "if (docker ps -a| grep coin) then (docker container stop coin && docker container rm coin) fi"
+                sh "if (docker images | grep coin) then (docker rmi \$(docker images coin -q)) fi"
+	        }
+	    }
+
+        stage('Image Build'){
+            steps{
+                echo 'Image Build Stage'
+                sh "docker build . -t coin:${BUILD_ID}"
+            }
+        }
+        stage('Deploy'){
+            steps{
+                sh "docker run -p 8002:8080 --name coin -v /log:/log -d coin:${BUILD_ID}"
+            }
+        }
+    }
+    post {
+            success {
+                // publish html
+                publishHTML target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'target/coverage-reports/',
+                    reportFiles: 'index.html',
+                    reportName: 'Jacoco Report'
+                ]
+            }
+        }
 }
