@@ -56,7 +56,6 @@
                         placeholder="请输入要提取知识图谱的内容"
                         v-model="extractedText"
                 >
-
                 </el-input>
             </el-tab-pane>
         </el-tabs>
@@ -67,12 +66,10 @@
         <el-button @click="addRouterToEditor">
             进入工作区
         </el-button>
-        <el-button @click="testt">测试</el-button>
     </div>
 </template>
 
 <script>
-    import {testAPI} from "../../api/entity";
     import {mapActions, mapGetters} from "vuex";
 
     export default {
@@ -109,21 +106,7 @@
             addRouterToEditor() {
                 this.$router.push('/editor');
             },
-            testt() {
-                console.log('this is test');
-                testAPI().then(res => {
-                    console.log(res);
-                    console.log(res.data);
-                    console.log(res.data.data);
-                    console.log(res.data.code);
-                })
-                // testAPI().then(res => {
-                //     this.extractedText = res.data;
-                //     console.log(this.extractedText);
-                // })
-                // this.test();
-                // console.log(this.testdata);
-            }
+
         }
     }
 </script>

@@ -260,7 +260,7 @@
 <script>
     import * as d3 from 'd3';
     import $ from 'jquery';
-    import {createNodeAPI, deleteNodeAPI, testAPI, updateNodeAPI} from "../../api/entity";
+    import {createNodeAPI, deleteNodeAPI, updateNodeAPI} from "../../api/entity";
     import {createDomainAPI, deleteDomainAPI, selectAllDomainAPI} from "../../api/domain";
     import {deleteLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../api/relationship";
 
@@ -270,6 +270,7 @@
     var nodeText;
     var linkText;
     var svg;
+
     export default {
         name: "editor",
         inject:['reload'],
@@ -352,9 +353,11 @@
                 linksData:[],
             }
         },
+
         created(){
             this.getAllDomains();
         },
+
         mounted(){
             svg = d3.select('svg')
             var width = +svg.attr('width')
@@ -376,6 +379,7 @@
 
             this.addMarker();
         },
+
         methods:{
             createNode(){
                 this.createNodeParams.domainId = this.domain.id;
@@ -388,19 +392,21 @@
             selectDomain(domain){
                 this.domain = domain;
                 getLinkByDomainIdAPI(this.domain.id).then(res => {
-                    // console.log(res);
-                    this.relationships = res.data.data.relationships;
-                    console.log(this.relationships);
-                    this.updateGraph();
+                    if(res.data.code == 200) {
+                        this.relationships = res.data.data.relationships;
+                        console.log(this.relationships);
+                        this.updateGraph();
+                    }
                 });
             },
             // 其他方法更新图谱时使用
             selectDomainById(domainId){
                 getLinkByDomainIdAPI(domainId).then(res => {
-                    // console.log(res);
-                    this.relationships = res.data.data.relationships;
-                    console.log(this.relationships);
-                    this.updateGraph();
+                    if(res.data.code == 200) {
+                        this.relationships = res.data.data.relationships;
+                        console.log(this.relationships);
+                        this.updateGraph();
+                    }
                 });
             },
             deleteDomain(domainId){
@@ -817,7 +823,7 @@
                 }));
             },
 
-            //导出图片
+            //=================================导出图片部分=============================
             exportPic() {
                 var svg = document.getElementById("kgGraph");
                 var img = this.export2Base64Img(svg, null, {
