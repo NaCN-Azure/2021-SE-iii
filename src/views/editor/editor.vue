@@ -196,7 +196,7 @@
                     <el-upload
                             drag
                             class="uploading"
-                            action="http://localhost:8080/coinservice/file/getCsv"
+                            action="http://106.15.93.81:8002/coinservice/file/getCsv"
                             on-success="csvsuccess"
                             accept=".csv"
                             auto-upload="false"
@@ -260,7 +260,7 @@
 <script>
     import * as d3 from 'd3';
     import $ from 'jquery';
-    import {createNodeAPI, deleteNodeAPI, testAPI, updateNodeAPI} from "../../api/entity";
+    import {createNodeAPI, deleteNodeAPI, updateNodeAPI} from "../../api/entity";
     import {createDomainAPI, deleteDomainAPI, selectAllDomainAPI} from "../../api/domain";
     import {deleteLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../api/relationship";
 
@@ -270,6 +270,7 @@
     var nodeText;
     var linkText;
     var svg;
+
     export default {
         name: "editor",
         inject:['reload'],
@@ -352,9 +353,11 @@
                 linksData:[],
             }
         },
+
         created(){
             // this.getAllDomains();
         },
+
         mounted(){
             svg = d3.select('svg')
             var width = +svg.attr('width')
@@ -376,6 +379,7 @@
 
             this.addMarker();
         },
+
         methods:{
             createNode(){
                 this.createNodeDialogVisible = true;
@@ -910,7 +914,7 @@
                 }));
             },
 
-            //导出图片
+            //=================================导出图片部分=============================
             exportPic() {
                 var svg = document.getElementById("kgGraph");
                 var img = this.export2Base64Img(svg, null, {
