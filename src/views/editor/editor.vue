@@ -81,7 +81,7 @@
             <div class="graph">
                 <el-scrollbar style="width: 100%;height: 100%">
 <!--                    <show-graph v-bind:relationships="relationships"></show-graph>-->
-                    <svg id="kgGraph" width="1500" height="600"></svg>
+                    <svg id="kgGraph" width="1200" height="600"></svg>
                 </el-scrollbar>
             </div>
 
@@ -491,8 +491,15 @@
                     shape:0,
                     domainId:0,
                 }
-                this.createNodeParams.domainId = this.domain.id;
-                this.createNodeDialogVisible = true;
+                if(this.domain.id==''){
+                    this.$message({
+                        message:'请先选择要添加节点的图谱哦',
+                        type:'warning'
+                    })
+                }else {
+                    this.createNodeParams.domainId = this.domain.id;
+                    this.createNodeDialogVisible = true;
+                }
             },
             createLink(){
                 // 清空表单
@@ -945,11 +952,7 @@
             },
             updateGraph(){
                 this.nodesData = this.getNodesFromRelationships(this.relationships);
-                console.log("nodesdata")
-                console.log(this.nodesData)
                 this.linksData = this.getLinksFromRelationships(this.relationships);
-                console.log("linksdata")
-                console.log(this.linksData)
                 var _this = this;
                 var link = links.selectAll('line').data(this.linksData,function(d){ return d.id});
                 link.exit().remove();
@@ -1130,6 +1133,17 @@
                 downloadAPI(this.domain.name,1).then(res => {
                     console.log(res);
                     if(res.status == 200){
+                        let blob = new Blob([res.data], {type: "application/x-download"}), // 此处为生成doc
+                            link = document.createElement("a"),
+
+                            href = window.URL.createObjectURL(blob);
+                        link.href = href;
+                        link.download = this.domain.name+".xml";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        window.URL.revokeObjectURL(href); // 释放掉blob对象
+
                         this.$message({
                             message:'导出成功',
                             type:'success'
