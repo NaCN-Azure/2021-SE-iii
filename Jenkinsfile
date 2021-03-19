@@ -13,6 +13,8 @@ pipeline {
 	        steps{
 	            echo 'Build Stage'
 	            sh "npm install"
+	            sh "yarn install"
+	            sh "yarn upgrade"
                 sh "npm run build"
 	        }
 	    }
