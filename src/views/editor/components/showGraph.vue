@@ -1,132 +1,109 @@
 <template>
+    <div>
     <div class="graph-container">
         <svg width="960" height="600"></svg>
-        <!-- 节点操作 -->
-        <div class="nodeOperationMenu">
+    </div>
 
-        </div>
+        <!-- 节点操作 -->
+        <ul class="el-dropdown-menu el-popper" id="node-custom-menu" style="display: none">
+            <li class="el-dropdown-menu__item" @click="editNode">
+                <span>编辑</span>
+            </li>
+            <li  class="el-dropdown-menu__item" @click="addLink">
+                <span class="pl-15">添加关系</span>
+            </li>
+            <li class="el-dropdown-menu__item" @click="deleteNode">
+                <span class="pl-15">删除</span>
+            </li>
+        </ul>
+
+        <!-- 关系操作 -->
+            <ul class="el-dropdown-menu el-popper" id="link-custom-menu" style="display: none">
+                <li class="el-dropdown-menu__item" @click="editLink">
+                    <span>编辑</span>
+                </li>
+                <li class="el-dropdown-menu__item" @click="deleteLink">
+                    <span class="pl-15">删除</span>
+                </li>
+            </ul>
+        <!-- 编辑节点对话框 -->
+        <el-dialog
+                :visible.sync="editNodeFormVisible"
+                title="编辑节点"
+        >
+            <el-form :model="this.editNodeParams">
+                <el-form-item label="节点名称">
+                    <el-input v-model="this.editNodeParams.name" style="width: 330px"></el-input>
+                </el-form-item>
+                <el-form-item label="选择颜色">
+                    <el-color-picker v-model="this.editNodeParams.bgColor">
+                    </el-color-picker>
+                </el-form-item>
+                <el-form-item label="选择形状">
+                    <el-select disabled v-model="this.editNodeParams.shape" placeholder="请选择">
+                        <el-option
+                                v-for="item in shapes"
+                                :key="item.key"
+                                :label="item.label"
+                                :value="item.key">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所属图谱">
+                    <!-- 默认只能在当前选中的图谱中添加节点 -->
+                    <el-select disabled v-model="this.editNodeParams.domainId" placeholder="请从现有图谱中选择">
+                        <el-option
+                                v-for="item in domainList"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="cancelEditNode">取消</el-button>
+                <el-button @click="submitEditNode" type="primary">确认</el-button>
+        </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import * as d3 from 'd3';
+    import $ from 'jquery';
     import {mapGetters} from "vuex";
+    import {deleteNodeAPI, updateNodeAPI} from "../../../api/entity";
 
-    var svg;
-    var simulation;
-    var linkGroup;
-    var nodeGroup;
-    var linkTextGroup;
-    var nodeTextGroup;
 
-    // 为关系添加箭头
-    var addMarker = function () {
-        var arrowMarker = svg.append("marker")
-            .attr("id","arrow")
-            .attr("markerUnits","strokeWidth")
-            .attr("markerWidth","18")//
-            .attr("markerHeight","18")
-            .attr("viewBox","0 0 12 12")
-            .attr("refX","30")// 13
-            .attr("refY","6")
-            .attr("orient","auto");
-        var arrow_path = "M2,2 L10,6 L2,10 L6,6 L2,2";// 定义箭头形状
-        arrowMarker.append("path").attr("d",arrow_path).attr("fill","#fce6d4"); // 应该是箭头颜色，后面再改
-    }
-
-    // 刷新页面函数
-    var ticked = function () {
-
-    }
-
-    //
     export default {
         name: "showGraph",
-        // props: {
-        //     width: String,
-        //     height: String,
-        // },
+        props: [
+            "relationships"
+        ],
         data(){
             return{
-                nodes:[
-                    {id:'1',name:'a'},
-                    {id:'2',name:'b'},
-                    {id:'3',name:'c'},
-                ],
-                links:[
-                    {fromId:'1',toId:'2',name:'ab'},
-                    {fromId: '2',toId: '3',name: 'bc'},
-                ]
+                selectedNode:{
+                    id:'',
+                    name:'',
+                    bgColor:'',
+                    shape:'',
+                    domainId:'',
+                },
+                editNodeFormVisible:false,
+                addLinkFormVisible:false,
+                editNodeParams:{
+                    id:'',
+                    name:'',
+                    bgColor:'',
+                    shape:'',
+                    domainId:'',
+                },
+
             }
         },
         mounted() {
-            // this.init();
-            // var s = d3.select('.graph-container');
-            // var width = s._groups[0][0].offsetWidth; //?
-            // var height = window.screen.height - 100; // 100先随便设的
-            // svg = s.append('svg');
-            // svg.attr('width', width);
-            // svg.attr('height', height);
-            //     simulation = d3.forceSimulation()
-            //         .force("link",d3.forceLink(this.links).distance(220).id(function (d) {return d.id}))
-            //         .force("charge",d3.forceManyBody().strength(-400))
-            //         .force("collide",d3.forceCollide().strength(-30))
-            //         .force("center",d3.forceCenter(width/2,(height-200)/2))
-            //         .nodes(this.nodes)
-            //         .on("tick",ticked)
-            //         .start();
-            //     linkGroup = svg.append("g").attr("class","line");
-            //     linkTextGroup = svg.append("g").attr("class","line-text");
-            //     nodeGroup = svg.append("g").attr("class","node");
-            //     nodeTextGroup = svg.append("g").attr("class","node-text");
-            //     this.addMarker();
-            //     var node = nodeGroup.selectAll('.node').data(this.nodes).enter().append('g');
-            //     node.append('circle')
-            //         .attr("class",function(d,i){
-            //             if(d.id ===1){
-            //                 return 'node centerNode';
-            //             }else{
-            //                 return 'node'
-            //             }
-            //         })
-            //         .attr('r',function (d,i) {
-            //             if(d.id === 1){
-            //                 return 50;
-            //             }else{
-            //                 return 25;
-            //             }
-            //         })
-            //         .style('fill',function (d) {
-            //             return 'red';
-            //         })
-            // },
-            // created(){
-            //     // this.getGraph();  // 应该是一个获取所有domain的方法，还没看明白
-            // },
-            // computed: {
-            //     ...mapGetters([
-            //         'nodeList', // d3渲染用的nodes数组
-            //         'linkList' // d3渲染用的links数组
-            //     ])
-            // },
-            // methods: {
-            //     // 从前端返回的links数组中获取nodes
-            //     getNodesFromLinks (links) {
-            //         var nodes = {};
-            //         links.forEach(function (link) {
-            //             if(link.type == 1){
-            //                 // 正常关系
-            //                 nodes.push(link.startEntity);
-            //                 nodes.push(link.endEntity);
-            //             }else{
-            //                 // 孤立节点
-            //                 nodes.push(link.startEntity);
-            //             }
-            //         });
-            //         return nodes;
-            //     },
-            //
-            //
             //     updateGraph() {
             //         var _this = this;
             //         var nodes = this.nodeList;
@@ -151,6 +128,7 @@
             //
             //     }
 
+            var _this = this;
             let svg = d3.select('svg')
             let width = +svg.attr('width')
             let height = +svg.attr('height')
@@ -193,7 +171,7 @@
                     "startEntity": {
                         "id": 114,
                         "name": "JKL",
-                        "bgColor": "yellow",
+                        "bgColor": "#9a9abe", // 返回的颜色必须是16进制的，colorpicker才能解析
                         "shape": 1,
                         "domainId": 1
                     },
@@ -207,6 +185,7 @@
                 }
             ]
 
+            // 提取出d3可以解析的节点和关系数组
             var nodesData = this.getNodesFromRelationships(relationships);
             var linksData = this.getLinksFromRelationships(relationships);
 
@@ -215,8 +194,9 @@
 
             var simulation = d3.forceSimulation()
                 .nodes(nodesData)
-                .force('charge_force', d3.forceManyBody())
-                .force('center_force', d3.forceCenter(width / 2, height / 2))
+                .force('charge', d3.forceManyBody().strength(-100))
+                .force('collide', d3.forceCollide().strength(-30))
+                .force('center', d3.forceCenter(width / 2, height / 2))
 
             var node = g.append('g')
                 .attr('class', 'nodes')
@@ -227,6 +207,28 @@
                 .attr('r', 20)
                 .attr('fill', (d) => {return d.bgColor})
 
+            // node.on("mouseover",function (d,i) {
+            //
+            // });
+            // 右键节点，弹出菜单
+            node.on("contextmenu",function (d) {
+                // var position = d3.mouse(this)
+                console.log(d);
+                var cc = $(this).offset();
+                _this.selectedNode.id = d.id;
+                _this.selectedNode.name = d.name;
+                _this.selectedNode.bgColor = d.bgColor;
+                _this.selectedNode.shape = d.shape;
+                _this.selectedNode.domainId = d.domainId;
+                d3.select('#node-custom-menu')
+                    .style('position','absolute')
+                    .style('left', cc.left -250 + "px")
+                    .style('top', cc.top -130+ "px")
+                    .style('display','block');
+                d3.event.preventDefault(); // 禁止系统默认右键
+                d3.event.stopPropagation(); // 禁止空白处右键
+            });
+
             var link = g.append('g')
                 .attr('class', 'links')
                 .selectAll('line')
@@ -234,9 +236,22 @@
                 .enter()
                 .append('line')
                 .attr('stroke-width', 2)
+                .attr('marker-end',"url(#arrow)")
                 .style('stroke', this.linkColor)
 
+            link.on("contextmenu",function(d){
+                var cc = $(this).offset();
+                d3.select('#link-custom-menu')
+                    .style('position','absolute')
+                    .style('left',cc.left-250+"px")
+                    .style('top',cc.top-130+"px")
+                    .style('display','block')
+                d3.event.preventDefault(); // 禁止系统默认右键
+                d3.event.stopPropagation(); // 禁止空白处右键
+            })
+
             var nodeText = g.append('g')
+                .attr("class", "nodeText")
                 .selectAll("text")
                 .data(nodesData)
                 .enter()
@@ -247,6 +262,7 @@
                 .text((d) => { return d.name });
 
             var linkText = g.append('g')
+                .attr("class","linkText")
                 .selectAll("text")
                 .data(linksData)
                 .enter()
@@ -302,8 +318,23 @@
 
             var linkForce = d3.forceLink(linksData)
                 .id((d) => { return d.id })
+                .distance(150)
 
             simulation.force('links', linkForce)
+
+            // 为关系添加箭头
+                var arrowMarker = svg.append("marker")
+                    .attr("id","arrow")
+                    .attr("markerUnits","strokeWidth")
+                    .attr("markerWidth","10")//
+                    .attr("markerHeight","10")
+                    .attr("viewBox","0 0 12 12")
+                    .attr("refX","25")// 13
+                    .attr("refY","6")
+                    .attr("orient","auto");
+                var arrow_path = "M2,2 L10,6 L2,10 L6,6 L2,2";// 定义箭头形状
+                arrowMarker.append("path").attr("d",arrow_path).attr("fill","grey"); // 应该是箭头颜色，后面再改
+
 
         },
         methods: {
@@ -359,12 +390,56 @@
                 return d.bgColor;
             },
             linkColor (d) {
-                // if (d.type === 'A') {
-                //     return 'green'
-                // } else {
-                //     return 'red'
-                // }
-                return 'black' // 目前连线颜色都设为黑色
+                return 'grey' // 目前连线颜色都设为灰色
+            },
+            editNode(){
+                console.log(this.selectedNode);
+                this.editNodeParams = this.selectedNode; // 编辑节点表单初始值即为选中节点属性值
+                console.log(this.editNodeParams);
+                this.editNodeFormVisible = true;
+                $('#node-custom-menu').hide();
+            },
+            addLink(){
+
+            },
+            deleteNode(){
+                deleteNodeAPI(this.selectedNode).then(res => {
+                    if(res){
+                        this.$message({
+                            message:'删除成功',
+                            type:'success'
+                        })
+                    }else{
+                        this.$message({
+                            message:'删除失败',
+                            type:'error'
+                        })
+                    }
+                })
+            },
+            cancelEditNode(){
+                this.editNodeFormVisible = false;
+            },
+            submitEditNode(){
+                updateNodeAPI(this.editNodeParams).then(res => {
+                    if(res){
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        })
+                    }else{
+                        this.$message({
+                            message: '修改失败',
+                            type:'error'
+                        })
+                    }
+                });
+            },
+            editLink(){
+
+            },
+            deleteLink(){
+
             }
         }
 

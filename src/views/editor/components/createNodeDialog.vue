@@ -13,7 +13,7 @@
                 </el-color-picker>
             </el-form-item>
             <el-form-item label="选择形状">
-                <el-select v-model="createNodeParams.shape" placeholder="请选择">
+                <el-select disabled v-model="createNodeParams.shape" placeholder="请选择">
                     <el-option
                         v-for="item in shapes"
                         :key="item.key"
@@ -33,13 +33,12 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
-            <span slot="footer" class="el-dialog__footer">
+        </el-form>
+        <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
+        <span slot="footer" class="dialog-footer">
                 <el-button @click="cancelCreateNode">取消</el-button>
                 <el-button @click="submitCreateNode" type="primary">确认</el-button>
-            </span>
-        </el-form>
-
+        </span>
     </el-dialog>
 </template>
 
@@ -79,7 +78,7 @@
 </script>
 
 <style scoped>
-    .el-dialog__footer{
-        float: right;
-    }
+    /*.el-dialog__footer{*/
+    /*    float: right;*/
+    /*}*/
 </style>

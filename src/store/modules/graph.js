@@ -48,6 +48,7 @@ const graph = {
             toId:'',
         },
         addDomainParams: {
+            id:'',
             name:'',
         },
         updateNodeDialogVisible: false,
@@ -55,7 +56,7 @@ const graph = {
         createNodeDialogVisible: false,
         createLinkDialogVisible: false,
         addDomainDialogVisible:false,
-
+        testdata:{},
     },
 
     mutations: {
@@ -94,6 +95,9 @@ const graph = {
         },
         set_addDomainDialogVisible: function ( state, data ) {
             state.addDomainDialogVisible = data
+        },
+        set_testdata: function (state, data) {
+            state.testdata = data
         }
     },
     actions: {
@@ -194,16 +198,17 @@ const graph = {
         test: async ({ state,commit}) => {
             const res = await testAPI()
             if(res){
-                commit('set_nodeList',res.data);
-                this.$message({
-                    message: res.data,
-                    type: 'success'
-                })
+                commit('set_testdata',res.data);
+                console.log(res);
+                // this.$message({
+                //     message: res.data,
+                //     type: 'success'
+                // })
             }else{
-                this.$message({
-                    message: 'test failed!',
-                    type:'error'
-                })
+                // this.$message({
+                //     message: 'test failed!',
+                //     type:'error'
+                // })
             }
 
         }

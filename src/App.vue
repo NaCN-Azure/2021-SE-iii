@@ -1,14 +1,32 @@
 <template>
   <div id="app" v-title data-title="知识图谱可视化系统">
     <transition name="fade-transform" mode="out-in">
-      <router-view/>
+      <router-view v-if="isRouterAlive"></router-view>
     </transition>
   </div>
 </template>
 <script>
 export default {
   components: {
-    
+
+  },
+  provide(){
+    return{
+      reload:this.reload,
+    }
+  },
+  data(){
+      return{
+        isRouterAlive: true
+      }
+  },
+  methods:{
+    reload(){
+      this.isRouterAlive = false;
+      this.$nextTick(function () {
+        this.isRouterAlive = true;
+      })
+    }
   }
 }
 </script>

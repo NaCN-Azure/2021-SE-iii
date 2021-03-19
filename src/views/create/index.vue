@@ -10,12 +10,12 @@
                 csv文件格式：节点-节点-关系 三元组
                 <el-upload
                         drag
-                        action="http://localhost:8080/coinservice/file/getCsv"
+                        action="http://localhost:8003/coinservice/file/getCsv"
                         class="uploading"
                         on-success="handleCsvSuccess"
                         data="uploadParam"
                         accept=".csv"
-                        auto-upload="false"
+                        auto-upload=false
                         ref="upload"
                 >
                     <i class="el-icon-upload"></i>
@@ -56,7 +56,6 @@
                         placeholder="请输入要提取知识图谱的内容"
                         v-model="extractedText"
                 >
-
                 </el-input>
             </el-tab-pane>
         </el-tabs>
@@ -67,66 +66,47 @@
         <el-button @click="addRouterToEditor">
             进入工作区
         </el-button>
-        <el-button @click="testt">测试</el-button>
     </div>
 </template>
 
 <script>
-    import {testAPI} from "../../api/entity";
     import {mapActions, mapGetters} from "vuex";
 
     export default {
         name: "index.vue",
-        data(){
-            return{
+        data() {
+            return {
                 createType: 'importCSV',
-                extractedText:'',
-                uploadParam:{},
-                uploadUrl:'localhost:8080/coinservice/file/getCsv'
+                extractedText: '',
+                uploadParam: {},
             }
         },
-        computed:{
+        computed: {
             ...mapGetters([
-                'nodeList'
+                'nodeList',
+                'testdata',
             ])
         },
-        methods:{
+        methods: {
             ...mapActions([
                 'test'
             ]),
-            handleCsvSuccess(){
+            handleCsvSuccess() {
                 this.$refs.upload.clearFiles();
                 this.$message({
-                    message:'导入中',
-                    type:'success'
+                    message: '导入中',
+                    type: 'success'
                 })
             },
-            submitUpload(){
+            submitUpload() {
                 console.log('submiting');
                 this.$refs.upload.submit();
-            },
-            addRouterToEditor(){
                 this.$router.push('/editor');
             },
-            testt(){
-                console.log('this is test');
-                var res = testAPI();
-                if(res){
-                    console.log(res);
-                    this.$message({
-                        message:'test success',
-                        type:'success'
-                    })
-                }else{
-                    this.$message({
-                        message:'test fail',
-                        type:'error'
-                    })
+            addRouterToEditor() {
+                this.$router.push('/editor');
+            },
 
-                }
-                // this.test();
-
-            }
         }
     }
 </script>

@@ -17,6 +17,7 @@
                 <el-upload
                         drag
                         class="uploading"
+                        action="http://localhost:8003/coinservice/file/getCsv"
                         on-success="csvsuccess"
                         accept=".csv"
                         auto-upload="false"
@@ -36,6 +37,7 @@
 
 <script>
     import {mapGetters, mapMutations} from "vuex";
+    import {createDomainAPI} from "../../../api/domain";
 
     export default {
         name: "addDomainDialog",
@@ -60,9 +62,12 @@
             submit(){
                 if(this.addDomainType=='empty'){
                     // 创建空白图谱
+                    createDomainAPI(this.addDomainParams).then(res => {
 
+                    })
                 }else{
                     // 导入文件创建图谱
+                    this.$refs.upload.submit();
                 }
                 console.log("提交新建图谱表单")
             }
