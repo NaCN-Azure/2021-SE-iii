@@ -13,7 +13,14 @@ export function getCsvFileAPI(file) {
 
 export function exportGraphXMLAPI(domainId) {
     return axios({
-        url: `${api.filePre}/exportGraphXML/${domainId}`,
+        url: `${api.filePre}/exportXml/${domainId}`,
+        method: 'get'
+    })
+}
+
+export function downloadAPI(domainName,type) {
+    return axios({
+        url: `${api.filePre}/download/${domainName}/${type}`,
         method: 'get'
     })
 }
