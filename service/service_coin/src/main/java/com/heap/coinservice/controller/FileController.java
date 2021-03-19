@@ -54,7 +54,14 @@ public class FileController {
         try {
             os = response.getOutputStream();
             response.reset();
-            response.setContentType("application/x-download;charset=GBK");
+            response.setContentType("application/x-download;charset=utf-8");
+            response.setHeader("Access-Control-Allow-Origin", "*");
+//        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+            // 解决预请求（发送2次请求），此问题也可在 nginx 中作相似设置解决。
+            response.setHeader("Access-Control-Allow-Headers", "x-requested-with,Cache-Control,Pragma,Content-Type,Token, Content-Type");
+            response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+            response.setHeader("Access-Control-Max-Age", "3600");
+            response.setHeader("Access-Control-Allow-Credentials", "true");
             response.setHeader("Content-Disposition", "attachment;filename="+ new String(filename.getBytes("utf-8"), "iso-8859-1"));
             File f = new File(filename);
             is = new FileInputStream(f);
