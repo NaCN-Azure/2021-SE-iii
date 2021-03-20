@@ -195,7 +195,7 @@
                         </el-form-item>
                     </el-form>
                 </el-tab-pane>
-                <el-tab-pane name="import" label="导入文件">
+                <el-tab-pane name="import" label="导入csv文件">
                     csv文件格式：节点-节点-关系 三元组
                     <el-upload
                             drag
@@ -271,7 +271,7 @@
                 </el-form-item>
                 <el-form-item label="起始节点">
                     <!-- 默认只能在当前选中的图谱中添加节点 -->
-                    <el-select disabled v-model="createLinkParams.fromId" placeholder="请从现有图谱中选择关系源节点" style="width: 330px">
+                    <el-select v-model="createLinkParams.fromId" placeholder="请从现有图谱中选择关系源节点" style="width: 330px">
                         <el-option
                                 v-for="item in nodesData"
                                 :key="item.id"
@@ -321,7 +321,7 @@
                 </el-form-item>
                 <el-form-item label="起始节点">
                     <!-- 默认只能在当前选中的图谱中添加节点 -->
-                    <el-select v-model="createLinkParams.fromId" placeholder="请从现有图谱中选择关系源节点" style="width: 330px">
+                    <el-select disabled v-model="createLinkParams.fromId" placeholder="请从现有图谱中选择关系源节点" style="width: 330px">
                         <el-option
                                 v-for="item in nodesData"
                                 :key="item.id"
@@ -558,26 +558,38 @@
                 });
             },
             deleteDomain(domainId){
-                deleteDomainAPI(domainId).then(res => {
-                    console.log(res);
-                    if(res.data.code == 200){
-                        this.$message({
-                            message:'删除成功',
-                            type:'success',
-                        });
-                        // 删除正在显示的domain，刷新
-                        if(domainId == this.domain.id){
-                            this.relationships = [];
-                            this.updateGraph();
+                this.$confirm('此操作将删除图谱及其中所有节点和关系（不可恢复），是否继续？',{
+                    confirmButtonText:'确认',
+                    cancelButtonText:'取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteDomainAPI(domainId).then(res => {
+                        console.log(res);
+                        if (res.data.code == 200) {
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success',
+                            });
+                            // 删除正在显示的domain，刷新
+                            if (domainId == this.domain.id) {
+                                this.relationships = [];
+                                this.updateGraph();
+                            }
+                        } else {
+                            this.$message({
+                                message: '删除失败',
+                                type: 'error'
+                            })
                         }
-                    }else{
+                        this.getAllDomains();
+                    });
+                }).catch(() => {
                         this.$message({
-                            message:'删除失败',
-                            type:'error'
+                            type: 'info',
+                            message: '已取消删除'
                         })
                     }
-                    this.getAllDomains();
-                });
+                )
             },
             getAllDomains(){
                 selectAllDomainAPI().then(res => {
@@ -606,6 +618,7 @@
             /* ===============================createLinkDialog====================================== */
             cancelCreateLink(){
                 this.createLinkDialogVisible = false;
+                this.addLinkFromNodeDialogVisible = false;
             },
             submitCreateLink(){
                 console.log(this.createLinkParams);
@@ -729,19 +742,30 @@
                 $('#node-custom-menu').hide();
             },
             deleteNode(){
-                deleteNodeAPI(this.selectedNode).then(res => {
-                    if(res.data.code == 200){
-                        this.$message({
-                            message:'删除成功',
-                            type:'success'
-                        })
-                        this.selectDomainById(this.selectedNode.domainId);
-                    }else{
-                        this.$message({
-                            message:'删除失败',
-                            type:'error'
-                        })
-                    }
+                this.$confirm('此操作将删除节点及与其关联的所有关系（不可恢复），是否继续？',{
+                    confirmButtonText:'确认',
+                    cancelButtonText:'取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteNodeAPI(this.selectedNode).then(res => {
+                        if (res.data.code == 200) {
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            })
+                            this.selectDomainById(this.selectedNode.domainId);
+                        } else {
+                            this.$message({
+                                message: '删除失败',
+                                type: 'error'
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type:'info',
+                        message:'已取消删除'
+                    })
                 })
                 $('#node-custom-menu').hide();
             },
@@ -771,20 +795,31 @@
                 $('#link-custom-menu').hide();
             },
             deleteLink(){
-                deleteLinkAPI(this.selectedLink).then(res => {
-                    if(res.data.code == 200){
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        })
-                        this.selectDomainById(this.selectedLink.domainId);
-                    }else{
-                        this.$message({
-                            message: '删除失败',
-                            type:'error'
-                        })
-                    }
-                });
+                this.$confirm('此操作将删除该关系（不可恢复），是否继续？',{
+                    confirmButtonText:'确认',
+                    cancelButtonText:'取消',
+                    type: 'warning'
+                }).then(() => {
+                    deleteLinkAPI(this.selectedLink).then(res => {
+                        if (res.data.code == 200) {
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            })
+                            this.selectDomainById(this.selectedLink.domainId);
+                        } else {
+                            this.$message({
+                                message: '删除失败',
+                                type: 'error'
+                            })
+                        }
+                    });
+                }).catch(()=>{
+                    this.$message({
+                        type:'info',
+                        message:'已取消删除'
+                    })
+                })
                 $('#link-custom-menu').hide();
             },
             cancelEditLink(){
@@ -897,6 +932,13 @@
                         .style('display','block')
                     d3.event.preventDefault(); // 禁止系统默认右键
                     d3.event.stopPropagation(); // 禁止空白处右键
+                })
+                linkEnter.on('mouseenter',function (d) {
+                    d3.select(this).style("stroke-width","10")
+                        .style("stroke","#C6C1C5")
+                })
+                linkEnter.on('mouseleave',function (d) {
+                    d3.select(this).style("stroke-width","3")
                 })
                 return linkEnter;
             },
