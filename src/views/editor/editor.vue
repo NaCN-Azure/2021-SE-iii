@@ -200,7 +200,7 @@
                     <el-upload
                             drag
                             class="uploading"
-                            action="http://localhost:8003/coinservice/file/getCsv"
+                            action="http://106.15.93.81:8002/coinservice/file/getCsv"
                             accept=".csv"
                             auto-upload=false
                             ref="upload"
@@ -538,6 +538,7 @@
             },
             // 选择domain，展示它的图谱
             selectDomain(domain){
+                console.log(this.domain);
                 this.domain = domain;
                 getLinkByDomainIdAPI(this.domain.id).then(res => {
                     if(res.data.code == 200) {
@@ -993,6 +994,7 @@
                 return linkTextEnter
             },
             updateGraph(){
+                console.log(this.relationships);
                 this.nodesData = this.getNodesFromRelationships(this.relationships);
                 this.linksData = this.getLinksFromRelationships(this.relationships);
                 var _this = this;
@@ -1158,16 +1160,8 @@
             exportXml(){
                 exportGraphXMLAPI(this.domain.id).then(res => {
                     if(res.data.code == 200){
-                        this.$message({
-                            message:'输出成功',
-                            type:'success'
-                        })
                         this.download();
                     }else{
-                        this.$message({
-                            message:'输出失败',
-                            type:'error'
-                        })
                     }
                 })
             },
