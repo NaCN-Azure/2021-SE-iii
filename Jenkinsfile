@@ -32,7 +32,7 @@ pipeline {
         }
         stage('Deploy'){
             steps{
-                sh "docker run -p 8002:8080 --name coin -v /log:/log -d coin:${BUILD_ID}"
+                sh "docker run -p 8002:8002 --name coin -v /log:/log -d coin:${BUILD_ID}"
             }
         }
     }
