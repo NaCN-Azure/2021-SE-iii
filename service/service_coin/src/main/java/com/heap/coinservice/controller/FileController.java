@@ -70,6 +70,7 @@ public class FileController {
             }
             IOUtils.copy(is, response.getOutputStream());
             response.getOutputStream().flush();
+
         } catch (IOException e) {
             return Result.error().message("下载附件失败，请检查文件"+filename+"是否存在");
         }
