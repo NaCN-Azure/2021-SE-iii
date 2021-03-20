@@ -541,11 +541,10 @@
                 console.log(this.domain);
                 this.domain = domain;
                 getLinkByDomainIdAPI(this.domain.id).then(res => {
-                    if(res.data.code == 200) {
                         this.relationships = res.data.data.relationships;
                         console.log(this.relationships);
                         this.updateGraph();
-                    }
+
                 });
             },
             // 其他方法更新图谱时使用
