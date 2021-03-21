@@ -58,4 +58,7 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      */
     @Query("MATCH (n)-[r]-() WHERE id(n) = {0} DELETE n,r")
     void deleteNodeWithLink(@Param("id") Long id);
+
+    @Query("MATCH (n) where n.name = {0} and n.domainId = {1} return n")
+    Entity findByName(@Param("name") String name,@Param("domainId") int domainId);
 }

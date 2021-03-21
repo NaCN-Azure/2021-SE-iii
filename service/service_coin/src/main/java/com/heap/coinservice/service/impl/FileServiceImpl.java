@@ -2,6 +2,7 @@ package com.heap.coinservice.service.impl;
 
 import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
+import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.service.DomainService;
 import com.heap.coinservice.service.EntityService;
 import com.heap.coinservice.service.FileService;
@@ -48,8 +49,17 @@ public class FileServiceImpl implements FileService {
             int size = content.size();
             for (int i = 0; i < size; i++) {
                 List<String> points = content.get(i);
-                Entity startNode = entityService.createNode(points.get(0), DefaultUtil.DEFAULT_COLOR, DefaultUtil.DEFAULT_TYPE, domainId);
-                Entity endNode = entityService.createNode(points.get(1), DefaultUtil.DEFAULT_COLOR, DefaultUtil.DEFAULT_TYPE, domainId);
+                Entity startNode,endNode;
+                Entity check=entityService.findByName(points.get(0),domainId);
+                if(check==null) {
+                    startNode = entityService.createNode(points.get(0), DefaultUtil.DEFAULT_COLOR, DefaultUtil.DEFAULT_TYPE, domainId);
+                }
+                else startNode=check;
+                check=entityService.findByName(points.get(1),domainId);
+                if(check==null) {
+                    endNode = entityService.createNode(points.get(1), DefaultUtil.DEFAULT_COLOR, DefaultUtil.DEFAULT_TYPE, domainId);
+                }
+                else endNode=check;
                 relationshipService.createLink(startNode.getId(), endNode.getId(), points.get(2));
             }
             return true;

@@ -56,4 +56,9 @@ public class EntityServiceImpl implements EntityService {
             return false;
         }
     }
+
+    @Override
+    public Entity findByName(String name,int domainId){
+        return entityMapper.findByName(name,domainId);
+    }
 }

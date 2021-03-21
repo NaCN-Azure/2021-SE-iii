@@ -17,7 +17,7 @@ public class FileUtil {
 
     public static List<List<String>> readCsv(MultipartFile file) throws IOException {
         List<List<String>> rowList = new ArrayList<List<String>>();
-        String charset = "utf-8";
+        String charset = "GBK";
         BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(),charset));
         String line = null;
         while ((line = reader.readLine()) != null) {
