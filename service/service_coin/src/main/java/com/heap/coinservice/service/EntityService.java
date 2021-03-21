@@ -52,4 +52,13 @@ public interface EntityService  {
      */
     boolean deleteNode(Entity entity);
 
+
+    /**
+     * 查询名称结点
+     * @param name
+     * @param domainId
+     * @return
+     */
+    Entity findByName(String name,int domainId);
+
 }
