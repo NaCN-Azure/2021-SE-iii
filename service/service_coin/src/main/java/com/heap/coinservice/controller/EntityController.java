@@ -29,7 +29,7 @@ public class EntityController {
     @PostMapping("/createNode")
     public Result createNode(@RequestBody Entity entity){
         Entity newEntity = entityService.createNode(entity.getName(), entity.getBgColor(), entity.getShape(), entity.getDomainId());
-        return Result.ok().data("entity", newEntity);
+        return newEntity!=null?Result.ok().data("entity", newEntity):Result.error().message("存在同名节点");
     }
 
     @GetMapping("/getNodesByDomainId/{domainId}")

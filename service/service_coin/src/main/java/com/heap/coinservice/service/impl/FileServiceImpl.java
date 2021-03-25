@@ -1,5 +1,6 @@
 package com.heap.coinservice.service.impl;
 
+import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
 import com.heap.coinservice.mapper.EntityMapper;
@@ -7,6 +8,7 @@ import com.heap.coinservice.service.DomainService;
 import com.heap.coinservice.service.EntityService;
 import com.heap.coinservice.service.FileService;
 import com.heap.coinservice.service.RelationshipService;
+import com.heap.coinservice.utils.FileUtil;
 import com.heap.commonutils.DefaultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,67 +73,10 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public boolean exportGraphXml(int domainId) throws TransformerConfigurationException, FileNotFoundException, SAXException {
+    public boolean exportGraphXml(int domainId){
         List<Relationship> relationships=relationshipService.getLinkByDomainId(domainId);
-        String domainName=domainService.getDomainById(domainId).getName();
-        try {
-            SAXTransformerFactory factory = (SAXTransformerFactory) SAXTransformerFactory.newInstance();
-            TransformerHandler handler = factory.newTransformerHandler();
-            Transformer transformer = handler.getTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            Result res = new StreamResult(new FileOutputStream(domainName+".xml"));
-            handler.setResult(res);
-            handler.startDocument();
-            AttributesImpl attributes = new AttributesImpl();
-
-            attributes.addAttribute("","id","id","",domainId+"");
-            handler.startElement("","domain","domain",attributes);
-            handler.characters(domainName.toCharArray(),0,domainName.length());
-            handler.endElement("","domain","domain");
-            attributes.clear();
-
-            handler.startElement("", "Relationships", "Relationships", attributes);
-            for (Relationship rs : relationships) {
-                attributes.clear();
-                if(rs.getId()!=null) {
-                    attributes.addAttribute("", "id", "id", "", rs.getId() + "");
-                }
-                handler.startElement("", "Relationship", "Relationship", attributes);
-
-                attributes.clear();
-                attributes.addAttribute("", "id", "id", "", rs.getStartEntity().getId() + "");
-                handler.startElement("", "startEntity", "startEntity", attributes);
-                handler.characters(rs.getStartEntity().getName().toCharArray(), 0, rs.getStartEntity().getName().length());
-                handler.endElement("", "startEntity", "startEntity");
-
-                attributes.clear();
-                attributes.addAttribute("", "id", "id", "", rs.getEndEntity().getId() + "");
-                handler.startElement("", "EndEntity", "EndEntity", attributes);
-                handler.characters(rs.getEndEntity().getName().toCharArray(), 0, rs.getEndEntity().getName().length());
-                handler.endElement("", "EndEntity", "EndEntity");
-
-                attributes.clear();
-                handler.startElement("", "name", "name", attributes);
-                if(rs.getName()!=null) {
-                    handler.characters(rs.getName().toCharArray(), 0, rs.getName().length());
-                }
-                handler.endElement("", "name", "name");
-
-                handler.startElement("", "type", "type", attributes);
-                String linkType = rs.getType() == 1 ? "normal-link" : "single-node";
-                handler.characters(linkType.toCharArray(), 0, linkType.length());
-                handler.endElement("", "type", "type");
-
-                handler.endElement("", "Relationship", "Relationship");
-            }
-            handler.endElement("", "Relationships", "Relationships");
-            handler.endDocument();
-            return true;
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
+        Domain domain=domainService.getDomainById(domainId);
+        return FileUtil.createXml(relationships,domain);
     }
 
 }

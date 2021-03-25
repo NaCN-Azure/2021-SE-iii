@@ -37,5 +37,9 @@ public class Entity implements Serializable {
 
     private int domainId;
 
+    double x;
+
+    double y;
+
 
 }

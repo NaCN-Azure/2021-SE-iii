@@ -3,7 +3,7 @@ package com.heap.coinservice.controller;
 import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.service.DomainService;
 import com.heap.coinservice.service.FileService;
-import com.heap.commonutils.FileUtil;
+import com.heap.coinservice.utils.FileUtil;
 import com.heap.commonutils.Result;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +47,7 @@ public class FileController {
     public Result download(@PathVariable String domainName, @PathVariable int type, final HttpServletRequest request, final HttpServletResponse response){
         OutputStream os = null;
         InputStream is= null;
-        String filename=domainName;
-        if(type==1){
-            filename=filename+".xml";
-        }
+        String filename=FileUtil.getFileName(domainName,type);
         try {
             os = response.getOutputStream();
             response.reset();
@@ -65,12 +62,8 @@ public class FileController {
             response.setHeader("Content-Disposition", "attachment;filename="+ new String(filename.getBytes("utf-8"), "iso-8859-1"));
             File f = new File(filename);
             is = new FileInputStream(f);
-            if (is == null) {
-                return Result.error().message("下载附件失败，请检查文件"+filename+"是否存在");
-            }
             IOUtils.copy(is, response.getOutputStream());
             response.getOutputStream().flush();
-
         } catch (IOException e) {
             return Result.error().message("下载附件失败，请检查文件"+filename+"是否存在");
         }
@@ -92,6 +85,6 @@ public class FileController {
                 e.printStackTrace();
             }
         }
-        return null;
+        return Result.ok().message("下载成功");
     }
 }
