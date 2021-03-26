@@ -10,12 +10,12 @@
                 csv文件格式：节点-节点-关系 三元组
                 <el-upload
                         drag
-                        action="http://106.15.93.81:8002/coinservice/file/getCsv"
+                        action="http://localhost:8002/coinservice/file/getCsv"
                         class="uploading"
                         on-success="handleCsvSuccess"
                         data="uploadParam"
                         accept=".csv"
-                        auto-upload=false
+                        :auto-upload=false
                         ref="upload"
                 >
                     <i class="el-icon-upload"></i>

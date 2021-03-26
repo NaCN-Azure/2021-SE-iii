@@ -1,4 +1,5 @@
 <template>
+    <!-- 添加节点对话框 -->
     <el-dialog
             :visible="createNodeDialogVisible"
             title="创建节点"
@@ -9,7 +10,7 @@
                 <el-input v-model="createNodeParams.name" style="width: 330px"></el-input>
             </el-form-item>
             <el-form-item label="选择颜色">
-                <el-color-picker v-model="createNodeParams.color">
+                <el-color-picker v-model="createNodeParams.bgColor">
                 </el-color-picker>
             </el-form-item>
             <el-form-item label="选择形状">
@@ -44,6 +45,7 @@
 
 <script>
     import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {createNodeAPI} from "../../../api/entity";
 
     export default {
         name: "createNodeDialog",
@@ -52,11 +54,8 @@
                 'createNodeDialogVisible',
                 'createNodeParams',
                 'shapes',
-                'domainList'
+                'domainList',
             ])
-        },
-        beforeCreate() {
-            this.form = this.$form.createForm(this, { name: 'createNodeDialog' });
         },
         methods:{
             ...mapMutations([
@@ -67,18 +66,13 @@
             ]),
             cancelCreateNode(){
                 this.set_createNodeDialogVisible(false);
-                this.form.resetFields();
             },
-            submitCreateNode(e){
+            submitCreateNode(){
                 this.createNode();
-                this.form.resetFields()
             }
         }
     }
 </script>
 
 <style scoped>
-    /*.el-dialog__footer{*/
-    /*    float: right;*/
-    /*}*/
 </style>

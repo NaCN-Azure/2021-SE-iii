@@ -107,267 +107,29 @@
                     <span class="pl-15">删除</span>
                 </li>
             </ul>
-
-            <!-- 编辑节点对话框 -->
-            <el-dialog
-                    :visible.sync="editNodeFormVisible"
-                    title="编辑节点"
-                    class="dialog"
-            >
-                <el-form>
-                    <el-form-item label="节点名称">
-                        <el-input v-model="editNodeParams.name" style="width: 330px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="选择颜色">
-                        <el-color-picker v-model="editNodeParams.bgColor">
-                        </el-color-picker>
-                    </el-form-item>
-                    <el-form-item label="选择形状">
-                        <el-select disabled v-model="editNodeParams.shape" placeholder="请选择">
-                            <el-option
-                                    v-for="item in shapes"
-                                    :key="item.key"
-                                    :label="item.label"
-                                    :value="item.key">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="所属图谱">
-                        <!-- 默认只能在当前选中的图谱中添加节点 -->
-                        <el-select disabled v-model="editNodeParams.domainId" placeholder="请从现有图谱中选择">
-                            <el-option
-                                    v-for="item in domainList"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-form>
-                <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="cancelEditNode">取消</el-button>
-                    <el-button @click="submitEditNode" type="primary">确认</el-button>
-                </span>
-            </el-dialog>
-
-            <!-- 编辑关系对话框 -->
-            <el-dialog
-                    :visible.sync="editLinkFormVisible"
-                    title="编辑关系"
-                    class="dialog"
-            >
-                <el-form :model="editLinkParams">
-                    <el-form-item label="关系名称">
-                        <el-input v-model="editLinkParams.name" style="width: 330px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="所属图谱">
-                        <!-- 默认只能在当前选中的图谱中添加节点 -->
-                        <el-select disabled v-model="editLinkParams.domainId" placeholder="请从现有图谱中选择">
-                            <el-option
-                                    v-for="item in domainList"
-                                    :key="item.id"
-                                    :label="item.name"
-                                    :value="item.id">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-form>
-                <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="cancelEditLink">取消</el-button>
-                    <el-button @click="submitEditLink" type="primary">确认</el-button>
-                </span>
-            </el-dialog>
         </div>
 
-        <!-- 新建图谱对话框 -->
-        <el-dialog
-                :visible.sync="addDomainDialogVisible"
-                title="新建图谱"
-                class="dialog"
-        >
-            <el-tabs type="border-card" v-model="addDomainType">
-                <el-tab-pane label="创建空白图谱" name="empty">
-                    <el-form>
-                        <el-form-item label="图谱名称">
-                            <el-input v-model="addDomainParams.name"></el-input>
-                        </el-form-item>
-                    </el-form>
-                </el-tab-pane>
-                <el-tab-pane name="import" label="导入csv文件">
-                    csv文件格式：节点-节点-关系 三元组
-                    <el-upload
-                            drag
-                            class="uploading"
-                            action="http://106.15.93.81:8002/coinservice/file/getCsv"
-                            accept=".csv"
-                            auto-upload=false
-                            ref="upload"
-                    >
-                        <i class="el-icon-upload"></i>
-                        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                    </el-upload>
-                </el-tab-pane>
-            </el-tabs>
-            <span slot="footer" class="dialog-footer">
-            <el-button @click="cancelCreateDomain">取消</el-button>
-            <el-button @click="submitCreateDomain" type="primary">确认</el-button>
-        </span>
-        </el-dialog>
-
-        <!-- 创建节点对话框 -->
-        <el-dialog
-                :visible.sync="createNodeDialogVisible"
-                title="添加节点"
-                class="dialog"
-        >
-            <el-form :model="createNodeParams">
-                <el-form-item label="节点名称">
-                    <el-input v-model="createNodeParams.name" style="width: 330px"></el-input>
-                </el-form-item>
-                <el-form-item label="选择颜色">
-                    <el-color-picker v-model="createNodeParams.bgColor">
-                    </el-color-picker>
-                </el-form-item>
-                <el-form-item label="选择形状">
-                    <el-select disabled v-model="createNodeParams.shape" placeholder="请选择">
-                        <el-option
-                                v-for="item in this.shapes"
-                                :key="item.key"
-                                :label="item.label"
-                                :value="item.key">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="所属图谱">
-                    <!-- 默认只能在当前选中的图谱中添加节点 -->
-                    <el-select disabled v-model="createNodeParams.domainId" placeholder="请从现有图谱中选择">
-                        <el-option
-                                v-for="item in domainList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-            </el-form>
-            <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="cancelCreateNode">取消</el-button>
-                <el-button @click="submitCreateNode" type="primary">确认</el-button>
-        </span>
-        </el-dialog>
-
-        <!-- 创建关系对话框 -->
-        <el-dialog
-                :visible.sync="createLinkDialogVisible"
-                title="添加关系"
-                class="dialog"
-        >
-            <el-form :model="createLinkParams">
-                <el-form-item label="关系名称">
-                    <el-input v-model="createLinkParams.name" style="width: 330px"></el-input>
-                </el-form-item>
-                <el-form-item label="起始节点">
-                    <!-- 默认只能在当前选中的图谱中添加节点 -->
-                    <el-select v-model="createLinkParams.fromId" placeholder="请从现有图谱中选择关系源节点" style="width: 330px">
-                        <el-option
-                                v-for="item in nodesData"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="目标节点">
-                    <!-- 默认只能在当前选中的图谱中添加节点 -->
-                    <el-select v-model="createLinkParams.toId" placeholder="请从现有图谱中选择关系目标节点" style="width: 330px">
-                        <el-option
-                                v-for="item in nodesData"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="所属图谱">
-                    <!-- 默认只能在当前选中的图谱中添加节点 -->
-                    <el-select disabled v-model="createNodeParams.domainId" placeholder="请从现有图谱中选择">
-                        <el-option
-                                v-for="item in domainList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="cancelCreateLink">取消</el-button>
-                <el-button @click="submitCreateLink" type="primary">确认</el-button>
-            </span>
-        </el-dialog>
-
-        <!-- 创建关系对话框 -->
-        <el-dialog
-                :visible.sync="addLinkFromNodeDialogVisible"
-                title="创建关系"
-                class="dialog"
-        >
-            <el-form :model="createLinkParams">
-                <el-form-item label="关系名称">
-                    <el-input v-model="createLinkParams.name" style="width: 330px"></el-input>
-                </el-form-item>
-                <el-form-item label="起始节点">
-                    <!-- 默认只能在当前选中的图谱中添加节点 -->
-                    <el-select disabled v-model="createLinkParams.fromId" placeholder="请从现有图谱中选择关系源节点" style="width: 330px">
-                        <el-option
-                                v-for="item in nodesData"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="目标节点">
-                    <!-- 默认只能在当前选中的图谱中添加节点 -->
-                    <el-select v-model="createLinkParams.toId" placeholder="请从现有图谱中选择关系目标节点" style="width: 330px">
-                        <el-option
-                                v-for="item in nodesData"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="所属图谱">
-                    <!-- 默认只能在当前选中的图谱中添加节点 -->
-                    <el-select disabled v-model="createNodeParams.domainId" placeholder="请从现有图谱中选择">
-                        <el-option
-                                v-for="item in domainList"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="cancelCreateLink">取消</el-button>
-                <el-button @click="submitCreateLink" type="primary">确认</el-button>
-            </span>
-        </el-dialog>
+        <create-node-dialog></create-node-dialog>
+        <edit-node-dialog></edit-node-dialog>
+        <add-domain-dialog></add-domain-dialog>
+        <create-link-dialog></create-link-dialog>
+        <edit-link-dialog></edit-link-dialog>
     </div>
 </template>
 
 <script>
     import * as d3 from 'd3';
     import $ from 'jquery';
-    import {createNodeAPI, deleteNodeAPI, updateNodeAPI} from "../../api/entity";
-    import {createDomainAPI, deleteDomainAPI, selectAllDomainAPI} from "../../api/domain";
-    import {createLinkAPI, deleteLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../api/relationship";
+    import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {deleteNodeAPI} from "../../api/entity";
+    import {deleteDomainAPI} from "../../api/domain";
+    import {deleteLinkAPI} from "../../api/relationship";
     import {downloadAPI, exportGraphXMLAPI} from "../../api/file";
+    import CreateNodeDialog from "./components/createNodeDialog";
+    import EditNodeDialog from "./components/editNodeDialog";
+    import AddDomainDialog from "./components/addDomainDialog";
+    import CreateLinkDialog from "./components/createLinkDialog";
+    import EditLinkDialog from "./components/editLinkDialog";
 
     var simulation;
     var nodes;
@@ -378,56 +140,12 @@
 
     export default {
         name: "editor",
+        components: {EditLinkDialog, CreateLinkDialog, AddDomainDialog, EditNodeDialog, CreateNodeDialog},
         inject:['reload'],
         data(){
             return{
-                domainList : [{
-                    id:1,
-                    name:'domain1',
-                },{
-                    id:2,
-                    name: 'domain2',
-                }],
-                domain:{
-                    id:'',
-                    name:''
-                },
-                relationships:[],
-                addDomainType:'empty',
-                createNodeParams:{
-                    name:'',
-                    bgColor:'',
-                    shape:0,
-                    domainId:'',
-                },
-                createLinkParams:{
-                    fromId:'',
-                    toId:'',
-                    name:'',
-                    domainId:'',
-                },
-                addDomainParams: {
-                    id:1,
-                    name:'',
-                },
-                createNodeDialogVisible: false,
-                createLinkDialogVisible: false,
-                addDomainDialogVisible:false,
-                shapes:[
-                    {key:0,label:'圆形'}
-                ],
-
                 // 选中要进行操作的节点
                 selectedNode:{
-                    id:'',
-                    name:'',
-                    bgColor:'',
-                    shape:'',
-                    domainId:'',
-                },
-                editNodeFormVisible:false,
-                addLinkFromNodeDialogVisible: false,
-                editNodeParams:{
                     id:'',
                     name:'',
                     bgColor:'',
@@ -442,17 +160,6 @@
                     toId:'',
                     domainId:'',
                 },
-                editLinkFormVisible: false,
-                editLinkParams: {
-                    id:'',
-                    name:'',
-                    type:'',
-                    fromId:'',
-                    toId:'',
-                },
-                // 要被渲染的nodes和links数组
-                nodesData:[],
-                linksData:[],
             }
         },
 
@@ -481,81 +188,91 @@
 
             this.addMarker();
         },
+        computed:{
+            ...mapGetters([
+                'selectedDomain',
+                'createNodeParams',
+                'domainList',
+                'relationships',
+                'nodesData',
+                'linksData',
+            ])
+        },
 
         methods:{
+            ...mapMutations([
+                'set_selectedDomain',
+                'set_createNodeDialogVisible',
+                'set_createNodeParams',
+                'set_editNodeDialogVisible',
+                'set_editNodeParams',
+                'set_addDomainDialogVisible',
+                'set_createLinkDialogVisible',
+                'set_createLinkParams',
+                'set_editLinkDialogVisible',
+                'set_editLinkParams',
+                'set_nodesData',
+                'set_linksData',
+            ]),
+            ...mapActions([
+                'getAllDomains',
+                'getDomainById',
+            ]),
             createNode(){
-                // 清空表单
-                this.createNodeParams={
-                    name:'',
-                    bgColor:'',
-                    shape:0,
-                    domainId:0,
-                }
-                if(this.domain.id==''){
+                if(this.selectedDomain.id==''){
                     this.$message({
                         message:'请先选择要添加节点的图谱哦',
                         type:'warning'
                     })
                 }else {
-                    this.createNodeParams.domainId = this.domain.id;
-                    this.createNodeDialogVisible = true;
+                    this.set_createNodeParams({
+                        name: '',
+                        bgColor: '',
+                        shape: 0,
+                        domainId: this.selectedDomain.id,
+                    })
+                    this.set_createNodeDialogVisible(true);
                 }
             },
             createLink(){
-                // 清空表单
-                this.createLinkParams ={
-                    fromId:'',
-                    toId:'',
-                    name:'',
-                    domainId:'',
-                }
-                if(this.domain.id==''){
+                if(this.selectedDomain.id==''){
                     this.$message({
                         message:'请先选择要添加关系的图谱哦',
                         type:'warning'
                     })
                 }else{
-                    this.createLinkParams.domainId = this.domain.id;
-                    this.createLinkDialogVisible = true;
+                    this.set_createLinkParams({
+                        fromId:'',
+                        toId:'',
+                        name:'',
+                        domainId: this.selectedDomain.id,
+                    })
+                    this.set_createLinkDialogVisible(true);
                 }
             },
             addDomain(){
-                this.addDomainParams.name = ''; // 清空
-                this.addDomainDialogVisible = true;
+                this.set_addDomainDialogVisible(true);
             },
             addLinkFromNode(){
-                // 清空表单
-                this.createLinkParams ={
-                    fromId:'',
-                    toId:'',
+                this.set_createLinkParams({
+                    fromId: this.selectedNode.id,
+                    toId: '',
                     name:'',
-                    domainId:'',
-                }
-                this.createLinkParams.fromId = this.selectedNode.id;
-                this.createLinkParams.domainId = this.domain.id;
+                    domainId: this.selectedDomain.id,
+                })
                 $('#node-custom-menu').hide();
-                this.addLinkFromNodeDialogVisible = true;
+                this.set_createLinkDialogVisible(true);
             },
             // 选择domain，展示它的图谱
             selectDomain(domain){
-                console.log(this.domain);
-                this.domain = domain;
-                getLinkByDomainIdAPI(this.domain.id).then(res => {
-                        this.relationships = res.data.data.relationships;
-                        console.log(this.relationships);
-                        this.updateGraph();
-
-                });
+                this.set_selectedDomain(domain);
+                this.getDomainById(this.selectedDomain.id);
+                this.updateGraph()
             },
             // 其他方法更新图谱时使用
             selectDomainById(domainId){
-                getLinkByDomainIdAPI(domainId).then(res => {
-                    if(res.data.code == 200) {
-                        this.relationships = res.data.data.relationships;
-                        console.log(this.relationships);
-                        this.updateGraph();
-                    }
-                });
+                this.getDomainById(domainId);
+                this.updateGraph();
             },
             deleteDomain(domainId){
                 this.$confirm('此操作将删除图谱及其中所有节点和关系（不可恢复），是否继续？',{
@@ -591,89 +308,6 @@
                     }
                 )
             },
-            getAllDomains(){
-                selectAllDomainAPI().then(res => {
-                    this.domainList = res.data.data.domain;
-                })
-            },
-
-            /* ===============================createNodeDialog====================================== */
-            cancelCreateNode(){
-                this.createNodeDialogVisible = false;
-            },
-            submitCreateNode(){
-                createNodeAPI(this.createNodeParams).then(res => {
-                    // console.log(res)
-                    if(res.data.code == 200){
-                        this.$message({
-                            message:'添加成功',
-                            type:'success'
-                        })
-                        this.selectDomainById(this.createNodeParams.domainId);
-                        this.createNodeDialogVisible = false;
-                    }
-                })
-            },
-
-            /* ===============================createLinkDialog====================================== */
-            cancelCreateLink(){
-                this.createLinkDialogVisible = false;
-                this.addLinkFromNodeDialogVisible = false;
-            },
-            submitCreateLink(){
-                console.log(this.createLinkParams);
-                createLinkAPI(this.createLinkParams.fromId,
-                    this.createLinkParams.toId,
-                    this.createLinkParams.name
-                ).then(res => {
-                    // console.log(res)
-                    if(res.data.code == 200){
-                        this.$message({
-                            message:'添加成功',
-                            type:'success'
-                        })
-                        this.selectDomainById(this.createLinkParams.domainId);
-                        this.createLinkDialogVisible = false;
-                        this.addLinkFromNodeDialogVisible = false;
-                    }
-                })
-            },
-
-
-            /* ============================addDomainDialog========================== */
-            cancelCreateDomain(){
-                this.addDomainDialogVisible = false;
-            },
-            submitCreateDomain(){
-                if(this.addDomainType == 'empty'){
-                    createDomainAPI(this.addDomainParams).then(res => {
-                        if(res.data.code == 200){
-                            this.$message({
-                                message:'添加成功',
-                                type: 'success'
-                            })
-                            this.addDomainDialogVisible = false
-                            this.getAllDomains()
-                        }else{
-                            this.$message({
-                                message:'添加失败',
-                                type: 'error'
-                            })
-                        }
-                    })
-                }else{
-                    this.addDomainDialogVisible = false
-                    this.$message({
-                        message:'添加成功',
-                        type:'success'
-                    })
-                    this.getAllDomains()
-                }
-            },
-
-
-
-
             /* ==========================showGraph================================== */
             // 从前端返回的relationships数组中获取nodes
             getNodesFromRelationships (relationships) {
@@ -735,10 +369,9 @@
                 return links;
             },
             editNode(){
-                // console.log(this.selectedNode);
-                this.editNodeParams = this.selectedNode; // 编辑节点表单初始值即为选中节点属性值
-                console.log(this.editNodeParams);
-                this.editNodeFormVisible = true;
+                // 编辑节点表单初始值即为选中节点属性值
+                this.set_editNodeParams(this.selectedNode);
+                this.set_editNodeDialogVisible(true);
                 $('#node-custom-menu').hide();
             },
             deleteNode(){
@@ -769,29 +402,9 @@
                 })
                 $('#node-custom-menu').hide();
             },
-            cancelEditNode(){
-                this.editNodeFormVisible = false;
-            },
-            submitEditNode(){
-                updateNodeAPI(this.editNodeParams).then(res => {
-                    if(res.data.code == 200){
-                        this.$message({
-                            message: '修改成功',
-                            type: 'success'
-                        });
-                        this.editNodeFormVisible = false
-                        this.selectDomainById(this.editNodeParams.domainId);
-                    }else{
-                        this.$message({
-                            message: '修改失败',
-                            type:'error'
-                        })
-                    }
-                });
-            },
             editLink(){
-                this.editLinkParams = this.selectedLink; // 编辑节点表单初始值即为选中节点属性值
-                this.editLinkFormVisible = true;
+                this.set_editLinkParams(this.selectedLink);
+                this.set_editLinkDialogVisible(true);
                 $('#link-custom-menu').hide();
             },
             deleteLink(){
@@ -821,26 +434,6 @@
                     })
                 })
                 $('#link-custom-menu').hide();
-            },
-            cancelEditLink(){
-                this.editLinkFormVisible = false;
-            },
-            submitEditLink(){
-                updateLinkAPI(this.editLinkParams).then(res => {
-                    if(res.data.code == 200){
-                        this.$message({
-                            message: '修改成功',
-                            type: 'success'
-                        })
-                        this.editLinkFormVisible = false;
-                        this.selectDomainById(this.editLinkParams.domainId);
-                    }else{
-                        this.$message({
-                            message: '修改失败',
-                            type:'error'
-                        })
-                    }
-                });
             },
             // 监听拖拽开始
             dragStarted(d) {
@@ -993,9 +586,8 @@
                 return linkTextEnter
             },
             updateGraph(){
-                console.log(this.relationships);
-                this.nodesData = this.getNodesFromRelationships(this.relationships);
-                this.linksData = this.getLinksFromRelationships(this.relationships);
+                this.set_nodesData(this.getNodesFromRelationships(this.relationships));
+                this.set_linksData(this.getLinksFromRelationships(this.relationships));
                 var _this = this;
                 var link = links.selectAll('line').data(this.linksData,function(d){ return d.id});
                 link.exit().remove();

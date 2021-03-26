@@ -14,23 +14,22 @@ const getters = {
   photoHotelId:state=>state.admin.photoHotelId,
   addHotelPhotoVisible:state=>state.admin.addHotelPhotoVisible,
 
-  //graph
-  domain: state => state.graph.domain,
-  domainList: state => state.graph.domainList,
-  nodeList: state => state.graph.nodeList,
-  linkList: state => state.graph.linkList,
-  shapes: state => state.graph.shapes,
-  testdata: state => state.graph.testdata,
-  createNodeParams: state => state.graph.createNodeParams,
-  updateNodeParams: state => state.graph.updateNodeParams,
-  createLinkParams: state => state.graph.createLinkParams,
-  updateLinkParams: state => state.graph.updateLinkParams,
-  addDomainParams: state => state.graph.addDomainParams,
-  updateNodeDialogVisible: state => state.graph.updateNodeDialogVisible,
-  updateLinkDialogVisible: state => state.graph.updateLinkDialogVisible,
-  createNodeDialogVisible: state => state.graph.createNodeDialogVisible,
-  createLinkDialogVisible: state => state.graph.updateLinkDialogVisible,
-  addDomainDialogVisible: state => state.graph.addDomainDialogVisible,
-  }
+  // editor
+  selectedDomain: state => state.editor.selectedDomain,
+  createNodeDialogVisible: state => state.editor.createNodeDialogVisible,
+  createNodeParams: state => state.editor.createNodeParams,
+  shapes: state => state.editor.shapes,
+  domainList: state => state.editor.domainList,
+  editNodeDialogVisible: state => state.editor.editNodeDialogVisible,
+  editNodeParams: state => state.editor.editNodeParams,
+  relationships: state => state.editor.relationships,
+  addDomainDialogVisible: state => state.editor.addDomainDialogVisible,
+  createLinkDialogVisible: state => state.editor.createLinkDialogVisible,
+  createLinkParams: state => state.editor.createLinkParams,
+  editLinkDialogVisible: state => state.editor.editLinkDialogVisible,
+  editLinkParams: state => state.editor.editLinkParams,
+  nodesData: state => state.editor.nodesData,
+  linksData: state => state.editor.linksData,
+}
 
   export default getters
