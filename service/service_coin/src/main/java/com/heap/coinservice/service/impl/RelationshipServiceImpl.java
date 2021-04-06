@@ -70,4 +70,9 @@ public class RelationshipServiceImpl implements RelationshipService {
         return graph;
     }
 
+    @Override
+    public int countAllLink(int domainId){
+        return relationshipMapper.countAllLink(domainId);
+    }
+
 }

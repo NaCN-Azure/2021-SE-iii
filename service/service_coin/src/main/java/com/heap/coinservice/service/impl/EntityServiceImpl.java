@@ -65,4 +65,14 @@ public class EntityServiceImpl implements EntityService {
     public Entity findByName(String name,int domainId){
         return entityMapper.findByName(name,domainId);
     }
+
+    @Override
+    public int countAllEntity(int domainId){
+        return entityMapper.countAllEntity(domainId);
+    }
+
+    @Override
+    public Entity updateXY(Long id,double x,double y){
+        return entityMapper.updateXY(id,x,y);
+    }
 }

@@ -34,11 +34,19 @@ public interface RelationshipMapper extends Neo4jRepository<Relationship,Long> {
 
     /**
      *
-     * 返回域内所有关系（包含孤立节点）
+     * 返回域内所有关系（不包含孤立节点）
      * @param domainId
      * @return
      */
     @Query("MATCH (n{domainId:{0}})-[r]->(m{domainId:{0}}) RETURN n,m,r")
     List<Relationship> getLinkByDomainId(@Param("domainId") int domainId);
+
+    /**
+     * 返回关系个数
+     * @param domainId
+     * @return
+     */
+    @Query("MATCH (n{domainId:{0}})-[r]->(m{domainId:{0}}) RETURN COUNT(r)")
+    int countAllLink(@Param("domainId") int domainId);
 
 }

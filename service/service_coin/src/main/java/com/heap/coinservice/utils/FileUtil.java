@@ -23,9 +23,7 @@ import java.util.List;
 
 public class FileUtil {
 
-    public static String FILEPATH="./";
-
-    public static String FILENAME="example";
+    public static String FILEPATH="";
 
     public static List<List<String>> readCsv(MultipartFile file) throws IOException {
         List<List<String>> rowList = new ArrayList<List<String>>();
@@ -45,7 +43,7 @@ public class FileUtil {
         if(type==1){
             filename=domainName+".xml";
         }
-        return filename;
+        return FILEPATH+filename;
     }
 
     public static boolean createXml(List<Relationship> relationships, Domain domain){
@@ -56,7 +54,7 @@ public class FileUtil {
             TransformerHandler handler = factory.newTransformerHandler();
             Transformer transformer = handler.getTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            Result res = new StreamResult(new FileOutputStream(domainName+".xml"));
+            Result res = new StreamResult(new FileOutputStream(FILEPATH+domainName+".xml"));
             handler.setResult(res);
             handler.startDocument();
             AttributesImpl attributes = new AttributesImpl();

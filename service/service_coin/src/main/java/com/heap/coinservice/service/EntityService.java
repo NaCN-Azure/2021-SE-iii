@@ -61,4 +61,20 @@ public interface EntityService  {
      */
     Entity findByName(String name,int domainId);
 
+    /**
+     * 获取域内节点个数
+     * @param domainId
+     * @return
+     */
+    int countAllEntity(int domainId);
+
+    /**
+     * 改变节点坐标
+     * @param id
+     * @param x
+     * @param y
+     * @return
+     */
+    Entity updateXY(Long id,double x,double y);
+
 }

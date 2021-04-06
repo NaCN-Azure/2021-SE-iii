@@ -74,6 +74,4 @@ public class DomainServiceImpl implements DomainService {
     public List<Domain> getAllDomain(){
         return domainMapper.selectAllDomain();
     }
-
-
 }

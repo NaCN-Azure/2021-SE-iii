@@ -59,6 +59,30 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
     @Query("MATCH (n)-[r]-() WHERE id(n) = {0} DELETE n,r")
     void deleteNodeWithLink(@Param("id") Long id);
 
+    /**
+     * 按名称查询节点
+     * @param name
+     * @param domainId
+     * @return
+     */
     @Query("MATCH (n) where n.name = {0} and n.domainId = {1} return n")
     Entity findByName(@Param("name") String name,@Param("domainId") int domainId);
+
+    /**
+     * 统计节点个数
+     * @param domainId
+     * @return
+     */
+    @Query("MATCH (n{domainId:{0}}) return COUNT(n)")
+    int countAllEntity(@Param("domainId") int domainId);
+
+    /**
+     * 改变位置
+     * @param id
+     * @param x
+     * @param y
+     * @return
+     */
+    @Query("MATCH (n) WHERE id(n) = {0} SET n.x = {1},n.y = {2} RETURN n")
+    Entity updateXY(Long id,double x,double y);
 }

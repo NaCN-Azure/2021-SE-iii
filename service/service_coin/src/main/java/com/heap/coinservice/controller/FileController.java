@@ -87,4 +87,9 @@ public class FileController {
         }
         return Result.ok().message("下载成功");
     }
+
+    @PostMapping("/deleteCache/{domainName}/{type}")
+    public Result deleteCache(@PathVariable String domainName, @PathVariable int type){
+        return fileService.deleteFile(domainName,type)?Result.ok().message("清除缓存"):Result.error().message("清除失败");
+    }
 }

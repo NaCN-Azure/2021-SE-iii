@@ -50,5 +50,16 @@ public class EntityController {
         return flag ? Result.ok() : Result.error().message("删除失败");
     }
 
+    @GetMapping("/countNode/{domainId}")
+    public Result countNode(@PathVariable int domainId){
+        return Result.ok().data("CountNode",entityService.countAllEntity(domainId));
+    }
+
+    @PostMapping("/updateXY/{id}/{x}/{y}")
+    public Result updateXY(@PathVariable Long id,@PathVariable double x,@PathVariable double y){
+        Entity entity=entityService.updateXY(id,x,y);
+        return Result.ok().data("newEntity",entity);
+    }
+
 }
 

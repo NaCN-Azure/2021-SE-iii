@@ -52,4 +52,11 @@ public interface RelationshipService {
      */
     List<Relationship> getLinkByDomainId(int domainId);
 
+    /**
+     * 返回关系个数
+     * @param domainId
+     * @return
+     */
+    int countAllLink(int domainId);
+
 }

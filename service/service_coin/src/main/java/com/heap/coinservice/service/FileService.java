@@ -1,6 +1,5 @@
 package com.heap.coinservice.service;
 
-import com.heap.coinservice.entity.Relationship;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
@@ -36,5 +35,12 @@ public interface FileService {
      * @throws SAXException
      */
     boolean exportGraphXml(int domainId) throws TransformerConfigurationException, FileNotFoundException, SAXException;
+
+    /**
+     * 下载结束删除缓存
+     * @param domainName
+     * @param type
+     */
+    boolean deleteFile(String domainName, int type);
 
 }

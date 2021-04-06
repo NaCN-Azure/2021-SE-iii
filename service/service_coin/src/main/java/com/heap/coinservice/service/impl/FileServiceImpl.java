@@ -3,7 +3,6 @@ package com.heap.coinservice.service.impl;
 import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
-import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.service.DomainService;
 import com.heap.coinservice.service.EntityService;
 import com.heap.coinservice.service.FileService;
@@ -12,18 +11,8 @@ import com.heap.coinservice.utils.FileUtil;
 import com.heap.commonutils.DefaultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamResult;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -77,6 +66,20 @@ public class FileServiceImpl implements FileService {
         List<Relationship> relationships=relationshipService.getLinkByDomainId(domainId);
         Domain domain=domainService.getDomainById(domainId);
         return FileUtil.createXml(relationships,domain);
+    }
+
+    @Override
+    public boolean deleteFile(String domainName, int type){
+        String fileName=FileUtil.getFileName(domainName,type);
+        File file=new File(fileName);
+        if(file.exists()){
+            System.out.println("File exist");
+            file.delete();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 }
