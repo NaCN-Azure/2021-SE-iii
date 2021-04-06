@@ -15,6 +15,7 @@ const getters = {
   editLinkParams: state => state.editor.editLinkParams,
   nodesData: state => state.editor.nodesData,
   linksData: state => state.editor.linksData,
+  nodeListVisible: state => state.editor.nodeListVisible,
 }
 
   export default getters

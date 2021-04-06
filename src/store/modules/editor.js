@@ -46,11 +46,10 @@ const editor = {
             {key:0,label:'圆形'}
         ],
         domainList:[],
-
         // 要被渲染的nodes和links数组
         nodesData:[],
         linksData:[],
-
+        nodeListVisible: false,
     },
     mutations:{
         set_createNodeDialogVisible:function (state,data) {
@@ -94,7 +93,10 @@ const editor = {
         },
         set_linksData: function (state, data) {
             state.linksData = data
-        }
+        },
+        set_nodeListVisible: function (state, data) {
+            state.nodeListVisible  = data
+        },
 
     },
     actions:{

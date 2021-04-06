@@ -5,6 +5,7 @@
             <el-scrollbar style="height:100%;width: 300px;overflow-x: hidden">
                 <div class="domain-list-head" style="margin-top: 15px;">
                     <span style="font-size: 16px;color: grey;">图谱列表</span>
+                    <el-tooltip content="添加图谱" placement="right">
                     <el-button
                             size="mini"
                             style="float: right;margin-top: 10px;margin-right: 20px"
@@ -12,7 +13,7 @@
                             @click="addDomain"
                             icon="el-icon-plus"
                             type="primary"
-                    ></el-button>
+                    ></el-button></el-tooltip>
                 </div>
                 <div class="domain-table" style="margin-top: 10px">
                     <el-table
@@ -47,8 +48,8 @@
             <!--编辑面板头部，包括一些操作和节点信息的显示-->
             <div class="edit-tools">
                 <!-- 显示当前图谱名称，可以在这里对图谱名称进行修改 TODO-->
-                <div class="edit-tool" v-show="domain.name!=''" style="display: flex">
-                    当前图谱：<el-input v-model="domain.name" size="small" style="width: 100px"></el-input>
+                <div class="edit-tool" v-show="selectedDomain.name!=''" style="display: flex">
+                    当前图谱：<el-input v-model="selectedDomain.name" size="small" style="width: 100px"></el-input>
                 </div>
                 <!-- 不知道是要搜索什么 -->
 <!--                <div class="edit-tool" v-show="domain.name!=''">-->
@@ -59,8 +60,9 @@
 <!--                            size="small"-->
 <!--                    ></el-input>-->
 <!--                </div>-->
-                <div class="edit-tool" v-show="domain.name!=''">
+                <div class="edit-tool" v-show="selectedDomain.name!=''">
                     <span class="">选中节点：</span>
+                    <span>{{selectedNode.name}}</span>
                 </div>
                 <!-- 固定的工具 -->
                 <div class="fixed-tools">
@@ -83,6 +85,14 @@
 <!--                    <show-graph v-bind:relationships="relationships"></show-graph>-->
                     <svg id="kgGraph" width="1200" height="600"></svg>
                 </el-scrollbar>
+            </div>
+            <div class="right-side-bar">
+                <el-button
+                    @click="showNodeList"
+                    size="mini"
+                    style="display: block"
+                >节点与关系</el-button>
+            <node-list-drawer></node-list-drawer>
             </div>
 
             <!-- 节点操作 -->
@@ -130,6 +140,7 @@
     import AddDomainDialog from "./components/addDomainDialog";
     import CreateLinkDialog from "./components/createLinkDialog";
     import EditLinkDialog from "./components/editLinkDialog";
+    import NodeListDrawer from "./components/nodeListDrawer";
 
     var simulation;
     var nodes;
@@ -140,7 +151,7 @@
 
     export default {
         name: "editor",
-        components: {EditLinkDialog, CreateLinkDialog, AddDomainDialog, EditNodeDialog, CreateNodeDialog},
+        components: {NodeListDrawer, EditLinkDialog, CreateLinkDialog, AddDomainDialog, EditNodeDialog, CreateNodeDialog},
         inject:['reload'],
         data(){
             return{
@@ -196,6 +207,7 @@
                 'relationships',
                 'nodesData',
                 'linksData',
+                'nodeListVisible',
             ])
         },
 
@@ -213,6 +225,7 @@
                 'set_editLinkParams',
                 'set_nodesData',
                 'set_linksData',
+                'set_nodeListVisible',
             ]),
             ...mapActions([
                 'getAllDomains',
@@ -307,6 +320,9 @@
                         })
                     }
                 )
+            },
+            showNodeList (){
+                this.set_nodeListVisible(true);
             },
             /* ==========================showGraph================================== */
             // 从前端返回的relationships数组中获取nodes
@@ -492,6 +508,7 @@
                 nodeEnter.on('mouseenter',function (d) {
                     d3.select(this).style("stroke-width","10")
                         .style("stroke","#C6C1C5")
+                    _this.selectedNode = d;
                 })
                 nodeEnter.on('mouseleave',function (d) {
                     d3.select(this).style("stroke-width","0")
@@ -749,7 +766,7 @@
             //==========导出图片部分结束============
 
             exportXml(){
-                exportGraphXMLAPI(this.domain.id).then(res => {
+                exportGraphXMLAPI(this.selectedDomain.id).then(res => {
                     if(res.data.code == 200){
                         this.download();
                     }else{
@@ -757,7 +774,7 @@
                 })
             },
             download(){
-                downloadAPI(this.domain.name,1).then(res => {
+                downloadAPI(this.selectedDomain.name,1).then(res => {
                     console.log(res);
                     if(res.status == 200){
                         let blob = new Blob([res.data], {type: "application/x-download"}), // 此处为生成doc
@@ -765,7 +782,7 @@
 
                             href = window.URL.createObjectURL(blob);
                         link.href = href;
-                        link.download = this.domain.name+".xml";
+                        link.download = this.selectedDomain.name+".xml";
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
@@ -826,6 +843,13 @@
         top: 50px;
         bottom: 0;
         width: 100%;
+    }
+    .right-side-bar{
+        position: absolute;
+        right: 300px;
+        /*width: 20px;*/
+        height: 100%;
+        vertical-align:center
     }
     .domain-table >>> .el-table__row > td{
         /* 去除表格线 */

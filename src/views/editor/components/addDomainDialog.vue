@@ -4,6 +4,7 @@
             :visible.sync="addDomainDialogVisible"
             title="新建图谱"
             class="dialog"
+            :before-close="cancelAddDomain"
     >
         <el-tabs type="border-card" v-model="addDomainType">
             <el-tab-pane label="创建空白图谱" name="empty">

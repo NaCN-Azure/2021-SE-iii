@@ -4,7 +4,7 @@
             :visible="editLinkDialogVisible"
             title="编辑关系"
             class="dialog"
-            :show-close="false"
+            :before-close="cancelEditLink"
     >
         <el-form :model="editLinkParams">
             <el-form-item label="关系名称">

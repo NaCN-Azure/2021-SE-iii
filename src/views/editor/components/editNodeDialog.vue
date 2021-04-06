@@ -4,6 +4,7 @@
             :visible.sync="editNodeDialogVisible"
             title="编辑节点"
             class="dialog"
+            :before-close="cancelEditNode"
     >
         <el-form>
             <el-form-item label="节点名称">

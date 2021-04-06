@@ -3,7 +3,7 @@
     <el-dialog
             :visible="createNodeDialogVisible"
             title="创建节点"
-            :show-close="false"
+            :before-close="cancelCreateNode"
     >
         <el-form :model="createNodeParams">
             <el-form-item label="节点名称">

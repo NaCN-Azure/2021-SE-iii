@@ -4,7 +4,7 @@
             :visible="createLinkDialogVisible"
             title="添加关系"
             class="dialog"
-            :show-close="false"
+            :before-close="cancelCreateLink"
     >
         <el-form :model="createLinkParams">
             <el-form-item label="关系名称">
