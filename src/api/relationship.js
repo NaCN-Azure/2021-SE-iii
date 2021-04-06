@@ -33,3 +33,10 @@ export function getLinkByDomainIdAPI(domainId){
         method: 'get'
     })
 }
+
+export function countLinkAPI(domainId){
+    return axios({
+        url: `${api.relationshipPre}/countLink/${domainId}`,
+        method: 'get'
+    })
+}

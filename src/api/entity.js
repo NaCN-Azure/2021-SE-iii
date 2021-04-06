@@ -35,10 +35,16 @@ export function deleteNodeAPI(entity){
     })
 }
 
-export function testAPI() {
+export function countNodeAPI(domainId) {
     return axios({
-        url:`${api.entityPre}/test`,
-        method:'get',
+        url: `${api.entityPre}/countNode/${domainId}`,
+        method: 'get',
     })
+}
 
+export function updateXYAPI(id, x, y) {
+    return axios({
+        url: `${api.entityPre}/updateXY/${id}/${x}/${y}`,
+        method: 'post',
+    })
 }
