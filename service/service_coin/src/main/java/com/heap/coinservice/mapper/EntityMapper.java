@@ -39,8 +39,8 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      * @param id name bgColor
      * @return
      */
-    @Query("MATCH (n) WHERE id(n) = {0} SET n.name = {1},n.bgColor = {2} RETURN n")
-    Entity updateNode(@Param("id") Long id, @Param("name") String name, @Param("bgColor") String bgColor);
+    @Query("MATCH (n) WHERE id(n) = {0} SET n.name = {1},n.description = {2} RETURN n")
+    Entity updateNode(@Param("id") Long id, @Param("name") String name, @Param("description") String description);
 
     /**
      *

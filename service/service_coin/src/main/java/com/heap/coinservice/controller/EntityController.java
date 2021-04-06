@@ -3,6 +3,7 @@ package com.heap.coinservice.controller;
 
 import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.service.EntityService;
+import com.heap.coinservice.service.TypeService;
 import com.heap.commonutils.Result;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class EntityController {
 
     @PostMapping("/createNode")
     public Result createNode(@RequestBody Entity entity){
-        Entity newEntity = entityService.createNode(entity.getName(), entity.getBgColor(), entity.getShape(), entity.getDomainId());
+        Entity newEntity = entityService.createNode(entity.getName(), entity.getBgColor(), entity.getShape(),entity.getNodeType(), entity.getDomainId(),entity.getDescription());
         return newEntity != null ? Result.ok().data("entity", newEntity) : Result.error().message("存在同名节点");
     }
 

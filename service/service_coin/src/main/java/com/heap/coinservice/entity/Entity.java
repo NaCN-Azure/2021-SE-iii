@@ -41,5 +41,9 @@ public class Entity implements Serializable {
 
     double y;
 
+    private String nodeType;
+
+    private String description;
+
 
 }

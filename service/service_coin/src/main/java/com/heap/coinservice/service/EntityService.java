@@ -22,11 +22,12 @@ public interface EntityService  {
      * 创建节点
      * @param name
      * @param color
-     * @param type
+     * @param shape
      * @param domainId
+     * @param description
      * @return
      */
-    Entity createNode(String name, String color, int type, int domainId);
+    Entity createNode(String name, String color,int shape,  String type,int domainId,String description);
 
     /**
      *

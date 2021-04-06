@@ -4,6 +4,7 @@ import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.service.EntityService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.heap.coinservice.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.stereotype.Service;
@@ -22,13 +23,16 @@ import java.util.Optional;
 @Service
 public class EntityServiceImpl implements EntityService {
     @Autowired
+    private TypeService typeService;
+
+    @Autowired
     private EntityMapper entityMapper;
 
     @Override
-    public Entity createNode(String name, String color, int type, int domainId){
+    public Entity createNode(String name, String color, int shape, String type,int domainId,String description){
         Entity entity = entityMapper.findByName(name,domainId);
         if(entity == null) {
-            entity = Entity.builder().name(name).bgColor(color).shape(type).domainId(domainId).build();
+            entity = Entity.builder().name(name).bgColor(color).nodeType(type).shape(shape).domainId(domainId).x(0).y(0).build();
             return entityMapper.save(entity);
         }
         else {
@@ -43,7 +47,7 @@ public class EntityServiceImpl implements EntityService {
 
     @Override
     public Entity updateNode(Entity entity){
-        return entityMapper.updateNode(entity.getId(), entity.getName(), entity.getBgColor());
+        return entityMapper.updateNode(entity.getId(), entity.getName(), entity.getDescription());
     }
 
     @Override
