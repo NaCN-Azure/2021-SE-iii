@@ -59,7 +59,7 @@ public interface EntityService  {
      * @param domainId
      * @return
      */
-    Entity findByName(String name,int domainId);
+    Entity findByName(String name, int domainId);
 
     /**
      * 获取域内节点个数
@@ -75,6 +75,6 @@ public interface EntityService  {
      * @param y
      * @return
      */
-    Entity updateXY(Long id,double x,double y);
+    Entity updateXY(Long id, double x, double y);
 
 }

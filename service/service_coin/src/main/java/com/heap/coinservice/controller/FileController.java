@@ -23,37 +23,37 @@ import java.util.List;
 public class FileController {
 
     @Autowired
-    FileService fileService;
+    private FileService fileService;
 
     @Autowired
-    DomainService domainService;
+    private DomainService domainService;
 
     @PostMapping("/getCsv")
-    public Result getCsvFile(@RequestParam(value="file",required = true) MultipartFile file) throws IOException {
-        List<List<String>> content=FileUtil.readCsv(file);
-        Domain csvDomain=Domain.builder().name(file.getOriginalFilename()).build();
-        int domainId=domainService.createDomain(csvDomain);
-        return fileService.createGraphByCsv(content,domainId)?Result.ok().message("导入成功"):Result.error().message("导入失败");
+    public Result getCsvFile(@RequestParam(value="file", required = true) MultipartFile file) throws IOException {
+        List<List<String>> content = FileUtil.readCsv(file);
+        Domain csvDomain = Domain.builder().name(file.getOriginalFilename()).build();
+        int domainId = domainService.createDomain(csvDomain);
+        return fileService.createGraphByCsv(content, domainId) ? Result.ok().message("导入成功") : Result.error().message("导入失败");
     }
 
-    @GetMapping(value="/exportXml/{domainId}",produces = "application/json;charset=UTF-8")
+    @GetMapping(value="/exportXml/{domainId}", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Result exportGraphXML(@PathVariable int domainId,final HttpServletRequest request, final HttpServletResponse response)
+    public Result exportGraphXML(@PathVariable int domainId, final HttpServletRequest request, final HttpServletResponse response)
             throws FileNotFoundException, SAXException, TransformerConfigurationException {
-        return fileService.exportGraphXml(domainId)?Result.ok().message("输出成功"):Result.error().message("输出失败");
+        return fileService.exportGraphXml(domainId) ? Result.ok().message("输出成功") : Result.error().message("输出失败");
     }
 
     @GetMapping("/download/{domainName}/{type}")
     public Result download(@PathVariable String domainName, @PathVariable int type, final HttpServletRequest request, final HttpServletResponse response){
         OutputStream os = null;
-        InputStream is= null;
-        String filename=FileUtil.getFileName(domainName,type);
+        InputStream is = null;
+        String filename = FileUtil.getFileName(domainName,type);
         try {
             os = response.getOutputStream();
             response.reset();
             response.setContentType("application/x-download;charset=utf-8");
             response.setHeader("Access-Control-Allow-Origin", "*");
-//        response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
+            //response.addHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
             // 解决预请求（发送2次请求），此问题也可在 nginx 中作相似设置解决。
             response.setHeader("Access-Control-Allow-Headers", "x-requested-with,Cache-Control,Pragma,Content-Type,Token, Content-Type");
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
@@ -65,7 +65,7 @@ public class FileController {
             IOUtils.copy(is, response.getOutputStream());
             response.getOutputStream().flush();
         } catch (IOException e) {
-            return Result.error().message("下载附件失败，请检查文件"+filename+"是否存在");
+            return Result.error().message("下载附件失败，请检查文件" + filename + "是否存在");
         }
         //文件的关闭放在finally中
         finally
@@ -90,6 +90,6 @@ public class FileController {
 
     @PostMapping("/deleteCache/{domainName}/{type}")
     public Result deleteCache(@PathVariable String domainName, @PathVariable int type){
-        return fileService.deleteFile(domainName,type)?Result.ok().message("清除缓存"):Result.error().message("清除失败");
+        return fileService.deleteFile(domainName,type) ? Result.ok().message("清除缓存") : Result.error().message("清除失败");
     }
 }

@@ -40,7 +40,7 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      * @return
      */
     @Query("MATCH (n) WHERE id(n) = {0} SET n.name = {1},n.bgColor = {2} RETURN n")
-    Entity updateNode(@Param("id") Long id,@Param("name") String name,@Param("bgColor") String bgColor);
+    Entity updateNode(@Param("id") Long id, @Param("name") String name, @Param("bgColor") String bgColor);
 
     /**
      *
@@ -66,7 +66,7 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      * @return
      */
     @Query("MATCH (n) where n.name = {0} and n.domainId = {1} return n")
-    Entity findByName(@Param("name") String name,@Param("domainId") int domainId);
+    Entity findByName(@Param("name") String name, @Param("domainId") int domainId);
 
     /**
      * 统计节点个数
@@ -84,5 +84,5 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      * @return
      */
     @Query("MATCH (n) WHERE id(n) = {0} SET n.x = {1},n.y = {2} RETURN n")
-    Entity updateXY(Long id,double x,double y);
+    Entity updateXY(Long id, double x, double y);
 }

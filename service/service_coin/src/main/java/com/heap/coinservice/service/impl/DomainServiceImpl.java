@@ -36,8 +36,8 @@ public class DomainServiceImpl implements DomainService {
 
     @Override
     public int createDomain(Domain domain){
-        Domain checkDomain=domainMapper.selectDomainByName(domain.getName());
-        if(checkDomain!=null){
+        Domain checkDomain = domainMapper.selectDomainByName(domain.getName());
+        if(checkDomain != null){
             return -1;
         }
         else {
@@ -49,19 +49,19 @@ public class DomainServiceImpl implements DomainService {
     @Override
     public void deleteDomain(int domainId){
         domainMapper.deleteDomain(domainId);
-        List<Entity> entities=entityMapper.getNodeByDomainId(domainId);
-        List<Relationship> relationships=relationshipMapper.getLinkByDomainId(domainId);
-        for(Entity entity:entities){
+        List<Entity> entities = entityMapper.getNodeByDomainId(domainId);
+        List<Relationship> relationships = relationshipMapper.getLinkByDomainId(domainId);
+        for(Entity entity : entities){
             entityMapper.delete(entity);
         }
-        for(Relationship relationship:relationships){
+        for(Relationship relationship : relationships){
             relationshipMapper.delete(relationship);
         }
     }
 
     @Override
     public Domain updateDomain(Domain domain){
-         domainMapper.updateDomain(domain.getName(),domain.getId());
+         domainMapper.updateDomain(domain.getName(), domain.getId());
          return domainMapper.selectDomain(domain.getId());
     }
 

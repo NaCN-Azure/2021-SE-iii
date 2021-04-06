@@ -39,36 +39,36 @@ public class FileUtil {
     }
 
     public static String getFileName(String domainName, int type){
-        String filename="";
-        if(type==1){
-            filename=domainName+".xml";
+        String filename = "";
+        if(type == 1){
+            filename = domainName + ".xml";
         }
-        return FILEPATH+filename;
+        return FILEPATH + filename;
     }
 
     public static boolean createXml(List<Relationship> relationships, Domain domain){
-        int domainId=domain.getId();
-        String domainName=domain.getName();
+        int domainId = domain.getId();
+        String domainName = domain.getName();
         try {
             SAXTransformerFactory factory = (SAXTransformerFactory) SAXTransformerFactory.newInstance();
             TransformerHandler handler = factory.newTransformerHandler();
             Transformer transformer = handler.getTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            Result res = new StreamResult(new FileOutputStream(FILEPATH+domainName+".xml"));
+            Result res = new StreamResult(new FileOutputStream(FILEPATH + domainName + ".xml"));
             handler.setResult(res);
             handler.startDocument();
             AttributesImpl attributes = new AttributesImpl();
 
-            attributes.addAttribute("","id","id","",domainId+"");
-            handler.startElement("","domain","domain",attributes);
-            handler.characters(domainName.toCharArray(),0,domainName.length());
-            handler.endElement("","domain","domain");
+            attributes.addAttribute("", "id", "id", "", domainId+"");
+            handler.startElement("", "domain", "domain", attributes);
+            handler.characters(domainName.toCharArray(), 0, domainName.length());
+            handler.endElement("", "domain", "domain");
             attributes.clear();
 
             handler.startElement("", "Relationships", "Relationships", attributes);
             for (Relationship rs : relationships) {
                 attributes.clear();
-                if(rs.getId()!=null) {
+                if(rs.getId() != null) {
                     attributes.addAttribute("", "id", "id", "", rs.getId() + "");
                 }
                 handler.startElement("", "Relationship", "Relationship", attributes);
@@ -87,7 +87,7 @@ public class FileUtil {
 
                 attributes.clear();
                 handler.startElement("", "name", "name", attributes);
-                if(rs.getName()!=null) {
+                if(rs.getName() != null) {
                     handler.characters(rs.getName().toCharArray(), 0, rs.getName().length());
                 }
                 handler.endElement("", "name", "name");

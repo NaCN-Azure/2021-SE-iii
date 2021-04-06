@@ -26,13 +26,14 @@ public class EntityServiceImpl implements EntityService {
 
     @Override
     public Entity createNode(String name, String color, int type, int domainId){
-        Entity entity;
-        entity=entityMapper.findByName(name,domainId);
-        if(entity==null) {
+        Entity entity = entityMapper.findByName(name,domainId);
+        if(entity == null) {
             entity = Entity.builder().name(name).bgColor(color).shape(type).domainId(domainId).build();
             return entityMapper.save(entity);
         }
-        else return null;
+        else {
+            return null;
+        }
     }
 
     @Override
@@ -62,7 +63,7 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Entity findByName(String name,int domainId){
+    public Entity findByName(String name, int domainId){
         return entityMapper.findByName(name,domainId);
     }
 
@@ -72,7 +73,7 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Entity updateXY(Long id,double x,double y){
+    public Entity updateXY(Long id, double x, double y){
         return entityMapper.updateXY(id,x,y);
     }
 }

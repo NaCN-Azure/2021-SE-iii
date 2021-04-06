@@ -24,7 +24,7 @@ public interface FileService {
      * @param domainId
      * @return
      */
-    boolean createGraphByCsv(List<List<String>> content,int domainId);
+    boolean createGraphByCsv(List<List<String>> content, int domainId);
 
     /**
      * 导出图谱为csv文件

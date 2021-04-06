@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.*;
 public class DomainController {
 
     @Autowired
-    DomainService domainService;
+    private DomainService domainService;
 
     @PostMapping("/createDomain")
     public Result createDomain(@RequestBody Domain domain) {
         int flag=domainService.createDomain(domain);
-        return flag!=-1?Result.ok().message("创建成功"):Result.error().message("名称重复");
+        return flag != -1 ? Result.ok().message("创建成功") : Result.error().message("名称重复");
     }
 
     @PostMapping("/updateDomain")
     public Result updateDomain(@RequestBody Domain domain){
-        return Result.ok().data("domain",domainService.updateDomain(domain));
+        return Result.ok().data("domain", domainService.updateDomain(domain));
     }
 
     @DeleteMapping("/deleteDomain/{domainId}")
@@ -33,12 +33,12 @@ public class DomainController {
 
     @GetMapping("/selectDomainById/{domainId}")
     public Result selectDomainById(@PathVariable int domainId){
-        return Result.ok().data("domain",domainService.getDomainById(domainId));
+        return Result.ok().data("domain", domainService.getDomainById(domainId));
     }
 
     @GetMapping("/selectAllDomain")
     public Result selectAllDomain(){
-        return Result.ok().data("domain",domainService.getAllDomain());
+        return Result.ok().data("domain", domainService.getAllDomain());
     }
 
 }

@@ -47,13 +47,13 @@ public class RelationshipController {
 
     @GetMapping("/getLinkByDomainId/{domainId}")
     public Result getGraph(@PathVariable int domainId){
-        List<Relationship> relationshipList=relationshipService.getLinkByDomainId(domainId);
-        return Result.ok().data("relationships",relationshipList);
+        List<Relationship> relationshipList = relationshipService.getLinkByDomainId(domainId);
+        return Result.ok().data("relationships", relationshipList);
     }
 
     @GetMapping("/countLink/{domainId}")
     public Result countLink(@PathVariable int domainId){
-        return Result.ok().data("CountLink",relationshipService.countAllLink(domainId));
+        return Result.ok().data("total", relationshipService.countAllLink(domainId));
     }
 
 }

@@ -38,7 +38,7 @@ public interface DomainMapper  {
      * @param id
      */
     @Update("update domain set name = #{name} where id =#{id}")
-    void updateDomain(@Param("name") String name,@Param("id") int id);
+    void updateDomain(@Param("name") String name, @Param("id") int id);
 
     /**
      * 返回当前域

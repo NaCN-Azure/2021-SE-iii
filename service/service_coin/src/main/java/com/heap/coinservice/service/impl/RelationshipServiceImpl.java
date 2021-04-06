@@ -60,10 +60,10 @@ public class RelationshipServiceImpl implements RelationshipService {
 
     @Override
     public List<Relationship> getLinkByDomainId(int domainId){
-        List<Relationship> graph=relationshipMapper.getLinkByDomainId(domainId);
-        List<Entity> noneNodes=entityMapper.getUnLinkNodes(domainId);
-        for(Entity node:noneNodes){
-            Relationship singleRelationship=Relationship.builder().domainId(domainId).startEntity(node).endEntity(node)
+        List<Relationship> graph = relationshipMapper.getLinkByDomainId(domainId);
+        List<Entity> noneNodes = entityMapper.getUnLinkNodes(domainId);
+        for(Entity node : noneNodes){
+            Relationship singleRelationship = Relationship.builder().domainId(domainId).startEntity(node).endEntity(node)
                     .fromId(node.getId()).toId(node.getId()).type(-1).build();
             graph.add(singleRelationship);//孤立节点的关系type是-1 初始节点和终止节点都是它自己
         }

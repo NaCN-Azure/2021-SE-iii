@@ -35,22 +35,26 @@ public class FileServiceImpl implements FileService {
     private DomainService domainService;
 
     @Override
-    public boolean createGraphByCsv(List<List<String>> content,int domainId){
+    public boolean createGraphByCsv(List<List<String>> content, int domainId){
         try {
             int size = content.size();
             for (int i = 0; i < size; i++) {
                 List<String> points = content.get(i);
-                Entity startNode,endNode;
-                Entity check=entityService.findByName(points.get(0),domainId);
-                if(check==null) {
+                Entity startNode, endNode;
+                Entity check = entityService.findByName(points.get(0), domainId);
+                if(check == null) {
                     startNode = entityService.createNode(points.get(0), DefaultUtil.DEFAULT_COLOR, DefaultUtil.DEFAULT_TYPE, domainId);
                 }
-                else startNode=check;
-                check=entityService.findByName(points.get(1),domainId);
-                if(check==null) {
+                else {
+                    startNode = check;
+                }
+                check = entityService.findByName(points.get(1),domainId);
+                if(check == null) {
                     endNode = entityService.createNode(points.get(1), DefaultUtil.DEFAULT_COLOR, DefaultUtil.DEFAULT_TYPE, domainId);
                 }
-                else endNode=check;
+                else {
+                    endNode = check;
+                }
                 relationshipService.createLink(startNode.getId(), endNode.getId(), points.get(2));
             }
             return true;
@@ -63,15 +67,15 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public boolean exportGraphXml(int domainId){
-        List<Relationship> relationships=relationshipService.getLinkByDomainId(domainId);
-        Domain domain=domainService.getDomainById(domainId);
-        return FileUtil.createXml(relationships,domain);
+        List<Relationship> relationships = relationshipService.getLinkByDomainId(domainId);
+        Domain domain = domainService.getDomainById(domainId);
+        return FileUtil.createXml(relationships, domain);
     }
 
     @Override
     public boolean deleteFile(String domainName, int type){
-        String fileName=FileUtil.getFileName(domainName,type);
-        File file=new File(fileName);
+        String fileName = FileUtil.getFileName(domainName, type);
+        File file = new File(fileName);
         if(file.exists()){
             System.out.println("File exist");
             file.delete();

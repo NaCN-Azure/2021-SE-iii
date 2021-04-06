@@ -30,7 +30,7 @@ public interface RelationshipMapper extends Neo4jRepository<Relationship,Long> {
      * @return
      */
     @Query("match (n)<-[r]-(m) where id(r)={0} set r.name={1} return r")
-    Relationship updateLink(@Param("id") Long id,@Param("name") String name);
+    Relationship updateLink(@Param("id") Long id, @Param("name") String name);
 
     /**
      *

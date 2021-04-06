@@ -29,7 +29,7 @@ public class EntityController {
     @PostMapping("/createNode")
     public Result createNode(@RequestBody Entity entity){
         Entity newEntity = entityService.createNode(entity.getName(), entity.getBgColor(), entity.getShape(), entity.getDomainId());
-        return newEntity!=null?Result.ok().data("entity", newEntity):Result.error().message("存在同名节点");
+        return newEntity != null ? Result.ok().data("entity", newEntity) : Result.error().message("存在同名节点");
     }
 
     @GetMapping("/getNodesByDomainId/{domainId}")
@@ -52,13 +52,13 @@ public class EntityController {
 
     @GetMapping("/countNode/{domainId}")
     public Result countNode(@PathVariable int domainId){
-        return Result.ok().data("CountNode",entityService.countAllEntity(domainId));
+        return Result.ok().data("total", entityService.countAllEntity(domainId));
     }
 
     @PostMapping("/updateXY/{id}/{x}/{y}")
-    public Result updateXY(@PathVariable Long id,@PathVariable double x,@PathVariable double y){
-        Entity entity=entityService.updateXY(id,x,y);
-        return Result.ok().data("newEntity",entity);
+    public Result updateXY(@PathVariable Long id, @PathVariable double x, @PathVariable double y){
+        Entity entity = entityService.updateXY(id,x,y);
+        return Result.ok().data("newEntity", entity);
     }
 
 }
