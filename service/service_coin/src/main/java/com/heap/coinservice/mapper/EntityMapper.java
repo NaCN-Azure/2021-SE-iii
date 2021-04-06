@@ -85,4 +85,31 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      */
     @Query("MATCH (n) WHERE id(n) = {0} SET n.x = {1},n.y = {2} RETURN n")
     Entity updateXY(Long id, double x, double y);
+
+    /**
+     *
+     * 统计一个类型的域节点个数
+     * @param domainId
+     * @param type
+     * @return
+     */
+    @Query("MATCH (n{domainId:{0}}) where n.type = {1} return COUNT(n)")
+    int countEntitiesByType(@Param("domainId") int domainId,@Param("type") String type);
+
+    /**
+     *
+     * 统计一个类型的所有域节点个数
+     * @param type
+     * @return
+     */
+    @Query("MATCH (n) where n.type = {0} return COUNT(n)")
+    int countEntitiesByTypeNoDomain(@Param("type") String type);
+
+    /**
+     * 更新所有节点颜色
+     * @param type
+     * @param color
+     */
+    @Query("MATCH (n{type:{0}}) set n.bgColor = {1}")
+    void updateAllColors(@Param("type") String type,@Param("color") String color);
 }

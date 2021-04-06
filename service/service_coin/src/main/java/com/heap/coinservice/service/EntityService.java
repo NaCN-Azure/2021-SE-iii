@@ -78,4 +78,19 @@ public interface EntityService  {
      */
     Entity updateXY(Long id, double x, double y);
 
+    /**
+     * 统计某类型节点个数
+     * @param domainId
+     * @param type
+     * @return
+     */
+    int countEntitiesByType(int domainId,String type);
+
+    /**
+     * 改变类型颜色
+     * @param type
+     * @param color
+     */
+    void updateColors(String type,String color);
+
 }

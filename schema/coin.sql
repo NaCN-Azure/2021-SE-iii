@@ -11,7 +11,7 @@
  Target Server Version : 80019
  File Encoding         : 65001
 
- Date: 16/03/2021 18:42:50
+ Date: 06/04/2021 17:47:49
 */
 
 SET NAMES utf8mb4;
@@ -25,45 +25,21 @@ CREATE TABLE `domain`  (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of domain
+-- Table structure for nodetype
 -- ----------------------------
-
--- ----------------------------
--- Table structure for entity
--- ----------------------------
-DROP TABLE IF EXISTS `entity`;
-CREATE TABLE `entity`  (
-  `id` int NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `bg_color` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `shape` int NULL DEFAULT NULL,
-  `domain_id` int NULL DEFAULT NULL,
+DROP TABLE IF EXISTS `nodetype`;
+CREATE TABLE `nodetype`  (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `color` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of entity
--- ----------------------------
-
--- ----------------------------
--- Table structure for relationship
--- ----------------------------
-DROP TABLE IF EXISTS `relationship`;
-CREATE TABLE `relationship`  (
-  `id` int NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `type` int NULL DEFAULT NULL,
-  `from_id` int NULL DEFAULT NULL,
-  `to_id` int NULL DEFAULT NULL,
-  `domain_id` int NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of relationship
+-- Records of nodetype
 -- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

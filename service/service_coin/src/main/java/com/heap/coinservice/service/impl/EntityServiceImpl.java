@@ -22,6 +22,7 @@ import java.util.Optional;
  */
 @Service
 public class EntityServiceImpl implements EntityService {
+
     @Autowired
     private TypeService typeService;
 
@@ -32,7 +33,8 @@ public class EntityServiceImpl implements EntityService {
     public Entity createNode(String name, String color, int shape, String type,int domainId,String description){
         Entity entity = entityMapper.findByName(name,domainId);
         if(entity == null) {
-            entity = Entity.builder().name(name).bgColor(color).nodeType(type).shape(shape).domainId(domainId).x(0).y(0).build();
+            color=typeService.insertType(color,type);
+            entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).x(0).y(0).description(description).build();
             return entityMapper.save(entity);
         }
         else {
@@ -57,6 +59,9 @@ public class EntityServiceImpl implements EntityService {
         if(check.isPresent()) {
             entityMapper.deleteNodeWithLink(id);
             if(entityMapper.findById(id).isPresent()){
+                if(entityMapper.countEntitiesByTypeNoDomain(entity.getType())==1){
+                    typeService.deleteType(entity.getType());
+                }
                 entityMapper.delete(entity);
             }
             return true;
@@ -77,7 +82,18 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
+    public int countEntitiesByType(int domainId,String type){
+        return entityMapper.countEntitiesByType(domainId,type);
+    }
+
+    @Override
     public Entity updateXY(Long id, double x, double y){
         return entityMapper.updateXY(id,x,y);
+    }
+
+    @Override
+    public void updateColors(String type,String color){
+        typeService.updateColor(type,color);
+        entityMapper.updateAllColors(type,color);
     }
 }

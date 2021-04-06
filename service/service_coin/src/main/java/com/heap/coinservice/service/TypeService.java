@@ -1,6 +1,5 @@
 package com.heap.coinservice.service;
 
-import com.heap.coinservice.entity.Domain;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,5 +15,14 @@ import java.util.List;
 @Service
 public interface TypeService {
 
+    String insertType(String color,String nodeType);
+
+    void updateColor(String type, String color);
+
+    void deleteType(String type);
+
+    String searchColorByType(String nodeType);
+
+    List<String> searchAll();
 
 }

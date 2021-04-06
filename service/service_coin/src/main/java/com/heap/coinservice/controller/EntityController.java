@@ -27,9 +27,12 @@ public class EntityController {
     @Autowired
     private EntityService entityService;
 
+    @Autowired
+    private TypeService typeService;
+
     @PostMapping("/createNode")
     public Result createNode(@RequestBody Entity entity){
-        Entity newEntity = entityService.createNode(entity.getName(), entity.getBgColor(), entity.getShape(),entity.getNodeType(), entity.getDomainId(),entity.getDescription());
+        Entity newEntity = entityService.createNode(entity.getName(), entity.getBgColor(), entity.getShape(),entity.getType(), entity.getDomainId(),entity.getDescription());
         return newEntity != null ? Result.ok().data("entity", newEntity) : Result.error().message("存在同名节点");
     }
 
@@ -56,10 +59,35 @@ public class EntityController {
         return Result.ok().data("total", entityService.countAllEntity(domainId));
     }
 
+    @GetMapping("/countNodeByType/{domainId}/{type}")
+    public Result countNodeByType(@PathVariable int domainId,@PathVariable String type){
+        return Result.ok().data("total", entityService.countEntitiesByType(domainId,type));
+    }
+
     @PostMapping("/updateXY/{id}/{x}/{y}")
     public Result updateXY(@PathVariable Long id, @PathVariable double x, @PathVariable double y){
         Entity entity = entityService.updateXY(id,x,y);
         return Result.ok().data("newEntity", entity);
+    }
+
+    @GetMapping("/getTypes")
+    public Result getTypes(){
+        return Result.ok().data("Types",typeService.searchAll());
+    }
+
+    @PostMapping("/updateAllColors/{type}/{color}")
+    public Result updateAllColors(@PathVariable String type,@PathVariable String color){
+        entityService.updateColors(type,color);
+        return Result.ok().message("Already change");
+    }
+
+    @PostMapping("/createType/{type}/{color}")
+    public Result createType(@PathVariable String type,@PathVariable String color){
+        String checkColor=typeService.searchColorByType(type);
+        if(checkColor==null){
+            return Result.ok().data("done!",typeService.insertType(color,type));
+        }
+        else return Result.error().message("type exists");
     }
 
 }
