@@ -66,9 +66,9 @@
                 </div>
                 <!-- 固定的工具 -->
                 <div class="fixed-tools">
-                    <el-button class="edit-tool" size="small" type="primary" @click="createNode">添加节点</el-button>
-                    <el-button class="edit-tool" size="small" type="primary" @click="createLink">添加关系</el-button>
-<!--                    <el-button class="edit-tool" size="small" @click="saveGraph">保存</el-button>-->
+
+                    <el-button class="edit-tool" size="small" type="primary" @click="showCreateNodeDialog">添加节点</el-button>
+                    <el-button class="edit-tool" size="small" type="primary" @click="showCreateLinkDialog">添加关系</el-button>
                     <el-dropdown>
                         <el-button size="small" class="edit-tool">
                             导出<i class="el-icon-arrow-down el-icon--right"></i>
@@ -257,7 +257,7 @@
 
                 this.addMarker();
             },
-            createNode(){
+            showCreateNodeDialog(){
                 if(this.selectedDomain.id==''){
                     this.$message({
                         message:'请先选择要添加节点的图谱哦',
@@ -277,7 +277,7 @@
                     this.set_createNodeDialogVisible(true);
                 }
             },
-            createLink(){
+            showCreateLinkDialog(){
                 if(this.selectedDomain.id==''){
                     this.$message({
                         message:'请先选择要添加关系的图谱哦',
