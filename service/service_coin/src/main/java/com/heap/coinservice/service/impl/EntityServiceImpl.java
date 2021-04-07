@@ -3,10 +3,8 @@ package com.heap.coinservice.service.impl;
 import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.service.EntityService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.heap.coinservice.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -87,13 +85,18 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Entity updateXY(Long id, double x, double y){
-        return entityMapper.updateXY(id,x,y);
+    public void updateXY(Long id, double x, double y){
+        entityMapper.updateXY(id, x, y);
     }
 
     @Override
     public void updateColors(String type,String color){
         typeService.updateColor(type,color);
         entityMapper.updateAllColors(type,color);
+    }
+
+    @Override
+    public List<Entity> getNodeByType(int domainId,String type){
+        return entityMapper.getNodeByType(domainId,type);
     }
 }

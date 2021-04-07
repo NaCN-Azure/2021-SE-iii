@@ -1,7 +1,6 @@
 package com.heap.coinservice.service;
 
 import com.heap.coinservice.entity.Entity;
-import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,13 +69,12 @@ public interface EntityService  {
     int countAllEntity(int domainId);
 
     /**
-     * 改变节点坐标
+     * 改变单个节点坐标
      * @param id
      * @param x
      * @param y
-     * @return
      */
-    Entity updateXY(Long id, double x, double y);
+    void updateXY(Long id, double x, double y);
 
     /**
      * 统计某类型节点个数
@@ -92,5 +90,13 @@ public interface EntityService  {
      * @param color
      */
     void updateColors(String type,String color);
+
+    /**
+     * 筛选节点类型
+     * @param domainId
+     * @param type
+     * @return
+     */
+    List<Entity> getNodeByType(int domainId,String type);
 
 }

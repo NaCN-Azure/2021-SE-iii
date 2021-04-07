@@ -64,10 +64,12 @@ public class EntityController {
         return Result.ok().data("total", entityService.countEntitiesByType(domainId,type));
     }
 
-    @PostMapping("/updateXY/{id}/{x}/{y}")
-    public Result updateXY(@PathVariable Long id, @PathVariable double x, @PathVariable double y){
-        Entity entity = entityService.updateXY(id,x,y);
-        return Result.ok().data("newEntity", entity);
+    @PostMapping("/updateXY")
+    public Result updateXY(@RequestBody List<Entity> entities){
+        for(Entity entity:entities) {
+            entityService.updateXY(entity.getId(), entity.getX(), entity.getY());
+        }
+        return Result.ok().message("location save!");
     }
 
     @GetMapping("/getTypes")
@@ -88,6 +90,11 @@ public class EntityController {
             return Result.ok().data("done!",typeService.insertType(color,type));
         }
         else return Result.error().message("type exists");
+    }
+
+    @GetMapping("/getNodeByType/{domainId}/{type}")
+    public Result getNodeByType(@PathVariable int domainId,@PathVariable String type){
+        return Result.ok().data("TypeNodes",entityService.getNodeByType(domainId,type));
     }
 
 }
