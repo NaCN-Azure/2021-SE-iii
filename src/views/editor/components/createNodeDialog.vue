@@ -4,6 +4,7 @@
             :visible="createNodeDialogVisible"
             title="创建节点"
             :before-close="cancelCreateNode"
+            width="600px"
     >
         <el-form :model="createNodeParams">
             <el-form-item label="节点名称">
@@ -14,7 +15,7 @@
                 </el-color-picker>
             </el-form-item>
             <el-form-item label="选择形状">
-                <el-select disabled v-model="createNodeParams.shape" placeholder="请选择">
+                <el-select v-model="createNodeParams.shape" placeholder="请选择">
                     <el-option
                         v-for="item in shapes"
                         :key="item.key"
@@ -22,6 +23,18 @@
                         :value="item.key">
                     </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="选择类型">
+                <el-input v-model="createNodeParams.type" style="width: 450px" placeholder="请输入节点类型"></el-input>
+            </el-form-item>
+            <el-form-item label="添加描述">
+                <el-input
+                        type="textarea"
+                        autosize
+                        placeholder="请输入节点描述"
+                        style="width: 450px"
+                        v-model="createNodeParams.description"
+                ></el-input>
             </el-form-item>
             <el-form-item label="所属图谱">
                 <!-- 默认只能在当前选中的图谱中添加节点 -->

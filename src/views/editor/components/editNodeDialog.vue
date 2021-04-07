@@ -5,6 +5,7 @@
             title="编辑节点"
             class="dialog"
             :before-close="cancelEditNode"
+            width="600px"
     >
         <el-form>
             <el-form-item label="节点名称">
@@ -23,6 +24,18 @@
                             :value="item.key">
                     </el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item label="选择类型">
+                <el-input v-model="editNodeParams.type" style="width: 450px" placeholder="请输入节点类型"></el-input>
+            </el-form-item>
+            <el-form-item label="添加描述">
+                <el-input
+                        type="textarea"
+                        autosize
+                        placeholder="请输入节点描述"
+                        style="width: 450px"
+                        v-model="editNodeParams.description"
+                ></el-input>
             </el-form-item>
             <el-form-item label="所属图谱">
                 <!-- 默认只能在当前选中的图谱中添加节点 -->
