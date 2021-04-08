@@ -76,7 +76,8 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="exportPic">导出图片</el-dropdown-item>
                             <el-dropdown-item @click.native="exportXml">导出xml</el-dropdown-item>
-                    </el-dropdown-menu>
+                            <el-dropdown-item @click.native="highlight">搜索</el-dropdown-item>
+                        </el-dropdown-menu>
                     </el-dropdown>
                 </div>
             </div>
@@ -129,11 +130,11 @@
             </div>
         </div>
 
-        <create-node-dialog></create-node-dialog>
-        <edit-node-dialog></edit-node-dialog>
-        <add-domain-dialog></add-domain-dialog>
-        <create-link-dialog></create-link-dialog>
-        <edit-link-dialog></edit-link-dialog>
+        <create-node-dialog/>
+        <edit-node-dialog/>
+        <add-domain-dialog/>
+        <create-link-dialog/>
+        <edit-link-dialog/>
     </div>
 </template>
 
@@ -152,13 +153,6 @@
     import EditLinkDialog from "./components/editLinkDialog";
     import NodeListDrawer from "./components/nodeListDrawer";
 
-    // var simulation;
-    // var nodes;
-    // var links;
-    // var nodeText;
-    // var linkText;
-    // var svg;
-    // var timer = null;
 
     export default {
         name: "editor",
@@ -194,6 +188,9 @@
                 linkText: [],
                 svg: null,
                 timer: null,
+                searchContent: '',   //搜索内容
+                searchNodesResult: [],  //搜索节点结果
+                searchLinksResult: [],  //搜索关系结果
             }
         },
 
@@ -202,7 +199,7 @@
         },
 
         async mounted(){
-            await this.initGraph();
+            this.initGraph();
         },
         computed:{
             ...mapGetters([
@@ -956,7 +953,38 @@
                     }
                     }
                 )
-            }
+            },
+
+            //==================搜索节点和关系===================
+            searchNodes(content) {
+                this.searchContent = content
+                this.searchNodesResult = []
+                for(var i = 0; i < this.nodesData.length; i++) {
+                    if(this.nodesData[i].name.search(this.searchContent) != -1) {
+                        this.searchNodesResult.push(this.nodesData[i])
+                    }
+                }
+                //searchNodesResult就是结果数组
+            },
+
+            searchLinks(content) {
+                this.searchContent = content
+                this.searchLinksResult = []
+                for(var i = 0; i < this.linksData.length; i++) {
+                    if(this.linksData[i].name.search(this.searchContent) != -1) {
+                        this.searchLinksResult.push(this.linksData[i])
+                    }
+                }
+                //searchLinksResult就是结果数组
+            },
+
+            highlight() {
+                //
+
+            },
+
+            //==================搜索节点和关系===================
+
 
         }
     }
