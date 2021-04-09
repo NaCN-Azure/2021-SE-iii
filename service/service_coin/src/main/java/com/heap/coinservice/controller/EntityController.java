@@ -72,22 +72,22 @@ public class EntityController {
         return Result.ok().message("location save!");
     }
 
-    @GetMapping("/getTypes")
-    public Result getTypes(){
-        return Result.ok().data("Types",typeService.searchAll());
+    @GetMapping("/getTypes/{domainId}")
+    public Result getTypes(int domainId){
+        return Result.ok().data("Types",typeService.searchAll(domainId));
     }
 
-    @PostMapping("/updateAllColors/{type}/{color}")
-    public Result updateAllColors(@PathVariable String type,@PathVariable String color){
-        entityService.updateColors(type,color);
+    @PostMapping("/updateAllColors/{type}/{color}/{domainId}")
+    public Result updateAllColors(@PathVariable String type,@PathVariable String color,@PathVariable int domainId){
+        entityService.updateColors(domainId,type,color);
         return Result.ok().message("Already change");
     }
 
-    @PostMapping("/createType/{type}/{color}")
-    public Result createType(@PathVariable String type,@PathVariable String color){
-        String checkColor=typeService.searchColorByType(type);
+    @PostMapping("/createType/{type}/{color}/{domainId}")
+    public Result createType(@PathVariable String type,@PathVariable String color,@PathVariable int domainId){
+        String checkColor=typeService.searchColorByType(domainId,type);
         if(checkColor==null){
-            return Result.ok().data("done!",typeService.insertType(color,type));
+            return Result.ok().data("done!",typeService.insertType(domainId,color,type));
         }
         else return Result.error().message("type exists");
     }
@@ -95,6 +95,11 @@ public class EntityController {
     @GetMapping("/getNodeByType/{domainId}/{type}")
     public Result getNodeByType(@PathVariable int domainId,@PathVariable String type){
         return Result.ok().data("TypeNodes",entityService.getNodeByType(domainId,type));
+    }
+
+    @GetMapping("/searchNodeByName/{domainId}/{searchName}")
+    public Result searchNodeByName(@PathVariable int domainId,@PathVariable String searchName){
+        return  Result.ok().data("SearchNodes",entityService.findByName(searchName,domainId,false));
     }
 
 }

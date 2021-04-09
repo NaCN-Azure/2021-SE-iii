@@ -7,6 +7,7 @@ import com.heap.coinservice.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class EntityServiceImpl implements EntityService {
     public Entity createNode(String name, String color, int shape, String type,int domainId,String description){
         Entity entity = entityMapper.findByName(name,domainId);
         if(entity == null) {
-            color=typeService.insertType(color,type);
+            color=typeService.insertType(domainId,color,type);
             entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).x(0).y(0).description(description).build();
             return entityMapper.save(entity);
         }
@@ -55,11 +56,11 @@ public class EntityServiceImpl implements EntityService {
         Long id = entity.getId();
         Optional<Entity> check = entityMapper.findById(id);
         if(check.isPresent()) {
+            if(entityMapper.countEntitiesByType(entity.getDomainId(),entity.getType())==1){
+                typeService.deleteType(entity.getDomainId(),entity.getType());
+            }
             entityMapper.deleteNodeWithLink(id);
             if(entityMapper.findById(id).isPresent()){
-                if(entityMapper.countEntitiesByTypeNoDomain(entity.getType())==1){
-                    typeService.deleteType(entity.getType());
-                }
                 entityMapper.delete(entity);
             }
             return true;
@@ -70,8 +71,15 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public Entity findByName(String name, int domainId){
-        return entityMapper.findByName(name,domainId);
+    public List<Entity> findByName(String name, int domainId,boolean strict){
+        //strict=true 严格模式下，name严格按照完全一致匹配
+        //strict=false 模糊模式下，name可根据部分字段进行匹配
+        List<Entity> entities=new ArrayList<>();
+        if(strict) {
+            entities.add(entityMapper.findByName(name, domainId));
+        }
+        ;//TODO
+        return entities;
     }
 
     @Override
@@ -90,9 +98,9 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public void updateColors(String type,String color){
-        typeService.updateColor(type,color);
-        entityMapper.updateAllColors(type,color);
+    public void updateColors(int domainId,String type,String color){
+        typeService.updateColor(domainId,type,color);
+        entityMapper.updateAllColors(domainId,type,color);
     }
 
     @Override

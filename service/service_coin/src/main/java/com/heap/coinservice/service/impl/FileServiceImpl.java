@@ -25,6 +25,7 @@ import java.util.List;
  */
 @Service
 public class FileServiceImpl implements FileService {
+
     @Autowired
     private EntityService entityService;
 
@@ -41,19 +42,19 @@ public class FileServiceImpl implements FileService {
             for (int i = 0; i < size; i++) {
                 List<String> points = content.get(i);
                 Entity startNode, endNode;
-                Entity check = entityService.findByName(points.get(0), domainId);
+                List<Entity> check = entityService.findByName(points.get(0), domainId,true);
                 if(check == null) {
                     startNode = entityService.createNode(points.get(0), DefaultUtil.DEFAULT_COLOR,DefaultUtil.DEFAULT_SHAPE, DefaultUtil.DEFAULT_TYPE, domainId,DefaultUtil.DEFAULT_DESCRIPTION);
                 }
                 else {
-                    startNode = check;
+                    startNode = check.get(0);
                 }
-                check = entityService.findByName(points.get(1),domainId);
+                check = entityService.findByName(points.get(1),domainId,true);
                 if(check == null) {
                     endNode = entityService.createNode(points.get(1), DefaultUtil.DEFAULT_COLOR, DefaultUtil.DEFAULT_SHAPE,DefaultUtil.DEFAULT_TYPE, domainId,DefaultUtil.DEFAULT_DESCRIPTION);
                 }
                 else {
-                    endNode = check;
+                    endNode = check.get(0);
                 }
                 relationshipService.createLink(startNode.getId(), endNode.getId(), points.get(2));
             }

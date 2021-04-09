@@ -15,14 +15,14 @@ import java.util.List;
 @Service
 public interface TypeService {
 
-    String insertType(String color,String nodeType);
+    String insertType(int domainId,String color,String nodeType);
 
-    void updateColor(String type, String color);
+    void updateColor(int domainId,String type, String color);
 
-    void deleteType(String type);
+    void deleteType(int domainId,String type);
 
-    String searchColorByType(String nodeType);
+    String searchColorByType(int domainId,String nodeType);
 
-    List<String> searchAll();
+    List<String> searchAll(int domainId);
 
 }

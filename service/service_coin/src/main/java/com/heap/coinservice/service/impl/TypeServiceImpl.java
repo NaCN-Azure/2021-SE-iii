@@ -22,33 +22,33 @@ public class TypeServiceImpl implements TypeService {
     TypeMapper typeMapper;
 
     @Override
-    public String insertType(String color,String nodeType){
-        String check=typeMapper.searchColorByType(nodeType);
+    public String insertType(int domainId,String color,String nodeType){
+        String check=typeMapper.searchColorByType(domainId,nodeType);
         if(check==null){
-            typeMapper.insertType(color,nodeType);
+            typeMapper.insertType(domainId,color,nodeType);
             return color;
         }
         else return check;
     }
 
     @Override
-    public void updateColor(String type, String color){
-        typeMapper.updateColor(type, color);
+    public void updateColor(int domainId,String type, String color){
+        typeMapper.updateColor(domainId,type, color);
     }
 
     @Override
-    public void deleteType(String type){
-        typeMapper.deleteType(type);
+    public void deleteType(int domainId,String type){
+        typeMapper.deleteType(domainId,type);
     }
 
     @Override
-    public String searchColorByType(String nodeType){
-        return typeMapper.searchColorByType(nodeType);
+    public String searchColorByType(int domainId,String nodeType){
+        return typeMapper.searchColorByType(domainId,nodeType);
     }
 
     @Override
-    public List<String> searchAll(){
-        return typeMapper.searchAll();
+    public List<String> searchAll(int domainId){
+        return typeMapper.searchAll(domainId);
     }
 
 

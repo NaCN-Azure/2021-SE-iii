@@ -55,11 +55,13 @@ public interface EntityService  {
 
     /**
      * 查询名称结点
+     * 严格模式下只返回含一个节点的节点列表，模糊模式不一定
      * @param name
      * @param domainId
+     * @param strict
      * @return
      */
-    Entity findByName(String name, int domainId);
+    List<Entity> findByName(String name, int domainId,boolean strict);
 
     /**
      * 获取域内节点个数
@@ -89,7 +91,7 @@ public interface EntityService  {
      * @param type
      * @param color
      */
-    void updateColors(String type,String color);
+    void updateColors(int domainId,String type,String color);
 
     /**
      * 筛选节点类型

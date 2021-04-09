@@ -17,19 +17,19 @@ import java.util.List;
 @Repository
 public interface TypeMapper {
 
-    @Insert("insert into nodetype(color,type) values (#{color},#{type})")
-    void insertType(@Param("color") String color, @Param("type") String nodeType);
+    @Insert("insert into nodetype(color,type,domain_id) values (#{color},#{type},#{domainId})")
+    void insertType(@Param("domainId") int domainId,@Param("color") String color, @Param("type") String nodeType);
 
-    @Update("update nodetype set color = #{color} where type =#{type}")
-    void updateColor(@Param("type") String type,@Param("color") String color);
+    @Update("update nodetype set color = #{color} where type =#{type} and domain_id =#{domainId}")
+    void updateColor(@Param("domainId") int domainId,@Param("type") String type,@Param("color") String color);
 
-    @Delete("delete from nodetype where type = #{type}")
-    void deleteType(@Param("type") String type);
+    @Delete("delete from nodetype where type = #{type} and domain_id =#{domainId}")
+    void deleteType(@Param("domainId") int domainId,@Param("type") String type);
 
-    @Select("select color from nodetype where type = #{type}")
-    String searchColorByType(@Param("type") String nodeType);
+    @Select("select color from nodetype where type = #{type} and domain_id =#{domainId}")
+    String searchColorByType(@Param("domainId") int domainId,@Param("type") String nodeType);
 
-    @Select("select type from nodetype")
-    List<String> searchAll();
+    @Select("select type from nodetype where domain_id =#{domainId}")
+    List<String> searchAll(@Param("domainId") int domainId);
 
 }

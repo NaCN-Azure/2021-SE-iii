@@ -1,10 +1,8 @@
 package com.heap.coinservice.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.heap.coinservice.entity.Entity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.neo4j.ogm.annotation.RelationshipEntity;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.stereotype.Repository;
@@ -81,10 +79,9 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      * @param id
      * @param x
      * @param y
-     * @return
      */
     @Query("MATCH (n) WHERE id(n) = {0} SET n.x = {1},n.y = {2} RETURN n")
-    Entity updateXY(Long id, double x, double y);
+    void updateXY(Long id, double x, double y);
 
     /**
      *
@@ -97,22 +94,19 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
     int countEntitiesByType(@Param("domainId") int domainId,@Param("type") String type);
 
     /**
-     *
-     * 统计一个类型的所有域节点个数
-     * @param type
-     * @return
-     */
-    @Query("MATCH (n) where n.type = {0} return COUNT(n)")
-    int countEntitiesByTypeNoDomain(@Param("type") String type);
-
-    /**
      * 更新所有节点颜色
      * @param type
      * @param color
      */
-    @Query("MATCH (n{type:{0}}) set n.bgColor = {1}")
-    void updateAllColors(@Param("type") String type,@Param("color") String color);
+    @Query("MATCH (n{type:{1}}) where n.domainId = {0} set n.bgColor = {2}")
+    void updateAllColors(@Param("domainId") int domainId,@Param("type") String type,@Param("color") String color);
 
+    /**
+     * 按类型得到节点
+     * @param domainId
+     * @param type
+     * @return
+     */
     @Query("MATCH (n) where n.domainId = {0} and n.type = {1} return n")
     List<Entity> getNodeByType(@Param("domainId") int domainId,@Param("type") String type);
 
