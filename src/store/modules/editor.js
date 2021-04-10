@@ -2,6 +2,7 @@ import {createNodeAPI, updateNodeAPI} from "../../api/entity";
 import {  Message } from 'element-ui'
 import {createDomainAPI, selectAllDomainAPI} from "../../api/domain";
 import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../api/relationship";
+import * as d3 from "d3";
 
 const editor = {
     state: {
@@ -11,6 +12,10 @@ const editor = {
             bgColor: '',
             shape: 0,
             domainId: '',
+            type:'',
+            description:'',
+            // x:0.0,
+            // y:0.0,
         },
         editNodeDialogVisible: false,
         editNodeParams:{
@@ -19,6 +24,8 @@ const editor = {
             bgColor:'',
             shape:'',
             domainId:'',
+            type: '',
+            description: '',
         },
         addDomainDialogVisible: false,
         createLinkDialogVisible: false,
@@ -42,8 +49,12 @@ const editor = {
         },
         // 获取到的图谱数据！
         relationships:[],
+        // 所有节点的位置数组
+        nodePositions:[],
         shapes:[
-            {key:0,label:'圆形'}
+            {key:0,label: '圆形'},
+            {key:1,label: '矩形'},
+            {key:2,label: '三角形'}
         ],
         domainList:[],
         // 要被渲染的nodes和links数组
@@ -93,6 +104,9 @@ const editor = {
         },
         set_linksData: function (state, data) {
             state.linksData = data
+        },
+        set_nodePositions: function(state,data){
+            state.nodePositions = data
         },
         set_nodeListVisible: function (state, data) {
             state.nodeListVisible  = data

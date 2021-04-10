@@ -72,6 +72,7 @@
                 </div>
                 <!-- 固定的工具 -->
                 <div class="fixed-tools">
+
                     <el-button class="edit-tool" size="small" type="primary" @click="showCreateNodeDialog">添加节点</el-button>
                     <el-button class="edit-tool" size="small" type="primary" @click="showCreateLinkDialog">添加关系</el-button>
                     <el-dropdown>
@@ -81,7 +82,8 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="exportPic">导出图片</el-dropdown-item>
                             <el-dropdown-item @click.native="exportXml">导出xml</el-dropdown-item>
-                    </el-dropdown-menu>
+                            <el-dropdown-item @click.native="highlight">搜索</el-dropdown-item>
+                        </el-dropdown-menu>
                     </el-dropdown>
                 </div>
             </div>
@@ -123,13 +125,22 @@
                     <span class="pl-15">删除</span>
                 </li>
             </ul>
+
+            <!-- 节点富文本展示 -->
+            <div id="rich-container" style="display: none;">
+                <div class="mind-fj-box" v-show="popoverContent!=''">
+                    <el-scrollbar v-show="popoverContent!=''" class="mind-fj-p">
+                        <p v-html="popoverContent"></p>
+                    </el-scrollbar>
+                </div>
+            </div>
         </div>
 
-        <create-node-dialog></create-node-dialog>
-        <edit-node-dialog></edit-node-dialog>
-        <add-domain-dialog></add-domain-dialog>
-        <create-link-dialog></create-link-dialog>
-        <edit-link-dialog></edit-link-dialog>
+        <create-node-dialog/>
+        <edit-node-dialog/>
+        <add-domain-dialog/>
+        <create-link-dialog/>
+        <edit-link-dialog/>
     </div>
 </template>
 
@@ -137,7 +148,7 @@
     import * as d3 from 'd3';
     import $ from 'jquery';
     import {mapActions, mapGetters, mapMutations} from "vuex";
-    import {deleteNodeAPI} from "../../api/entity";
+    import {deleteNodeAPI, updateXYAPI} from "../../api/entity";
     import {deleteDomainAPI} from "../../api/domain";
     import {deleteLinkAPI} from "../../api/relationship";
     import {downloadAPI, exportGraphXMLAPI} from "../../api/file";
@@ -148,12 +159,6 @@
     import EditLinkDialog from "./components/editLinkDialog";
     import NodeListDrawer from "./components/nodeListDrawer";
 
-    var simulation;
-    var nodes;
-    var links;
-    var nodeText;
-    var linkText;
-    var svg;
 
     export default {
         name: "editor",
@@ -168,6 +173,8 @@
                     bgColor:'',
                     shape:'',
                     domainId:'',
+                    nodeType:'',
+                    description:'',
                 },
                 selectedLink:{
                     id:'',
@@ -177,6 +184,19 @@
                     toId:'',
                     domainId:'',
                 },
+                popoverContent:'',
+                simulation: null,
+                nodes: [], // cicleNodes
+                rectNodes: [],
+                triangleNodes: [],
+                links: [],
+                nodeText: [],
+                linkText: [],
+                svg: null,
+                timer: null,
+                searchContent: '',   //搜索内容
+                searchNodesResult: [],  //搜索节点结果
+                searchLinksResult: [],  //搜索关系结果
             }
         },
 
@@ -184,26 +204,8 @@
             this.getAllDomains();
         },
 
-        mounted(){
-            svg = d3.select('svg')
-            var width = +svg.attr('width')
-            var height = +svg.attr('height')
-            const g = svg.append('g') // svg中创建g元素，node和link放在g中
-
-            simulation = d3.forceSimulation()
-                .force('charge', d3.forceManyBody().strength(-100))
-                .force('collide', d3.forceCollide().strength(-30))
-                .force('center', d3.forceCenter(width / 2, height / 2))
-                .force('link', d3.forceLink().distance(300).id(function (d) {
-                    return d.id;
-                }));
-
-            links = g.append('g').attr("class","link");
-            linkText = g.append('g').attr("class","linkText");
-            nodes = g.append('g').attr("class","node");
-            nodeText = g.append("g").attr("class","nodeText");
-
-            this.addMarker();
+        async mounted(){
+            this.initGraph();
         },
         computed:{
             ...mapGetters([
@@ -237,6 +239,27 @@
                 'getAllDomains',
                 'getDomainById',
             ]),
+            initGraph(){
+                this.svg = d3.select('svg')
+                var width = + this.svg.attr('width')
+                var height = + this.svg.attr('height')
+                const g = this.svg.append('g') // svg中创建g元素，node和link放在g中
+
+                this.simulation = d3.forceSimulation()
+                    .force('charge', d3.forceManyBody().strength(-40))
+                    .force('collide', d3.forceCollide().radius(()=>50))
+                    .force('center', d3.forceCenter(width / 2, height / 2))
+                    .force('link', d3.forceLink().distance(300).id(d => d.id));
+
+                this.links = g.append('g').attr("class","link");
+                this.linkText = g.append('g').attr("class","linkText");
+                this.nodes = g.append('g').attr("class","node");
+                this.rectNodes = g.append('g').attr("class","rectNode");
+                this.triangleNodes = g.append('g').attr("class","triangleNode");
+                this.nodeText = g.append("g").attr("class","nodeText");
+
+                this.addMarker();
+            },
             showCreateNodeDialog(){
                 if(this.selectedDomain.id==''){
                     this.$message({
@@ -249,6 +272,10 @@
                         bgColor: '',
                         shape: 0,
                         domainId: this.selectedDomain.id,
+                        type:'',
+                        description:'',
+                        x:0.0,
+                        y:0.0,
                     })
                     this.set_createNodeDialogVisible(true);
                 }
@@ -457,29 +484,37 @@
                 })
                 $('#link-custom-menu').hide();
             },
-            // 监听拖拽开始
-            dragStarted(d) {
-                if(!d3.event.active)
-                    simulation.alphaTarget(0.3).restart()
-                d.fx = d.x;
-                d.fy = d.y;
-            },
 
-            //监听拖拽中
-            dragged(d) {
-                d.fx = d3.event.x;  //fevent.x为拖拽移动时的坐标
-                d.fy = d3.event.y;
-            },
+            drag(){
+                // 监听拖拽开始
+                function dragStarted(d) {
+                    if(!d3.event.active)
+                        this.simulation.alphaTarget(0.3).restart()
+                    d.fx = d.x;
+                    d.fy = d.y;
+                }
 
-            //监听拖拽结束
-            dragended(d) {
-                if (!d3.event.active) simulation.alphaTarget(0);
-                d.fx = null;        //固定坐标清空
-                d.fy = null;
+                //监听拖拽中
+                function dragged(d) {
+                    d.fx = d3.event.x;  //fevent.x为拖拽移动时的坐标
+                    d.fy = d3.event.y;
+                }
+
+                //监听拖拽结束
+                function dragended(d) {
+                    if (!d3.event.active) this.simulation.alphaTarget(0);
+                    d.fx = null;        //固定坐标清空
+                    d.fy = null;
+                }
+
+                return d3.drag()
+                    .on("start",this.dragStarted)
+                    .on("drag",this.dragged)
+                    .on("end",this.dragended)
             },
 
             addMarker(){
-                var arrowMarker = svg.append("marker")
+                var arrowMarker = this.svg.append("marker")
                     .attr("id","arrow")
                     .attr("markerUnits","strokeWidth")
                     .attr("markerWidth","10")//
@@ -491,18 +526,13 @@
                 var arrow_path = "M2,2 L10,6 L2,10 L6,6 L2,2";// 定义箭头形状
                 arrowMarker.append("path").attr("d",arrow_path).attr("fill","grey"); // 应该是箭头颜色，后面再改
             },
-
             drawNode(nodes){
                 var _this = this;
-                var nodeEnter = nodes.enter().append('circle');
+                var nodeEnter = nodes.enter().filter(d => d.shape == 0).append('circle');
                 nodeEnter.on("contextmenu", function(d){
                     console.log(d);
                     var cc = $(this).offset();
-                    _this.selectedNode.id = d.id;
-                    _this.selectedNode.name = d.name;
-                    _this.selectedNode.bgColor = d.bgColor;
-                    _this.selectedNode.shape = d.shape;
-                    _this.selectedNode.domainId = d.domainId;
+                    _this.selectedNode = d;
                     d3.select('#node-custom-menu')
                         .style('position','absolute')
                         .style('left', cc.left -250 + "px")
@@ -516,15 +546,103 @@
                         .style("stroke","#C6C1C5")
                     _this.selectedNode = d;
                 })
+                // 鼠标在节点上停留2s时，显示节点描述信息
+                nodeEnter.on('mouseover',function (d,i){
+                    this.timer = setTimeout(function (d) {
+                        _this.popoverContent = d.description;
+                        d3.select("#rich-container")
+                            .style('position','absolute')
+                            .style('left',d.x+"px")
+                            .style('top',d.y+"px")
+                            .style('display','block');
+                    },2000);
+                });
+                nodeEnter.on('mouseout',function (d,i) {
+                    clearTimeout(this.timer);
+                })
                 nodeEnter.on('mouseleave',function (d) {
                     d3.select(this).style("stroke-width","0")
                 })
-                nodeEnter.call(d3.drag()
-                    .on("start",this.dragStarted)
-                    .on("drag",this.dragged)
-                    .on("end",this.dragended)
-                );
+                nodeEnter.call(this.drag());
                 return nodeEnter;
+            },
+            drawRectNode(rectNodes){
+                var _this = this;
+                var rectNodeEnter = rectNodes.enter().filter(d => d.shape == 1).append('rect');
+                rectNodeEnter.on("contextmenu", function(d){
+                    var cc = $(this).offset();
+                    this.setSelectedNode(d);
+                    d3.select('#node-custom-menu')
+                        .style('position','absolute')
+                        .style('left', cc.left -250 + "px")
+                        .style('top', cc.top -130+ "px")
+                        .style('display','block');
+                    d3.event.preventDefault(); // 禁止系统默认右键
+                    d3.event.stopPropagation(); // 禁止空白处右键
+                });
+                rectNodeEnter.on('mouseenter',function (d) {
+                    d3.select(this).style("stroke-width","10")
+                        .style("stroke","#C6C1C5")
+                    _this.selectedNode = d;
+                })
+                // 鼠标在节点上停留2s时，显示节点描述信息
+                rectNodeEnter.on('mouseover',function (d,i){
+                    this.timer = setTimeout(function (d) {
+                        _this.popoverContent = d.description;
+                        d3.select("#rich-container")
+                            .style('position','absolute')
+                            .style('left',d.x+"px")
+                            .style('top',d.y+"px")
+                            .style('display','block');
+                    },2000);
+                });
+                rectNodeEnter.on('mouseout',function (d,i) {
+                    clearTimeout(this.timer);
+                })
+                rectNodeEnter.on('mouseleave',function (d) {
+                    d3.select(this).style("stroke-width","0")
+                })
+                rectNodeEnter.call(this.drag());
+                return rectNodeEnter;
+            },
+            drawTriangleNode(triangleNodes){
+                var _this = this;
+                var triangleNodeEnter = triangleNodes.enter().filter(d => d.shape == 2).append('triangle-up');
+                triangleNodeEnter.on("contextmenu", function(d){
+                    var cc = $(this).offset();
+                    this.setSelectedNode(d);
+                    d3.select('#node-custom-menu')
+                        .style('position','absolute')
+                        .style('left', cc.left -250 + "px")
+                        .style('top', cc.top -130+ "px")
+                        .style('display','block');
+                    d3.event.preventDefault(); // 禁止系统默认右键
+                    d3.event.stopPropagation(); // 禁止空白处右键
+                });
+                triangleNodeEnter.on('mouseenter',function (d) {
+                    d3.select(this).style("stroke-width","10")
+                        .style("stroke","#C6C1C5")
+                    _this.selectedNode = d;
+                })
+                // 鼠标在节点上停留2s时，显示节点描述信息
+                triangleNodeEnter.on('mouseover',function (d,i){
+                    this.timer = setTimeout(function (d) {
+                        _this.popoverContent = d.description;
+                        d3.select("#rich-container")
+                            .style('position','absolute')
+                            .style('left',d.x+"px")
+                            .style('top',d.y+"px")
+                            .style('display','block');
+                    },2000);
+                });
+                triangleNodeEnter.on('mouseout',function (d,i) {
+                    clearTimeout(this.timer);
+                })
+                triangleNodeEnter.on('mouseleave',function (d) {
+                    d3.select(this).style("stroke-width","0")
+                })
+                triangleNodeEnter.call(this.drag());
+                return triangleNodeEnter;
             },
             drawLink(links){
                 var _this = this;
@@ -583,11 +701,7 @@
                 nodeTextEnter.on("contextmenu",function (d) {
                         console.log(d);
                         var cc = $(this).offset();
-                        _this.selectedNode.id = d.id;
-                        _this.selectedNode.name = d.name;
-                        _this.selectedNode.bgColor = d.bgColor;
-                        _this.selectedNode.shape = d.shape;
-                        _this.selectedNode.domainId = d.domainId;
+                        _this.selectedNode = d;
                         d3.select('#node-custom-menu')
                             .style('position','absolute')
                             .style('left', cc.left -250 + "px")
@@ -612,17 +726,17 @@
                 this.set_nodesData(this.getNodesFromRelationships(this.relationships));
                 this.set_linksData(this.getLinksFromRelationships(this.relationships));
                 var _this = this;
-                var link = links.selectAll('line').data(this.linksData,function(d){ return d.id});
+                var link = this.links.selectAll('line').data(this.linksData,function(d){ return d.id});
                 link.exit().remove();
                 var linkEnter = this.drawLink(link);
                 link = linkEnter.merge(link);
 
-                var linktext = linkText.selectAll("text").data(this.linksData,function(d){return d.id})
+                var linktext = this.linkText.selectAll("text").data(this.linksData,function(d){return d.id})
                 linktext.exit().remove();
                 var linkTextEnter = this.drawLinkText(linktext);
                 linktext = linkTextEnter.merge(linktext).text(function(d){ return d.name});
 
-                var node = nodes.selectAll("circle").data(this.nodesData);
+                var node = this.nodes.selectAll("circle").data(this.nodesData).filter(d => d.shape == 0);
                 node.exit().remove();
                 var nodeEnter = this.drawNode(node);
                 node = nodeEnter.merge(node).text(function(d){ return d.name;});
@@ -633,13 +747,41 @@
                     return "#5290F2"
                 });
                 node.attr('r', 40);
+                // node.attr('r',function (d) {
+                //     if(typeof(d.r)!="undefined" && d.r!=''){
+                //         return d.r;
+                //     }
+                //     return 40;
+                // })
                 node.style("opacity",0.8);
                 node.append("title")
                     .text(function (d) {
                         return d.name;
                     });
 
-                var nodetext = nodeText.selectAll("text").data(this.nodesData);
+                // var rectNode = this.rectNodes.selectAll("rect").data(this.nodesData).filter(d => d.shape == 1);
+                // rectNode.exit().remove();
+                // var rectNodeEnter = this.drawRectNode(rectNode);
+                // rectNode = rectNodeEnter.merge(rectNode).text(function(d){ return d.name;});
+                // rectNode.attr("fill",function(d){
+                //     if(typeof(d.bgColor)!="undefined" && d.bgColor != ''){
+                //         return d.bgColor;
+                //     }
+                //     return "#5290F2"
+                // });
+                //
+                // var triangleNode = this.triangleNodes.selectAll("triangle-up").data(this.nodesData).filter(d => d.shape == 2);
+                // triangleNode.exit().remove();
+                // var triangleNodeEnter = this.drawTriangleNode(triangleNode);
+                // triangleNode = triangleNodeEnter.merge(triangleNode).text(function(d){ return d.name;});
+                // triangleNode.attr("fill",function(d){
+                //     if(typeof(d.bgColor)!="undefined" && d.bgColor != ''){
+                //         return d.bgColor;
+                //     }
+                //     return "#5290F2"
+                // });
+
+                var nodetext = this.nodeText.selectAll("text").data(this.nodesData);
                 nodetext.exit().remove();
                 var nodeTextEnter = this.drawNodeText(nodetext);
                 nodetext = nodeTextEnter.merge(nodetext).text(function(d){return d.name});
@@ -648,15 +790,22 @@
                         return d.name;
                     });
 
-                simulation.nodes(this.nodesData).alphaTarget(0).alphaDecay(0.05).on("tick",tickAction);
-                simulation.force("link").links(this.linksData);
-                simulation.alpha(1).restart();
+                this.simulation.nodes(this.nodesData).alphaTarget(0).alphaDecay(0.05).on("tick",tickAction);
+                this.simulation.force("link").links(this.linksData);
+                this.simulation.alpha(1).restart();
                 // 每tick更新图谱
                 function tickAction () {
                     node
                         .attr('cx', (d) => { return d.x })
                         .attr('cy', (d) => { return d.y })
-
+                    // rectNode
+                    //     .attr("x", d => d.x-d.node_size*0.707) //方形中心点
+                    //     .attr("y", d => d.y-d.node_size*0.707);
+                    //
+                    // triangleNode
+                    //     .attr("d", function(d){
+                    //         return "M "+(d.x-0.87*d.node_size)+" "+ (d.y+0.5*d.node_size)+" L "+(d.x+0.87*d.node_size-0.87*d.node_size)+" "+(d.y-1.5*d.node_size+0.5*d.node_size)+" L "+(d.x+d.node_size*1.73-0.87*d.node_size)+" "+(d.y+0.5*d.node_size)+" L "+(d.x-0.87*d.node_size)+" "+(d.y+0.5*d.node_size)
+                    //     });
                     link
                         .attr('x1', (d) => { return d.source.x })
                         .attr('y1', (d) => { return d.source.y })
@@ -670,15 +819,19 @@
                         .attr('y', (d) => { return (d.source.y + d.target.y) / 2})
                 }
 
-                svg.call(d3.zoom().on("zoom", function() {
-                    svg.selectAll("g").attr("transform", d3.event.transform);
+                this.svg.call(d3.zoom().on("zoom", function() {
+                    this.svg.selectAll("g").attr("transform", d3.event.transform);
                 }));
 
                 // 点击空白处，关闭点开的菜单
-                svg.on("click",function () {
+                this.svg.on("click",function () {
                     $('#link-custom-menu').hide();
                     $('#node-custom-menu').hide();
                 })
+
+            },
+            // 将用户对图谱做出的改动进行保存，主要是更新位置
+            saveGraph(){
 
             },
 
@@ -806,7 +959,38 @@
                     }
                     }
                 )
-            }
+            },
+
+            //==================搜索节点和关系===================
+            searchNodes(content) {
+                this.searchContent = content
+                this.searchNodesResult = []
+                for(var i = 0; i < this.nodesData.length; i++) {
+                    if(this.nodesData[i].name.search(this.searchContent) != -1) {
+                        this.searchNodesResult.push(this.nodesData[i])
+                    }
+                }
+                //searchNodesResult就是结果数组
+            },
+
+            searchLinks(content) {
+                this.searchContent = content
+                this.searchLinksResult = []
+                for(var i = 0; i < this.linksData.length; i++) {
+                    if(this.linksData[i].name.search(this.searchContent) != -1) {
+                        this.searchLinksResult.push(this.linksData[i])
+                    }
+                }
+                //searchLinksResult就是结果数组
+            },
+
+            highlight() {
+                //
+
+            },
+
+            //==================搜索节点和关系===================
+
 
         }
     }
