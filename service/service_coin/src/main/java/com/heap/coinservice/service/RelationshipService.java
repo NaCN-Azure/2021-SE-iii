@@ -1,6 +1,7 @@
 package com.heap.coinservice.service;
 
 import com.heap.coinservice.entity.Domain;
+import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +59,21 @@ public interface RelationshipService {
      * @return
      */
     int countAllLink(int domainId);
+
+    /**
+     * 名称查找
+     * @param domainId
+     * @param name
+     * @return
+     */
+    List<Relationship> getLinkByName(int domainId,String name);
+
+    /**
+     * 筛选器
+     * @param domainId
+     * @param entities
+     * @return
+     */
+    List<Relationship> getGraphScreen(int domainId,List<Entity> entities);
 
 }

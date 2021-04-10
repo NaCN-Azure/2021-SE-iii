@@ -78,7 +78,14 @@ public class EntityServiceImpl implements EntityService {
         if(strict) {
             entities.add(entityMapper.findByName(name, domainId));
         }
-        ;//TODO
+        else{
+            List<Entity> checks=entityMapper.getNodeByDomainId(domainId);
+            for(Entity nodes:checks){
+                if(nodes.getName().contains(name)){
+                    entities.add(nodes);
+                }
+            }
+        }
         return entities;
     }
 

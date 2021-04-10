@@ -8,6 +8,7 @@ import com.heap.coinservice.service.RelationshipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,6 +74,30 @@ public class RelationshipServiceImpl implements RelationshipService {
     @Override
     public int countAllLink(int domainId){
         return relationshipMapper.countAllLink(domainId);
+    }
+
+    @Override
+    public List<Relationship> getLinkByName(int domainId,String name){
+        List<Relationship> graph = relationshipMapper.getLinkByDomainId(domainId);
+        List<Relationship> result=new ArrayList<>();
+        for(Relationship re:graph){
+            if(re.getName().contains(name)){
+                result.add(re);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Relationship> getGraphScreen(int domainId,List<Entity> entities){
+        List<Relationship> graph=getLinkByDomainId(domainId);
+        List<Relationship> result=new ArrayList<>();
+        for(Relationship check:graph){
+            if(entities.contains(check.getStartEntity())||entities.contains(check.getEndEntity())){
+                result.add(check);
+            }
+        }
+        return result;
     }
 
 }
