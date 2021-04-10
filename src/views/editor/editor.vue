@@ -64,6 +64,12 @@
                     <span class="">选中节点：</span>
                     <span>{{selectedNode.name}}</span>
                 </div>
+                <div class="multi-mode">
+                    <el-button-group>
+                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small">力导图模式</el-button>
+                        <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small">排版模式</el-button>
+                    </el-button-group>
+                </div>
                 <!-- 固定的工具 -->
                 <div class="fixed-tools">
                     <el-button class="edit-tool" size="small" type="primary" @click="showCreateNodeDialog">添加节点</el-button>
@@ -829,12 +835,26 @@
         width: 100%;
         display: flex;
     }
+    .multi-mode{
+        width: 300px;
+        position: absolute;
+        right: 800px;
+    }
     .fixed-tools{
         width: 300px;
         position: absolute;
         right: 300px;
         /*很离谱啊这里，为什么浏览器在看不见的地方还多了300px*/
     }
+
+    .mode-button{
+    width: 100px;
+    }
+
+
+
+
+
     .edit-tool{
         margin-left: 20px;
     }
