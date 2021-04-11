@@ -20,13 +20,12 @@ public interface EntityService  {
      *
      * 创建节点
      * @param name
-     * @param color
-     * @param shape
+    * @param shape
      * @param domainId
      * @param description
      * @return
      */
-    Entity createNode(String name, String color,int shape,  String type,int domainId,String description);
+    Entity createNode(String name, int shape,  String type,int domainId,String description);
 
     /**
      *
@@ -87,18 +86,20 @@ public interface EntityService  {
     int countEntitiesByType(int domainId,String type);
 
     /**
-     * 改变类型颜色
-     * @param type
-     * @param color
-     */
-    void updateColors(int domainId,String type,String color);
-
-    /**
      * 筛选节点类型
      * @param domainId
      * @param type
      * @return
      */
     List<Entity> getNodeByType(int domainId,String type);
+
+    /**
+     * 改变类型
+     * @param id
+     * @param oldType
+     * @param newType
+     * @param domainId
+     */
+    void updateType(Long id,String oldType,String newType,int domainId);
 
 }

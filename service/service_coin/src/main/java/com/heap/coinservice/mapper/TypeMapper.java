@@ -20,9 +20,6 @@ public interface TypeMapper {
     @Insert("insert into nodetype(color,type,domain_id) values (#{color},#{type},#{domainId})")
     void insertType(@Param("domainId") int domainId,@Param("color") String color, @Param("type") String nodeType);
 
-    @Update("update nodetype set color = #{color} where type =#{type} and domain_id =#{domainId}")
-    void updateColor(@Param("domainId") int domainId,@Param("type") String type,@Param("color") String color);
-
     @Delete("delete from nodetype where type = #{type} and domain_id =#{domainId}")
     void deleteType(@Param("domainId") int domainId,@Param("type") String type);
 

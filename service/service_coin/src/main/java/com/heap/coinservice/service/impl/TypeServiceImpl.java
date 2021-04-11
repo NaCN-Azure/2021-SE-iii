@@ -2,6 +2,7 @@ package com.heap.coinservice.service.impl;
 
 import com.heap.coinservice.mapper.TypeMapper;
 import com.heap.coinservice.service.TypeService;
+import com.heap.commonutils.DefaultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +23,10 @@ public class TypeServiceImpl implements TypeService {
     TypeMapper typeMapper;
 
     @Override
-    public String insertType(int domainId,String color,String nodeType){
+    public String insertType(int domainId,String nodeType){
         String check=typeMapper.searchColorByType(domainId,nodeType);
         if(check==null){
+            String color= DefaultUtil.useDefaultColor();
             typeMapper.insertType(domainId,color,nodeType);
             return color;
         }
@@ -32,12 +34,9 @@ public class TypeServiceImpl implements TypeService {
     }
 
     @Override
-    public void updateColor(int domainId,String type, String color){
-        typeMapper.updateColor(domainId,type, color);
-    }
-
-    @Override
     public void deleteType(int domainId,String type){
+        String color = typeMapper.searchColorByType(domainId,type);
+        DefaultUtil.releaseColor(color);
         typeMapper.deleteType(domainId,type);
     }
 

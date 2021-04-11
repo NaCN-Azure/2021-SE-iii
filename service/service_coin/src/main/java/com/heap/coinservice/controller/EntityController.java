@@ -32,7 +32,7 @@ public class EntityController {
 
     @PostMapping("/createNode")
     public Result createNode(@RequestBody Entity entity){
-        Entity newEntity = entityService.createNode(entity.getName(), entity.getBgColor(), entity.getShape(),entity.getType(), entity.getDomainId(),entity.getDescription());
+        Entity newEntity = entityService.createNode(entity.getName(), entity.getShape(),entity.getType(), entity.getDomainId(),entity.getDescription());
         return newEntity != null ? Result.ok().data("entity", newEntity) : Result.error().message("存在同名节点");
     }
 
@@ -77,21 +77,6 @@ public class EntityController {
         return Result.ok().data("Types",typeService.searchAll(domainId));
     }
 
-    @PostMapping("/updateAllColors/{type}/{color}/{domainId}")
-    public Result updateAllColors(@PathVariable String type,@PathVariable String color,@PathVariable int domainId){
-        entityService.updateColors(domainId,type,color);
-        return Result.ok().message("Already change");
-    }
-
-    @PostMapping("/createType/{type}/{color}/{domainId}")
-    public Result createType(@PathVariable String type,@PathVariable String color,@PathVariable int domainId){
-        String checkColor=typeService.searchColorByType(domainId,type);
-        if(checkColor==null){
-            return Result.ok().data("done!",typeService.insertType(domainId,color,type));
-        }
-        else return Result.error().message("type exists");
-    }
-
     @GetMapping("/getNodeByType/{domainId}/{type}")
     public Result getNodeByType(@PathVariable int domainId,@PathVariable String type){
         return Result.ok().data("TypeNodes",entityService.getNodeByType(domainId,type));
@@ -100,6 +85,12 @@ public class EntityController {
     @GetMapping("/searchNodeByName/{domainId}/{searchName}")
     public Result searchNodeByName(@PathVariable int domainId,@PathVariable String searchName){
         return  Result.ok().data("SearchNodes",entityService.findByName(searchName,domainId,false));
+    }
+
+    @PostMapping("/updateType/{id}/{oldType}/{newType}/{domainId}")
+    public Result updateType(@PathVariable Long id,@PathVariable String oldType,@PathVariable String newType,@PathVariable int domainId){
+        entityService.updateType(id,oldType,newType,domainId);
+        return Result.ok().message("Type Update");
     }
 
 }

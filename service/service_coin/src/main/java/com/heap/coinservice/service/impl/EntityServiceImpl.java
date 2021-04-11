@@ -29,10 +29,10 @@ public class EntityServiceImpl implements EntityService {
     private EntityMapper entityMapper;
 
     @Override
-    public Entity createNode(String name, String color, int shape, String type,int domainId,String description){
+    public Entity createNode(String name, int shape, String type,int domainId,String description){
         Entity entity = entityMapper.findByName(name,domainId);
         if(entity == null) {
-            color=typeService.insertType(domainId,color,type);
+            String color=typeService.insertType(domainId,type);
             entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).x(0).y(0).description(description).build();
             return entityMapper.save(entity);
         }
@@ -56,7 +56,7 @@ public class EntityServiceImpl implements EntityService {
         Long id = entity.getId();
         Optional<Entity> check = entityMapper.findById(id);
         if(check.isPresent()) {
-            if(entityMapper.countEntitiesByType(entity.getDomainId(),entity.getType())==1){
+            if(entityMapper.countEntitiesByType(entity.getDomainId(),entity.getType())<=1){
                 typeService.deleteType(entity.getDomainId(),entity.getType());
             }
             entityMapper.deleteNodeWithLink(id);
@@ -105,13 +105,19 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public void updateColors(int domainId,String type,String color){
-        typeService.updateColor(domainId,type,color);
-        entityMapper.updateAllColors(domainId,type,color);
+    public List<Entity> getNodeByType(int domainId,String type){
+        return entityMapper.getNodeByType(domainId,type);
     }
 
     @Override
-    public List<Entity> getNodeByType(int domainId,String type){
-        return entityMapper.getNodeByType(domainId,type);
+    public void updateType(Long id,String oldType,String newType,int domainId){
+        String color = typeService.searchColorByType(domainId,newType);
+        if(color==null){
+            color=typeService.insertType(domainId,newType);//没有,说明是新类型
+        }
+        if(entityMapper.countEntitiesByType(domainId,oldType)<=1){
+            typeService.deleteType(domainId,oldType);//说明改动的节点是该类型的最后一个，类型删掉
+        }
+        entityMapper.updateType(id,newType,color);
     }
 }

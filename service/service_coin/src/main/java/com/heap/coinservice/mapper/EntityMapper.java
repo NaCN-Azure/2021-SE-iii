@@ -110,4 +110,13 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
     @Query("MATCH (n) where n.domainId = {0} and n.type = {1} return n")
     List<Entity> getNodeByType(@Param("domainId") int domainId,@Param("type") String type);
 
+    /**
+     * 更改类型及颜色
+     * @param id
+     * @param type
+     * @param bgColor
+     */
+    @Query("MATCH (n) where id(n) = {0} set n.type = {1},n.bgColor= {2} return n")
+    void updateType(@Param("id") Long id,@Param("type") String type,@Param("bgColor") String bgColor);
+
 }

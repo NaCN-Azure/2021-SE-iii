@@ -15,9 +15,7 @@ import java.util.List;
 @Service
 public interface TypeService {
 
-    String insertType(int domainId,String color,String nodeType);
-
-    void updateColor(int domainId,String type, String color);
+    String insertType(int domainId,String nodeType);
 
     void deleteType(int domainId,String type);
 
