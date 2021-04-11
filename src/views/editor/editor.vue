@@ -98,7 +98,8 @@
                 <el-button
                     @click="showNodeList"
                     size="mini"
-                    style="display: block"
+                    style="display: block;margin-right: 15px;margin-top: 10px"
+                    type="primary" plain
                 >节点与关系</el-button>
             <node-list-drawer></node-list-drawer>
             </div>
@@ -430,7 +431,7 @@
                     type: 'warning'
                 }).then(() => {
                     deleteNodeAPI(this.selectedNode).then(res => {
-                        if (res.data.code == 200) {
+                        if (res.data.code == 200 ) {
                             this.$message({
                                 message: '删除成功',
                                 type: 'success'
