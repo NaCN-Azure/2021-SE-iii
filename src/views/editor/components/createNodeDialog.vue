@@ -31,13 +31,18 @@
                     v-model="createNodeParams.description"
                 />
             </el-form-item>
-            <el-form-item 
-                label="所属图谱" 
-                v-model="createNodeParams.domainId"
-                v-for="item in domainList"
-                :key="item.id"
-                :value="item.id">
-                {{item.name}}
+            <el-form-item label="所属图谱">
+                <el-select 
+                    v-model="createNodeParams.domainId" 
+                    disabled 
+                    placeholder="">
+                    <el-option
+                        v-for="item in domainList"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
             </el-form-item>
         </el-form>
         <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
