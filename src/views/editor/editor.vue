@@ -685,8 +685,9 @@
                             return "#000000"
                         }
                         else{
-                            return "#ffffff"
+                            return "#000000"
                         }
+                        //默认先全部使用黑色字体
                     })
                     .attr("class","nodeText")
                     .attr("dy",4)

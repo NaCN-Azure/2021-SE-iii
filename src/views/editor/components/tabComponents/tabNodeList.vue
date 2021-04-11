@@ -42,8 +42,7 @@
                 </el-card>
             </el-col>
         </div>
-        <div class="result">
-
+        <div class="result" id="resultShow">
         </div>
 
     </div>
@@ -83,13 +82,8 @@
             }
         },
         mounted(){
-            const nodesData=this.nodesData;
             console.log("tab1组件");
-            console.log(nodesData);
-            for(var i = 0; i < nodesData.length; i++) {
-                console.log("name:"+nodesData[i].name+"\ndescription: "+nodesData[i].description+"\nshape: "+nodesData[i].shape+"\ntype: "+nodesData[i].type);
-            }
-
+            this.showSearchNodes(this.nodesData);
         },
         methods: {
             focus() {
@@ -108,8 +102,9 @@
                 clearTimeout(this.searchBoxTimeout);
             },
             searchHandler() {
-                this.searchNodes(this.search)
-                console.log(this.searchNodesResult)
+                this.searchNodes(this.search);
+                // console.log(this.searchNodesResult)
+                this.showSearchNodes(this.searchNodesResult);
                 //随机生成搜索历史tag式样
                 let n = RandomUtil.getRandomNumber(0, 5);
                 let exist =
@@ -145,6 +140,59 @@
                 }
                 //searchNodesResult就是结果数组
             },
+            createCircleHtml(name,type,description,color){
+                return "            <div class=\"showElement\">\n" +
+                    "                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
+                    "                    <circle cx=\"60\" cy=\"60\" r=\"25\" stroke=\"black\" stroke-width=\"0\" fill="+color+" />\n" +
+                    "                    <text x=\"120\" y=\"45\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
+                    "                    <text x=\"120\" y=\"65\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
+                    "                    <text x=\"120\" y=\"85\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
+                    "                </svg>\n" +
+                    "            </div>\n"
+            },
+            createRectangleHtml(name,type,description,color){
+                return "            <div class=\"showElement\">\n" +
+                    "                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
+                    "                    <rect  x=\"38\" y=\"39\" width=\"44\" height=\"44\" style=\"fill:"+color+";stroke-width:0;stroke:rgb(0,0,0)\" />\n" +
+                    "                    <text x=\"120\" y=\"45\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
+                    "                    <text x=\"120\" y=\"65\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
+                    "                    <text x=\"120\" y=\"85\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
+                    "                </svg>\n" +
+                    "            </div>"
+            },
+            createTriangleHtml(name,type,description,color){
+                return "            <div class=\"showElement\">\n" +
+                    "                <svg  xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
+                    "                    <polygon points=\"60,33 35,83 85,83\"\n" +
+                    "                             style=\"fill:"+color+";stroke:purple;stroke-width:0\"/>\n" +
+                    "                    <text x=\"120\" y=\"45\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
+                    "                    <text x=\"120\" y=\"65\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
+                    "                    <text x=\"120\" y=\"85\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
+                    "                </svg>\n" +
+                    "        </div>"
+            },
+            showSearchNodes(nodes){
+                document.getElementById("resultShow").innerHTML="";
+                const nodesData=nodes;
+                console.log(nodesData);
+                for(var i = 0; i < nodesData.length; i++) {
+                    switch (nodesData[i].shape) {
+                        case 0:{
+                            document.getElementById("resultShow").innerHTML+=this.createCircleHtml(nodesData[i].name,nodesData[i].type,nodesData[i].description,nodesData[i].bgColor);
+                            break;
+                        }
+                        case 1:{
+                            document.getElementById("resultShow").innerHTML+=this.createRectangleHtml(nodesData[i].name,nodesData[i].type,nodesData[i].description,nodesData[i].bgColor);
+                            break;
+                        }
+                        case 2:{
+                            document.getElementById("resultShow").innerHTML+=this.createTriangleHtml(nodesData[i].name,nodesData[i].type,nodesData[i].description,nodesData[i].bgColor);
+                            break;
+                        }
+                    }
+                    console.log("name:"+nodesData[i].name+"\ndescription: "+nodesData[i].description+"\nshape: "+nodesData[i].shape+"\ntype: "+nodesData[i].type);
+                }
+            },
         }
     }
 </script>
@@ -152,7 +200,7 @@
 <style scoped>
     .showElement{
         margin: 20px;
-        width: 120px;
+        width: 260px;
         height: 120px;
         display: block;
         -webkit-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);
@@ -166,10 +214,10 @@
     }
     .whole{
         display: block;
-        border: solid 1px black;
+        /*border: solid 1px black;*/
     }
     .search{
-        border: solid 1px black;
+        /*border: solid 1px black;*/
         height: 70px;
         width: 300px;
         padding-right: 20px;
@@ -178,7 +226,9 @@
         margin-left: 2px;
         width: 300px;
         height: 600px;
-        border: solid 1px black;
+        overflow-y: auto;
+        overflow-x: hidden;
+        /*border: solid 1px black;*/
     }
     #search {
         background-color: rgb(64,158,255);
