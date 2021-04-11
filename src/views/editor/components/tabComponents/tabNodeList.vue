@@ -62,7 +62,8 @@
                 historySearchList: [], //历史搜索数据
                 searchList: ["暂无数据"], //搜索返回数据,
                 history: false,
-                types: ["", "success", "info", "warning", "danger"] //搜索历史tag式样
+                types: ["", "success", "info", "warning", "danger"], //搜索历史tag式样
+                searchNodesResult: [],  //搜索节点结果
             };
         },
         computed:{
@@ -107,6 +108,8 @@
                 clearTimeout(this.searchBoxTimeout);
             },
             searchHandler() {
+                this.searchNodes(this.search)
+                console.log(this.searchNodesResult)
                 //随机生成搜索历史tag式样
                 let n = RandomUtil.getRandomNumber(0, 5);
                 let exist =
@@ -131,7 +134,17 @@
             },
             removeAllHistory() {
                 Store.removeAllHistory();
-            }
+            },
+            //搜索节点
+            searchNodes(content) {
+                this.searchNodesResult = []
+                for(var i = 0; i < this.nodesData.length; i++) {
+                    if(this.nodesData[i].name.search(content) != -1) {
+                        this.searchNodesResult.push(this.nodesData[i])
+                    }
+                }
+                //searchNodesResult就是结果数组
+            },
         }
     }
 </script>
