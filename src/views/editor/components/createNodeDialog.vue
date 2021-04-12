@@ -31,6 +31,15 @@
                     v-model="createNodeParams.description"
                 />
             </el-form-item>
+            <el-form-item label="输入半径">
+                <el-input
+                    type="textarea"
+                    autosize
+                    placeholder="请输入半径"
+                    style="width: 450px"
+                    v-model="createNodeParams.r"
+                />
+            </el-form-item>
             <el-form-item label="所属图谱">
                 <el-select 
                     v-model="createNodeParams.domainId" 
