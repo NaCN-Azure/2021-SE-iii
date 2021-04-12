@@ -41,8 +41,12 @@ public class Entity implements Serializable {
 
     double y;
 
+    double r;
+
     private String type;
 
     private String description;
+
+    private int fontSize;
 
 }

@@ -48,7 +48,7 @@ public class EntityServiceImpl implements EntityService {
 
     @Override
     public Entity updateNode(Entity entity){
-        return entityMapper.updateNode(entity.getId(), entity.getName(), entity.getDescription());
+        return entityMapper.updateNode(entity.getId(), entity.getName(), entity.getDescription(),entity.getR());
     }
 
     @Override

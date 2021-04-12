@@ -37,8 +37,9 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      * @param id name bgColor
      * @return
      */
-    @Query("MATCH (n) WHERE id(n) = {0} SET n.name = {1},n.description = {2} RETURN n")
-    Entity updateNode(@Param("id") Long id, @Param("name") String name, @Param("description") String description);
+    @Query("MATCH (n) WHERE id(n) = {0} SET n.name = {1},n.description = {2}, n.r = {3} RETURN n")
+    Entity updateNode(@Param("id") Long id, @Param("name") String name, @Param("description") String description,
+                      @Param("r") double r);
 
     /**
      *
@@ -81,7 +82,7 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      * @param y
      */
     @Query("MATCH (n) WHERE id(n) = {0} SET n.x = {1},n.y = {2} RETURN n")
-    void updateXY(Long id, double x, double y);
+    void updateXY(@Param("id") Long id, @Param("x") double x, @Param("y") double y);
 
     /**
      *
