@@ -1,24 +1,5 @@
-# njuse-front
+2021-04-12
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+1. 重构 d3 渲染节点逻辑，初步实现节点和关系的建立和显示
+2. 关于坐标还是有 NaN 的报错，接下来主要解决这个问题
+3. font_size 目前在前端是写死的，也就是说暂不支持修改字体大小，这个留到迭代三完成

@@ -34,20 +34,14 @@
                 ></el-input>
             </el-form-item>
             <el-form-item label="修改半径">
-                <el-input
-                        type="textarea"
-                        autosize
-                        placeholder="请输入半径"
-                        style="width: 450px"
-                        v-model="editNodeParams.r"
-                ></el-input>
+                <el-input style="width: 330px" v-model="editNodeParams.r"></el-input>
             </el-form-item>
         </el-form>
         <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
         <span slot="footer" class="dialog-footer">
-                    <el-button @click="cancelEditNode">取消</el-button>
-                    <el-button @click="submitEditNode" type="primary">确认</el-button>
-                </span>
+            <el-button @click="cancelEditNode">取消</el-button>
+            <el-button @click="submitEditNode" type="primary">确认</el-button>
+        </span>
     </el-dialog>
 </template>
 

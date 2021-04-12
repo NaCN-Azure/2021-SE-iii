@@ -32,13 +32,7 @@
                 />
             </el-form-item>
             <el-form-item label="输入半径">
-                <el-input
-                    type="textarea"
-                    autosize
-                    placeholder="请输入半径"
-                    style="width: 450px"
-                    v-model="createNodeParams.r"
-                />
+                <el-input v-model="createNodeParams.r" style="width: 330px"></el-input>
             </el-form-item>
             <el-form-item label="所属图谱">
                 <el-select 

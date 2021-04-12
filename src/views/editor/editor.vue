@@ -91,7 +91,7 @@
             <div class="graph">
                 <el-scrollbar style="width: 100%;height: 100%">
 <!--                    <show-graph v-bind:relationships="relationships"></show-graph>-->
-                    <svg id="kgGraph" width="1200" height="600"></svg>
+                    <svg id="kgGraph" width="1200" height="1000"></svg>
                 </el-scrollbar>
             </div>
             <div class="right-side-bar">
@@ -168,7 +168,7 @@
         data(){
             return{
                 width: 1200,
-                height: 600,
+                height: 1000,
                 // 选中要进行操作的节点
                 selectedNode:{
                     id:'',
@@ -248,7 +248,6 @@
                 this.set_nodesData(this.getNodesFromRelationships(this.relationships))
                 this.set_linksData(this.getLinksFromRelationships(this.relationships))
 
-
                 this.simulation = d3.forceSimulation(this.nodesData)
                     .force("link", d3.forceLink(this.linksData).id(d => d.id).distance(200).strength(0))
                     .force("collide", d3.forceCollide().radius(()=>50))
@@ -278,7 +277,6 @@
                             return d.source+"_"+d.name+"_"+d.target
                         }
                     })
-                    //.join("path")
                     .enter()
                     .append('path')
                     .attr("stroke", "#999")
@@ -307,7 +305,6 @@
                             return d.source+"_"+d.name+"_"+d.target
                         }
                     })
-                    //.join("text")
                     .enter()
                     .append('text')
                     .style('text-anchor', 'middle')
@@ -330,7 +327,6 @@
                     .attr("stroke-width", 2)
                     .selectAll("circle")
                     .data(this.nodesData)
-                    //.join("circle")
                     .enter()
                     .append('circle')
                     .filter(d => d.shape == 0)
@@ -338,6 +334,7 @@
                         if(typeof(d.r) != "undefined" && d.r != ''){
                             return d.r
                         }
+                        d.r = 40
                         return 40   //默认半径是40
                     })
                     .attr("class","node")
@@ -363,12 +360,14 @@
                         if(typeof(d.r) != "undefined" && d.r != ''){
                             return d.r * 1.41
                         }
+                        d.r = 40 * 1.41
                         return 40 * 1.41   
                     }) 
                     .attr("height", function (d) {
                         if(typeof(d.r) != "undefined" && d.r != ''){
                             return d.r * 1.41
                         }
+                        d.r = 40 * 1.41
                         return 40 * 1.41   
                     }) 
                     .attr("class", "node")
@@ -406,19 +405,22 @@
                 this.nodeText = g.append("g")
                     .selectAll("text")
                     .data(this.nodesData)
-                    //.join("text")
                     .enter()
                     .append('text')
                     .text(function (d) {
                         return d.name
                     })
                     .attr("dx", function (d) {
+                        //现在后端没有font_size，前端就先给出来，到迭代三再加入
+                        d.font_size = 20
                         return (d.r/2 + d.font_size)/2*(-1)
                     })
                     .attr("dy", function (d) {
+                        d.font_size = 20
                         return d.r + d.font_size - 5
                     })
                     .style("font-size", function(d){
+                        d.font_size = 20
                         return d.font_size
                     })
                     .attr("class", "node-name")
@@ -426,7 +428,7 @@
                 
 
                 this.simulation.on("tick", () => {
-                    this.links.attr("d", function(d){
+                    this.links.attr("d", function(d) {
                         if(d.source.x < d.target.x && d.source.y < d.target.y){
                             return( "M " +
                             (d.source.x - (d.source.x - d.target.x)*(d.source.r)/(Math.sqrt(Math.pow(d.source.y-d.target.y,2)+Math.pow(d.source.x-d.target.x,2))))
@@ -500,8 +502,8 @@
                         })
 
                     this.nodeText
-                        .attr("x",d => d.x)
-                        .attr("y",d => d.y)
+                        .attr("x", d => d.x)
+                        .attr("y", d => d.y)
                     })
             },
 
@@ -520,8 +522,10 @@
                         domainId: this.selectedDomain.id,
                         type:'',
                         description:'',
+                        r: '',
                         x:0.0,
                         y:0.0,
+                        font_size: 20,
                     })
                     this.set_createNodeDialogVisible(true);
                 }
@@ -761,17 +765,49 @@
             },
 
             addMarker(){
-                var arrowMarker = this.svg.append("marker")
-                    .attr("id", "arrow")
-                    .attr("markerUnits", "strokeWidth")
-                    .attr("markerWidth", "10")//
-                    .attr("markerHeight", "10")
-                    .attr("viewBox", "0 0 12 12")
-                    .attr("refX", "25")// 13
-                    .attr("refY", "6")
+                const positiveMarker = this.svg.append("marker")
+                    .attr("id", "positiveMarker")
                     .attr("orient", "auto")
-                var arrow_path = "M2,2 L10,6 L2,10 L6,6 L2,2"// 定义箭头形状
-                arrowMarker.append("path").attr("d", arrow_path).attr("fill", "grey") // 应该是箭头颜色，后面再改
+                    .attr("stroke-width", 2)
+                    .attr("markerUnits", "strokeWidth")
+                    .attr("markerUnits", "userSpaceOnUse")
+                    .attr("viewBox", "0 -5 10 10")
+                    .attr("refX", 11)
+                    .attr("refY", 0)
+                    .attr("markerWidth", 12)
+                    .attr("markerHeight", 12)
+                    .append("path")
+                    .attr("d", "M 0 -5 L 10 0 L 0 5")
+                    .attr('fill', '#999')
+                    .attr("stroke-opacity", 0.6)
+
+                const negativeMarker = this.svg.append("marker")
+                    .attr("id", "negativeMarker")
+                    .attr("orient","auto")
+                    .attr("stroke-width",2)
+                    .attr("markerUnits", "strokeWidth")
+                    .attr("markerUnits", "userSpaceOnUse")
+                    .attr("viewBox", "0 -5 10 10")
+                    .attr("refX", 0)
+                    .attr("refY", 0)
+                    .attr("markerWidth", 12)
+                    .attr("markerHeight", 12)
+                    .append("path")
+                    .attr("d", "M 10 -5 L 0 0 L 10 5")
+                    .attr('fill', '#999')
+                    .attr("stroke-opacity", 0.6)
+
+                // var arrowMarker = this.svg.append("marker")
+                //     .attr("id", "arrow")
+                //     .attr("markerUnits", "strokeWidth")
+                //     .attr("markerWidth", "10")//
+                //     .attr("markerHeight", "10")
+                //     .attr("viewBox", "0 0 12 12")
+                //     .attr("refX", "25")// 13
+                //     .attr("refY", "6")
+                //     .attr("orient", "auto")
+                // var arrow_path = "M2,2 L10,6 L2,10 L6,6 L2,2"// 定义箭头形状
+                // arrowMarker.append("path").attr("d", arrow_path).attr("fill", "grey") // 应该是箭头颜色，后面再改
             },
             drawNode(nodes){
                 var _this = this
