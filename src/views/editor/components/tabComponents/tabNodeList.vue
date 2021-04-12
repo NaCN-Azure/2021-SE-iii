@@ -143,7 +143,7 @@
             createCircleHtml(name,type,description,color){
                 return "            <div class=\"showElement\" style='margin-top: 10px;margin-bottom: 15px;margin-left:20px;width: 250px;height: 110px;-webkit-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);-moz-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);box-shadow:0 0 10px rgba(52, 56, 66, 0.2);border-radius: 10px 10px;'>\n" +
                     "                <svg width='250px' height='110px' xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
-                    "                    <circle cx=\"60\" cy=\"55\" r=\"25\" stroke=\"#999\" stroke-width=\"2\" fill="+color+" />\n" +
+                    "                    <circle cx=\"60\" cy=\"55\" r=\"25\" stroke=\"#999\" stroke-width=\"0\" fill="+color+" />\n" +
                     "                    <text x=\"120\" y=\"40\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
                     "                    <text x=\"120\" y=\"60\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
                     "                    <text x=\"120\" y=\"80\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
@@ -153,7 +153,7 @@
             createRectangleHtml(name,type,description,color){
                 return "            <div class=\"showElement\" style='margin-top: 10px;margin-bottom: 15px;margin-left:20px;width: 250px;height: 110px;-webkit-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);-moz-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);box-shadow:0 0 10px rgba(52, 56, 66, 0.2);border-radius: 10px 10px;'>\n" +
                     "                <svg width='250px' height='110px' xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
-                    "                    <rect  x=\"38\" y=\"34\" width=\"44\" height=\"44\" style=\"fill:"+color+";stroke-width:2;stroke:#999\" />\n" +
+                    "                    <rect  x=\"38\" y=\"34\" width=\"44\" height=\"44\" style=\"fill:"+color+";stroke-width:0;stroke:#999\" />\n" +
                     "                    <text x=\"120\" y=\"40\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
                     "                    <text x=\"120\" y=\"60\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
                     "                    <text x=\"120\" y=\"80\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
@@ -164,7 +164,7 @@
                 return "            <div class=\"showElement\" style='margin-top: 10px;margin-bottom: 15px;margin-left:20px;width: 250px;height: 110px;-webkit-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);-moz-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);box-shadow:0 0 10px rgba(52, 56, 66, 0.2);border-radius: 10px 10px;'>\n" +
                     "                <svg width='250px' height='110px' xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
                     "                    <polygon points=\"60,28 35,78 85,78\"\n" +
-                    "                             style=\"fill:"+color+";stroke:#999;stroke-width:2\"/>\n" +
+                    "                             style=\"fill:"+color+";stroke:#999;stroke-width:0\"/>\n" +
                     "                    <text x=\"120\" y=\"40\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
                     "                    <text x=\"120\" y=\"60\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
                     "                    <text x=\"120\" y=\"80\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +

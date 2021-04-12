@@ -323,8 +323,6 @@
 
                 //圆形节点初始化
                 this.nodes = g.append("g")
-                    .attr("stroke", "#999")
-                    .attr("stroke-width", 2)
                     .selectAll("circle")
                     .data(this.nodesData)
                     .enter()
@@ -344,13 +342,42 @@
                         }
                         return "#5290F2"  //一种蓝色
                     })
-                    //.on("click", this.nodeClick)
+                    .on("contextmenu", function(d){
+                        var cc = $(this).offset()
+                        this.selectedNode = d
+                        d3.select('#node-custom-menu')
+                            .style('position', 'absolute')
+                            .style('left', cc.left -250 + "px")
+                            .style('top', cc.top -130 + "px")
+                            .style('display', 'block');
+                        d3.event.preventDefault() // 禁止系统默认右键
+                        d3.event.stopPropagation() // 禁止空白处右键
+                    })
+                    .on('mouseenter',function (d) {
+                        d3.select(this).style("stroke-width", "2").style("stroke","#999")
+                        this.selectedNode = d
+                    })
+                    // 鼠标在节点上停留2s时，显示节点描述信息
+                    .on('mouseover',function (d, i){
+                        this.timer = setTimeout(function (d) {
+                            this.popoverContent = d.description
+                            d3.select("#rich-container")
+                                .style('position', 'absolute')
+                                .style('left', d.x + "px")
+                                .style('top', d.y + "px")
+                                .style('display', 'block')
+                        }, 2000)
+                    })
+                    .on('mouseout',function (d, i) {
+                        clearTimeout(this.timer)
+                    })
+                    .on('mouseleave',function (d) {
+                        d3.select(this).style("stroke-width","0")
+                    })
                     .call(this.drag(this.simulation))
 
                 //矩形节点初始化
                 this.rectNodes = g.append("g")
-                    .attr("stroke", "#999")
-                    .attr("stroke-width", 2)
                     .selectAll("rect")
                     .data(this.nodesData)
                     .enter()
@@ -377,13 +404,42 @@
                         }
                         return "#5290F2"  //一种蓝色
                     })
-                    //.on("click",this.nodeClick)
+                    .on("contextmenu", function(d){
+                        var cc = $(this).offset()
+                        this.selectedNode = d
+                        d3.select('#node-custom-menu')
+                            .style('position', 'absolute')
+                            .style('left', cc.left -250 + "px")
+                            .style('top', cc.top -130 + "px")
+                            .style('display', 'block');
+                        d3.event.preventDefault() // 禁止系统默认右键
+                        d3.event.stopPropagation() // 禁止空白处右键
+                    })
+                    .on('mouseenter',function (d) {
+                        d3.select(this).style("stroke-width", "2").style("stroke","#999")
+                        this.selectedNode = d
+                    })
+                    // 鼠标在节点上停留2s时，显示节点描述信息
+                    .on('mouseover',function (d, i){
+                        this.timer = setTimeout(function (d) {
+                            this.popoverContent = d.description
+                            d3.select("#rich-container")
+                                .style('position', 'absolute')
+                                .style('left', d.x + "px")
+                                .style('top', d.y + "px")
+                                .style('display', 'block')
+                        }, 2000)
+                    })
+                    .on('mouseout',function (d, i) {
+                        clearTimeout(this.timer)
+                    })
+                    .on('mouseleave',function (d) {
+                        d3.select(this).style("stroke-width","0")
+                    })
                     .call(this.drag(this.simulation))
 
                 //三角形节点初始化
                 this.triangleNodes = g.append("g")
-                    .attr("stroke", "#999")
-                    .attr("stroke-width", 2)
                     .selectAll("triangle-up")
                     .data(this.nodesData)
                     .enter()
@@ -396,7 +452,38 @@
                         }
                         return "#5290F2"  //一种蓝色
                     })
-                    //.on("click",this.nodeClick)
+                    .on("contextmenu", function(d){
+                        var cc = $(this).offset()
+                        this.selectedNode = d
+                        d3.select('#node-custom-menu')
+                            .style('position', 'absolute')
+                            .style('left', cc.left -250 + "px")
+                            .style('top', cc.top -130 + "px")
+                            .style('display', 'block');
+                        d3.event.preventDefault() // 禁止系统默认右键
+                        d3.event.stopPropagation() // 禁止空白处右键
+                    })
+                    .on('mouseenter',function (d) {
+                        d3.select(this).style("stroke-width", "2").style("stroke","#999")
+                        this.selectedNode = d
+                    })
+                    // 鼠标在节点上停留2s时，显示节点描述信息
+                    .on('mouseover',function (d, i){
+                        this.timer = setTimeout(function (d) {
+                            this.popoverContent = d.description
+                            d3.select("#rich-container")
+                                .style('position', 'absolute')
+                                .style('left', d.x + "px")
+                                .style('top', d.y + "px")
+                                .style('display', 'block')
+                        }, 2000)
+                    })
+                    .on('mouseout',function (d, i) {
+                        clearTimeout(this.timer)
+                    })
+                    .on('mouseleave',function (d) {
+                        d3.select(this).style("stroke-width","0")
+                    })
                     .call(this.drag(this.simulation))
 
 
@@ -505,6 +592,12 @@
                         .attr("x", d => d.x)
                         .attr("y", d => d.y)
                     })
+
+                // 点击空白处，关闭点开的菜单
+                this.svg.on("click", function () {
+                    $('#link-custom-menu').hide()
+                    $('#node-custom-menu').hide()
+                })
             },
 
 
