@@ -22,11 +22,11 @@
                 >
                     <dl v-if="isHistorySearch">
                         <dt class="search-title" v-show="history">历史搜索</dt>
-                        <dt class="remove-history" v-show="history" @click="removeAllHistory">
+                        <dt class="remove-history" v-show="history" @click="removeAllNodeHistory">
                             <i class="el-icon-delete"></i>清空历史记录
                         </dt>
                         <el-tag
-                                v-for="search in historySearchList"
+                                v-for="search in historySearchNodeList"
                                 :key="search.id"
                                 closable
                                 :type="search.type"
@@ -58,7 +58,7 @@
                 search: "", //当前输入框的值
                 isFocus: false, //是否聚焦
                 hotSearchList: ["暂无热门搜索"], //热门搜索数据
-                historySearchList: [], //历史搜索数据
+                historySearchNodeList: [], //历史搜索数据
                 searchList: ["暂无数据"], //搜索返回数据,
                 history: false,
                 types: ["", "success", "info", "warning", "danger"], //搜索历史tag式样
@@ -82,15 +82,15 @@
             }
         },
         mounted(){
-            console.log("tab1组件");
+            // console.log("tab1组件");
             this.showSearchNodes(this.nodesData);
         },
         methods: {
             focus() {
                 this.isFocus = true;
-                this.historySearchList =
-                    Store.loadHistory() == null ? [] : Store.loadHistory();
-                this.history = this.historySearchList.length == 0 ? false : true;
+                this.historySearchNodeList =
+                    Store.loadNodeHistory() == null ? [] : Store.loadNodeHistory();
+                this.history = this.historySearchNodeList.length == 0 ? false : true;
             },
             blur() {
                 var self = this;
@@ -108,27 +108,27 @@
                 //随机生成搜索历史tag式样
                 let n = RandomUtil.getRandomNumber(0, 5);
                 let exist =
-                    this.historySearchList.filter(value => {
+                    this.historySearchNodeList.filter(value => {
                         return value.name == this.search;
                     }).length == 0
                         ? false
                         : true;
                 if (!exist) {
-                    this.historySearchList.push({ name: this.search, type: this.types[n] });
-                    Store.saveHistory(this.historySearchList);
+                    this.historySearchNodeList.push({ name: this.search, type: this.types[n] });
+                    Store.saveNodeHistory(this.historySearchNodeList);
                 }
-                this.history = this.historySearchList.length == 0 ? false : true;
+                this.history = this.historySearchNodeList.length == 0 ? false : true;
             },
             closeHandler(search){
-                this.historySearchList.splice(this.historySearchList.indexOf(search), 1);
-                Store.saveHistory(this.historySearchList);
+                this.historySearchNodeList.splice(this.historySearchNodeList.indexOf(search), 1);
+                Store.saveNodeHistory(this.historySearchNodeList);
                 clearTimeout(this.searchBoxTimeout);
-                if (this.historySearchList.length == 0) {
+                if (this.historySearchNodeList.length == 0) {
                     this.history = false;
                 }
             },
-            removeAllHistory() {
-                Store.removeAllHistory();
+            removeAllNodeHistory() {
+                Store.removeAllNodeHistory();
             },
             //搜索节点
             searchNodes(content) {
@@ -141,40 +141,40 @@
                 //searchNodesResult就是结果数组
             },
             createCircleHtml(name,type,description,color){
-                return "            <div class=\"showElement\">\n" +
-                    "                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
-                    "                    <circle cx=\"60\" cy=\"60\" r=\"25\" stroke=\"black\" stroke-width=\"0\" fill="+color+" />\n" +
-                    "                    <text x=\"120\" y=\"45\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
-                    "                    <text x=\"120\" y=\"65\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
-                    "                    <text x=\"120\" y=\"85\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
+                return "            <div class=\"showElement\" style='margin-top: 10px;margin-bottom: 15px;margin-left:20px;width: 250px;height: 110px;-webkit-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);-moz-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);box-shadow:0 0 10px rgba(52, 56, 66, 0.2);border-radius: 10px 10px;'>\n" +
+                    "                <svg width='250px' height='110px' xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
+                    "                    <circle cx=\"60\" cy=\"55\" r=\"25\" stroke=\"#999\" stroke-width=\"2\" fill="+color+" />\n" +
+                    "                    <text x=\"120\" y=\"40\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
+                    "                    <text x=\"120\" y=\"60\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
+                    "                    <text x=\"120\" y=\"80\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
                     "                </svg>\n" +
                     "            </div>\n"
             },
             createRectangleHtml(name,type,description,color){
-                return "            <div class=\"showElement\">\n" +
-                    "                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
-                    "                    <rect  x=\"38\" y=\"39\" width=\"44\" height=\"44\" style=\"fill:"+color+";stroke-width:0;stroke:rgb(0,0,0)\" />\n" +
-                    "                    <text x=\"120\" y=\"45\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
-                    "                    <text x=\"120\" y=\"65\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
-                    "                    <text x=\"120\" y=\"85\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
+                return "            <div class=\"showElement\" style='margin-top: 10px;margin-bottom: 15px;margin-left:20px;width: 250px;height: 110px;-webkit-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);-moz-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);box-shadow:0 0 10px rgba(52, 56, 66, 0.2);border-radius: 10px 10px;'>\n" +
+                    "                <svg width='250px' height='110px' xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
+                    "                    <rect  x=\"38\" y=\"34\" width=\"44\" height=\"44\" style=\"fill:"+color+";stroke-width:2;stroke:#999\" />\n" +
+                    "                    <text x=\"120\" y=\"40\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
+                    "                    <text x=\"120\" y=\"60\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
+                    "                    <text x=\"120\" y=\"80\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
                     "                </svg>\n" +
                     "            </div>"
             },
             createTriangleHtml(name,type,description,color){
-                return "            <div class=\"showElement\">\n" +
-                    "                <svg  xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
-                    "                    <polygon points=\"60,33 35,83 85,83\"\n" +
-                    "                             style=\"fill:"+color+";stroke:purple;stroke-width:0\"/>\n" +
-                    "                    <text x=\"120\" y=\"45\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
-                    "                    <text x=\"120\" y=\"65\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
-                    "                    <text x=\"120\" y=\"85\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
+                return "            <div class=\"showElement\" style='margin-top: 10px;margin-bottom: 15px;margin-left:20px;width: 250px;height: 110px;-webkit-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);-moz-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);box-shadow:0 0 10px rgba(52, 56, 66, 0.2);border-radius: 10px 10px;'>\n" +
+                    "                <svg width='250px' height='110px' xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n" +
+                    "                    <polygon points=\"60,28 35,78 85,78\"\n" +
+                    "                             style=\"fill:"+color+";stroke:#999;stroke-width:2\"/>\n" +
+                    "                    <text x=\"120\" y=\"40\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点名称："+name+"</text>\n" +
+                    "                    <text x=\"120\" y=\"60\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点类型："+type+"</text>\n" +
+                    "                    <text x=\"120\" y=\"80\" fill=\"black\" text-anchor=\"start\" font-size=\"12px\">节点描述："+description+"</text>\n" +
                     "                </svg>\n" +
                     "        </div>"
             },
             showSearchNodes(nodes){
                 document.getElementById("resultShow").innerHTML="";
                 const nodesData=nodes;
-                console.log(nodesData);
+                // console.log(nodesData);
                 for(var i = 0; i < nodesData.length; i++) {
                     switch (nodesData[i].shape) {
                         case 0:{
@@ -190,7 +190,7 @@
                             break;
                         }
                     }
-                    console.log("name:"+nodesData[i].name+"\ndescription: "+nodesData[i].description+"\nshape: "+nodesData[i].shape+"\ntype: "+nodesData[i].type);
+                    // console.log("name:"+nodesData[i].name+"\ndescription: "+nodesData[i].description+"\nshape: "+nodesData[i].shape+"\ntype: "+nodesData[i].type);
                 }
             },
         }
@@ -199,13 +199,13 @@
 
 <style scoped>
     .showElement{
-        margin: 20px;
+        margin-top: 20px;
         width: 260px;
-        height: 120px;
+        height: 110px;
         display: block;
         -webkit-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);
         -moz-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);
-        box-shadow:0 0 10px rgba(52, 56, 66, 0.2);
+        box-shadow:0 0 15px rgba(52, 56, 66, 0.2);
         border-radius: 10px 10px;
     }
     .center {
@@ -223,7 +223,10 @@
         padding-right: 20px;
     }
     .result{
+        margin-top: 0;
         margin-left: 2px;
+        padding-top: -10px;
+        margin-bottom: 10px;
         width: 300px;
         height: 600px;
         overflow-y: auto;

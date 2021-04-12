@@ -966,16 +966,7 @@
             //==================搜索节点和关系===================
 
 
-            searchLinks(content) {
-                this.searchContent = content
-                this.searchLinksResult = []
-                for(var i = 0; i < this.linksData.length; i++) {
-                    if(this.linksData[i].name.search(this.searchContent) != -1) {
-                        this.searchLinksResult.push(this.linksData[i])
-                    }
-                }
-                //searchLinksResult就是结果数组
-            },
+
 
             highlight() {
                 //
