@@ -29,11 +29,11 @@ public class EntityServiceImpl implements EntityService {
     private EntityMapper entityMapper;
 
     @Override
-    public Entity createNode(String name, int shape, String type,int domainId,String description){
+    public Entity createNode(String name, int shape, String type,int domainId,String description,double r){
         Entity entity = entityMapper.findByName(name,domainId);
         if(entity == null) {
             String color=typeService.insertType(domainId,type);
-            entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).x(0).y(0).description(description).build();
+            entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).x(0).y(0).r(r).description(description).build();
             return entityMapper.save(entity);
         }
         else {

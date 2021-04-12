@@ -12,6 +12,8 @@ public class DefaultUtil {
 
     public static String DEFAULT_DESCRIPTION="";
 
+    public static double DEFAULT_R=40;
+
     public static HashMap<String,Boolean> DEFAULT_TYPE_COLORS=new HashMap<String, Boolean>(){
         {
                     put("#0000FF", false);

@@ -46,4 +46,5 @@ backend-parent：后端系统的根目录（父工程），暂时管理两个子
 2021-04-12
 - 1.新增Entity的r成员和fontsize成员
 - 2.updateNode方法加入r更新
+- 3.createNode方法加入输入参数r成员
 
