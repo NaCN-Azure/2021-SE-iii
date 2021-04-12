@@ -11,12 +11,8 @@
             <el-form-item label="节点名称">
                 <el-input v-model="editNodeParams.name" style="width: 330px"></el-input>
             </el-form-item>
-            <el-form-item label="选择颜色">
-                <el-color-picker v-model="editNodeParams.bgColor">
-                </el-color-picker>
-            </el-form-item>
             <el-form-item label="选择形状">
-                <el-select disabled v-model="editNodeParams.shape" placeholder="请选择">
+                <el-select v-model="editNodeParams.shape" placeholder="请选择">
                     <el-option
                             v-for="item in shapes"
                             :key="item.key"
@@ -25,10 +21,10 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="选择类型">
+            <el-form-item label="修改类型">
                 <el-input v-model="editNodeParams.type" style="width: 450px" placeholder="请输入节点类型"></el-input>
             </el-form-item>
-            <el-form-item label="添加描述">
+            <el-form-item label="修改描述">
                 <el-input
                         type="textarea"
                         autosize
@@ -37,23 +33,15 @@
                         v-model="editNodeParams.description"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="所属图谱">
-                <!-- 默认只能在当前选中的图谱中添加节点 -->
-                <el-select disabled v-model="editNodeParams.domainId" placeholder="请从现有图谱中选择">
-                    <el-option
-                            v-for="item in domainList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
+            <el-form-item label="修改半径">
+                <el-input style="width: 330px" v-model="editNodeParams.r"></el-input>
             </el-form-item>
         </el-form>
         <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
         <span slot="footer" class="dialog-footer">
-                    <el-button @click="cancelEditNode">取消</el-button>
-                    <el-button @click="submitEditNode" type="primary">确认</el-button>
-                </span>
+            <el-button @click="cancelEditNode">取消</el-button>
+            <el-button @click="submitEditNode" type="primary">确认</el-button>
+        </span>
     </el-dialog>
 </template>
 

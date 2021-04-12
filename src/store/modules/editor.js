@@ -13,6 +13,7 @@ const editor = {
             domainId: '',
             type: '',
             description: '',
+            r: '',
         },
         editNodeDialogVisible: false,
         editNodeParams:{
@@ -25,6 +26,7 @@ const editor = {
             description: '',
             x:0.0,
             y:0.0,
+            r: '',
         },
         addDomainDialogVisible: false,
         createLinkDialogVisible: false,

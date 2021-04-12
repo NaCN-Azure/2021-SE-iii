@@ -91,7 +91,7 @@
             <div class="graph">
                 <el-scrollbar style="width: 100%;height: 100%">
 <!--                    <show-graph v-bind:relationships="relationships"></show-graph>-->
-                    <svg id="kgGraph" width="1200" height="600"></svg>
+                    <svg id="kgGraph" width="1200" height="1000"></svg>
                 </el-scrollbar>
             </div>
             <div class="right-side-bar">
@@ -167,6 +167,8 @@
         inject:['reload'],
         data(){
             return{
+                width: 1200,
+                height: 1000,
                 // 选中要进行操作的节点
                 selectedNode:{
                     id:'',
@@ -176,6 +178,8 @@
                     domainId:'',
                     nodeType:'',
                     description:'',
+                    r: '',
+                    font_size: 20,  //字体大小
                 },
                 selectedLink:{
                     id:'',
@@ -205,9 +209,9 @@
             this.getAllDomains();
         },
 
-        async mounted(){
-            this.initGraph();
-        },
+        // async mounted(){
+        //     this.initGraph();
+        // },
         computed:{
             ...mapGetters([
                 'selectedDomain',
@@ -241,26 +245,269 @@
                 'getDomainById',
             ]),
             initGraph(){
+                this.set_nodesData(this.getNodesFromRelationships(this.relationships))
+                this.set_linksData(this.getLinksFromRelationships(this.relationships))
+
+                this.simulation = d3.forceSimulation(this.nodesData)
+                    .force("link", d3.forceLink(this.linksData).id(d => d.id).distance(200).strength(0))
+                    .force("collide", d3.forceCollide().radius(()=>50))
+                    .force("charge", d3.forceManyBody().strength(-40))
+                    .force("center", d3.forceCenter(this.width / 2, this.height / 2))
+
                 this.svg = d3.select('svg')
-                var width = + this.svg.attr('width')
-                var height = + this.svg.attr('height')
-                const g = this.svg.append('g') // svg中创建g元素，node和link放在g中
+                    .attr("viewBox", [0, 0, this.width, this.height])
+                    .call(d3.zoom()
+                        .scaleExtent([0.3, 3])
+                        .on("zoom", function (event) { g.attr("transform", event.transform) }))
+                    .attr("class", "svgCanvas")
 
-                this.simulation = d3.forceSimulation()
-                    .force('charge', d3.forceManyBody().strength(-40))
-                    .force('collide', d3.forceCollide().radius(()=>50))
-                    .force('center', d3.forceCenter(width / 2, height / 2))
-                    .force('link', d3.forceLink().distance(300).id(d => d.id));
+                this.addMarker()
 
-                this.links = g.append('g').attr("class","link");
-                this.linkText = g.append('g').attr("class","linkText");
-                this.nodes = g.append('g').attr("class","node");
-                this.rectNodes = g.append('g').attr("class","rectNode");
-                this.triangleNodes = g.append('g').attr("class","triangleNode");
-                this.nodeText = g.append("g").attr("class","nodeText");
+                const g = this.svg.append('g').attr("class", "content")
 
-                this.addMarker();
+                //虚线   stroke-dasharray 5, 5
+
+                this.links = g.append("g")
+                    .selectAll("path")
+                    .data(this.linksData, function (d) {
+                        if(typeof (d.source) === 'object'){
+                            return d.source.id + "_"+d.name+"_"+d.target.id
+                        }
+                        else{
+                            return d.source+"_"+d.name+"_"+d.target
+                        }
+                    })
+                    .enter()
+                    .append('path')
+                    .attr("stroke", "#999")
+                    .attr("stroke-opacity", 0.8)
+                    .attr("marker-end", "url(resolved)")
+                    .attr("fill-opacity", 0)
+                    .attr("stroke-width", 2)
+                    .attr("class", "link")
+                    //.on("click", this.linkClick)
+                    .attr("id", function (d) {
+                        if(typeof (d.source) === 'object'){
+                            return d.source.id+"_"+d.name+"_"+d.target.id
+                        }
+                        else{
+                            return d.source+"_"+d.name+"_"+d.target
+                        }
+                    })
+
+                this.linkText = g.append("g")
+                    .selectAll("text")
+                    .data(this.linksData, function (d) {
+                        if(typeof (d.source) === 'object'){
+                            return d.source.id+"_"+d.name+"_"+d.target.id
+                        }
+                        else{
+                            return d.source+"_"+d.name+"_"+d.target
+                        }
+                    })
+                    .enter()
+                    .append('text')
+                    .style('text-anchor', 'middle')
+                    .style('font-size', '20px')
+                    .append('textPath')
+                    .attr('xlink:href', function (d) {
+                        if(typeof (d.source) === 'object'){
+                            return "#" + d.source.id+"_"+d.name+"_"+d.target.id
+                        }
+                        else{
+                            return "#" + d.source+"_"+d.name+"_"+d.target
+                        }
+                    })
+                    .attr('startOffset', '50%')
+                    .text(d=>d.name)
+
+                //圆形节点初始化
+                this.nodes = g.append("g")
+                    .attr("stroke", "#999")
+                    .attr("stroke-width", 2)
+                    .selectAll("circle")
+                    .data(this.nodesData)
+                    .enter()
+                    .append('circle')
+                    .filter(d => d.shape == 0)
+                    .attr('r', function (d) {
+                        if(typeof(d.r) != "undefined" && d.r != ''){
+                            return d.r
+                        }
+                        d.r = 40
+                        return 40   //默认半径是40
+                    })
+                    .attr("class","node")
+                    .attr("fill", function(d){
+                        if(typeof(d.bgColor) != "undefined" && d.bgColor != ''){
+                            return d.bgColor
+                        }
+                        return "#5290F2"  //一种蓝色
+                    })
+                    //.on("click", this.nodeClick)
+                    .call(this.drag(this.simulation))
+
+                //矩形节点初始化
+                this.rectNodes = g.append("g")
+                    .attr("stroke", "#999")
+                    .attr("stroke-width", 2)
+                    .selectAll("rect")
+                    .data(this.nodesData)
+                    .enter()
+                    .filter(d => d.shape == 1)
+                    .append("rect")
+                    .attr("width", function (d) {  //方形为对应size原型的内切方形
+                        if(typeof(d.r) != "undefined" && d.r != ''){
+                            return d.r * 1.41
+                        }
+                        d.r = 40 * 1.41
+                        return 40 * 1.41   
+                    }) 
+                    .attr("height", function (d) {
+                        if(typeof(d.r) != "undefined" && d.r != ''){
+                            return d.r * 1.41
+                        }
+                        d.r = 40 * 1.41
+                        return 40 * 1.41   
+                    }) 
+                    .attr("class", "node")
+                    .attr("fill", function(d){
+                        if(typeof(d.bgColor) != "undefined" && d.bgColor != ''){
+                            return d.bgColor
+                        }
+                        return "#5290F2"  //一种蓝色
+                    })
+                    //.on("click",this.nodeClick)
+                    .call(this.drag(this.simulation))
+
+                //三角形节点初始化
+                this.triangleNodes = g.append("g")
+                    .attr("stroke", "#999")
+                    .attr("stroke-width", 2)
+                    .selectAll("triangle-up")
+                    .data(this.nodesData)
+                    .enter()
+                    .filter(d => d.shape == 2)
+                    .append('path')
+                    .attr("class", "node")
+                    .attr("fill", function(d){
+                        if(typeof(d.bgColor) != "undefined" && d.bgColor != ''){
+                            return d.bgColor
+                        }
+                        return "#5290F2"  //一种蓝色
+                    })
+                    //.on("click",this.nodeClick)
+                    .call(this.drag(this.simulation))
+
+
+                this.nodes.append("title").text(d => d.name)
+
+                this.nodeText = g.append("g")
+                    .selectAll("text")
+                    .data(this.nodesData)
+                    .enter()
+                    .append('text')
+                    .text(function (d) {
+                        return d.name
+                    })
+                    .attr("dx", function (d) {
+                        //现在后端没有font_size，前端就先给出来，到迭代三再加入
+                        d.font_size = 20
+                        return (d.r/2 + d.font_size)/2*(-1)
+                    })
+                    .attr("dy", function (d) {
+                        d.font_size = 20
+                        return d.r + d.font_size - 5
+                    })
+                    .style("font-size", function(d){
+                        d.font_size = 20
+                        return d.font_size
+                    })
+                    .attr("class", "node-name")
+                    .attr("fill", "black")
+                
+
+                this.simulation.on("tick", () => {
+                    this.links.attr("d", function(d) {
+                        if(d.source.x < d.target.x && d.source.y < d.target.y){
+                            return( "M " +
+                            (d.source.x - (d.source.x - d.target.x)*(d.source.r)/(Math.sqrt(Math.pow(d.source.y-d.target.y,2)+Math.pow(d.source.x-d.target.x,2))))
+                            +" "+
+                            (d.source.y-(d.source.y-d.target.y)*(d.source.r)/(Math.sqrt(Math.pow(d.source.y-d.target.y,2)+Math.pow(d.source.x-d.target.x,2))))
+                            +" L "+
+                            (d.target.x-(d.target.x-d.source.x)*(d.target.r)/(Math.sqrt(Math.pow(d.target.y-d.source.y,2)+Math.pow(d.target.x-d.source.x,2))))
+                            +" "+
+                            (d.target.y-(d.target.y-d.source.y)*(d.target.r)/(Math.sqrt(Math.pow(d.target.y-d.source.y,2)+Math.pow(d.target.x-d.source.x,2))))
+                            )
+                        }else if(d.source.x<d.target.x&&d.source.y>=d.target.y){
+                            return( "M "+
+                            (d.source.x-(d.source.x-d.target.x)*(d.source.r)/(Math.sqrt(Math.pow(d.source.y-d.target.y,2)+Math.pow(d.source.x-d.target.x,2))))
+                            +" "+
+                            (d.source.y-(d.source.y-d.target.y)*(d.source.r)/(Math.sqrt(Math.pow(d.source.y-d.target.y,2)+Math.pow(d.source.x-d.target.x,2))))
+                            +" L "+
+                            (d.target.x-(d.target.x-d.source.x)*(d.target.r)/(Math.sqrt(Math.pow(d.target.y-d.source.y,2)+Math.pow(d.target.x-d.source.x,2))))
+                            +" "+
+                            (d.target.y-(d.target.y-d.source.y)*(d.target.r)/(Math.sqrt(Math.pow(d.target.y-d.source.y,2)+Math.pow(d.target.x-d.source.x,2))))
+                            )
+                        }else if(d.source.x>d.target.x&&d.source.y<d.target.y){
+                            return( "M "+
+                            (d.target.x-(d.target.x-d.source.x)*(d.target.r)/(Math.sqrt(Math.pow(d.target.y-d.source.y,2)+Math.pow(d.target.x-d.source.x,2))))
+                            +" "+
+                            (d.target.y-(d.target.y-d.source.y)*(d.target.r)/(Math.sqrt(Math.pow(d.target.y-d.source.y,2)+Math.pow(d.target.x-d.source.x,2))))
+                            +" L "+
+                            (d.source.x-(d.source.x-d.target.x)*(d.source.r)/(Math.sqrt(Math.pow(d.source.y-d.target.y,2)+Math.pow(d.source.x-d.target.x,2))))
+                            +" "+
+                            (d.source.y-(d.source.y-d.target.y)*(d.source.r)/(Math.sqrt(Math.pow(d.source.y-d.target.y,2)+Math.pow(d.source.x-d.target.x,2))))
+                            )
+                        }else{
+                            return ("M " +
+                            (d.target.x-(d.target.x-d.source.x)*(d.target.r)/(Math.sqrt(Math.pow(d.target.y-d.source.y,2)+Math.pow(d.target.x-d.source.x,2))))
+                            +" "+
+                            (d.target.y-(d.target.y-d.source.y)*(d.target.r)/(Math.sqrt(Math.pow(d.target.y-d.source.y,2)+Math.pow(d.target.x-d.source.x,2))))
+                            +" L "+
+                            (d.source.x-(d.source.x-d.target.x)*(d.source.r)/(Math.sqrt(Math.pow(d.source.y-d.target.y,2)+Math.pow(d.source.x-d.target.x,2))))
+                            +" "+
+                            (d.source.y-(d.source.y-d.target.y)*(d.source.r)/(Math.sqrt(Math.pow(d.source.y-d.target.y,2)+Math.pow(d.source.x-d.target.x,2))))
+                            )
+                        }
+                        })
+                        .attr("marker-end", function (d) {
+                            if(d.source.x < d.target.x){
+                                return "url(#positiveMarker)"
+                            }
+                            else {
+                                return null
+                            }
+                        })
+                        .attr("marker-start",function (d) {
+                            if(d.source.x < d.target.x){
+                                return null
+                            }
+                            else{
+                                return "url(#negativeMarker)"
+                            }
+                        })
+
+                    this.nodes
+                        .attr("cx", d => d.x)
+                        .attr("cy", d => d.y)
+
+                    this.rectNodes
+                        .attr("x", d => d.x - d.r * 0.707) //方形中心点
+                        .attr("y", d => d.y - d.r * 0.707)
+
+                    this.triangleNodes
+                        .attr("d", function(d){
+                            return "M "+(d.x-0.87*d.r)+" "+ (d.y+0.5*d.r)+" L "+(d.x+0.87*d.r-0.87*d.r)+" "+(d.y-1.5*d.r+0.5*d.r)+" L "+(d.x+d.r*1.73-0.87*d.r)+" "+(d.y+0.5*d.r)+" L "+(d.x-0.87*d.r)+" "+(d.y+0.5*d.r)
+                        })
+
+                    this.nodeText
+                        .attr("x", d => d.x)
+                        .attr("y", d => d.y)
+                    })
             },
+
+
             showCreateNodeDialog(){
                 if(this.selectedDomain.id==''){
                     this.$message({
@@ -275,8 +522,10 @@
                         domainId: this.selectedDomain.id,
                         type:'',
                         description:'',
+                        r: '',
                         x:0.0,
                         y:0.0,
+                        font_size: 20,
                     })
                     this.set_createNodeDialogVisible(true);
                 }
@@ -312,14 +561,14 @@
             },
             // 选择domain，展示它的图谱
             selectDomain(domain){
-                this.set_selectedDomain(domain);
+                this.set_selectedDomain(domain)
                 this.getDomainById(this.selectedDomain.id);
-                this.updateGraph()
+                this.initGraph()
             },
             // 其他方法更新图谱时使用
             selectDomainById(domainId){
                 this.getDomainById(domainId);
-                this.updateGraph();
+                this.initGraph();
             },
             deleteDomain(domainId){
                 this.$confirm('此操作将删除图谱及其中所有节点和关系（不可恢复），是否继续？',{
@@ -366,7 +615,8 @@
                         "name": "JKL",
                         "bgColor": "1",
                         "shape": 1,
-                        "domainId": 1}
+                        "domainId": 1,
+                        "r": 1}
                  */
                 var nodes = [];
                 var node_ids =[]; //去重用
@@ -515,37 +765,67 @@
             },
 
             addMarker(){
-                var arrowMarker = this.svg.append("marker")
-                    .attr("id","arrow")
-                    .attr("markerUnits","strokeWidth")
-                    .attr("markerWidth","10")//
-                    .attr("markerHeight","10")
-                    .attr("viewBox","0 0 12 12")
-                    .attr("refX","25")// 13
-                    .attr("refY","6")
-                    .attr("orient","auto");
-                var arrow_path = "M2,2 L10,6 L2,10 L6,6 L2,2";// 定义箭头形状
-                arrowMarker.append("path").attr("d",arrow_path).attr("fill","grey"); // 应该是箭头颜色，后面再改
+                const positiveMarker = this.svg.append("marker")
+                    .attr("id", "positiveMarker")
+                    .attr("orient", "auto")
+                    .attr("stroke-width", 2)
+                    .attr("markerUnits", "strokeWidth")
+                    .attr("markerUnits", "userSpaceOnUse")
+                    .attr("viewBox", "0 -5 10 10")
+                    .attr("refX", 11)
+                    .attr("refY", 0)
+                    .attr("markerWidth", 12)
+                    .attr("markerHeight", 12)
+                    .append("path")
+                    .attr("d", "M 0 -5 L 10 0 L 0 5")
+                    .attr('fill', '#999')
+                    .attr("stroke-opacity", 0.6)
+
+                const negativeMarker = this.svg.append("marker")
+                    .attr("id", "negativeMarker")
+                    .attr("orient","auto")
+                    .attr("stroke-width",2)
+                    .attr("markerUnits", "strokeWidth")
+                    .attr("markerUnits", "userSpaceOnUse")
+                    .attr("viewBox", "0 -5 10 10")
+                    .attr("refX", 0)
+                    .attr("refY", 0)
+                    .attr("markerWidth", 12)
+                    .attr("markerHeight", 12)
+                    .append("path")
+                    .attr("d", "M 10 -5 L 0 0 L 10 5")
+                    .attr('fill', '#999')
+                    .attr("stroke-opacity", 0.6)
+
+                // var arrowMarker = this.svg.append("marker")
+                //     .attr("id", "arrow")
+                //     .attr("markerUnits", "strokeWidth")
+                //     .attr("markerWidth", "10")//
+                //     .attr("markerHeight", "10")
+                //     .attr("viewBox", "0 0 12 12")
+                //     .attr("refX", "25")// 13
+                //     .attr("refY", "6")
+                //     .attr("orient", "auto")
+                // var arrow_path = "M2,2 L10,6 L2,10 L6,6 L2,2"// 定义箭头形状
+                // arrowMarker.append("path").attr("d", arrow_path).attr("fill", "grey") // 应该是箭头颜色，后面再改
             },
             drawNode(nodes){
-                var _this = this;
-                var nodeEnter = nodes.enter().filter(d => d.shape == 0).append('circle');
+                var _this = this
+                var nodeEnter = nodes.enter().filter(d => d.shape == 0).append('circle')
                 nodeEnter.on("contextmenu", function(d){
-                    console.log(d);
-                    var cc = $(this).offset();
-                    _this.selectedNode = d;
+                    var cc = $(this).offset()
+                    _this.selectedNode = d
                     d3.select('#node-custom-menu')
                         .style('position','absolute')
                         .style('left', cc.left -250 + "px")
                         .style('top', cc.top -130+ "px")
-                        .style('display','block');
-                    d3.event.preventDefault(); // 禁止系统默认右键
-                    d3.event.stopPropagation(); // 禁止空白处右键
-                });
-                nodeEnter.on('mouseenter',function (d) {
-                    d3.select(this).style("stroke-width","10")
-                        .style("stroke","#C6C1C5")
-                    _this.selectedNode = d;
+                        .style('display', 'block');
+                    d3.event.preventDefault() // 禁止系统默认右键
+                    d3.event.stopPropagation() // 禁止空白处右键
+                })
+                nodeEnter.on('mouseenter', function (d) {
+                    d3.select(this).style("stroke-width", "10").style("stroke", "#C6C1C5")
+                    _this.selectedNode = d
                 })
                 // 鼠标在节点上停留2s时，显示节点描述信息
                 nodeEnter.on('mouseover',function (d,i){
@@ -737,7 +1017,7 @@
                 linktext.exit().remove();
                 var linkTextEnter = this.drawLinkText(linktext);
                 linktext = linkTextEnter.merge(linktext).text(function(d){ return d.name});
-
+//
                 var node = this.nodes.selectAll("circle").data(this.nodesData).filter(d => d.shape == 0);
                 node.exit().remove();
                 var nodeEnter = this.drawNode(node);
@@ -801,12 +1081,12 @@
                         .attr('cx', (d) => { return d.x })
                         .attr('cy', (d) => { return d.y })
                     // rectNode
-                    //     .attr("x", d => d.x-d.node_size*0.707) //方形中心点
-                    //     .attr("y", d => d.y-d.node_size*0.707);
+                    //     .attr("x", d => d.x-d.r*0.707) //方形中心点
+                    //     .attr("y", d => d.y-d.r*0.707);
                     //
                     // triangleNode
                     //     .attr("d", function(d){
-                    //         return "M "+(d.x-0.87*d.node_size)+" "+ (d.y+0.5*d.node_size)+" L "+(d.x+0.87*d.node_size-0.87*d.node_size)+" "+(d.y-1.5*d.node_size+0.5*d.node_size)+" L "+(d.x+d.node_size*1.73-0.87*d.node_size)+" "+(d.y+0.5*d.node_size)+" L "+(d.x-0.87*d.node_size)+" "+(d.y+0.5*d.node_size)
+                    //         return "M "+(d.x-0.87*d.r)+" "+ (d.y+0.5*d.r)+" L "+(d.x+0.87*d.r-0.87*d.r)+" "+(d.y-1.5*d.r+0.5*d.r)+" L "+(d.x+d.r*1.73-0.87*d.r)+" "+(d.y+0.5*d.r)+" L "+(d.x-0.87*d.r)+" "+(d.y+0.5*d.r)
                     //     });
                     link
                         .attr('x1', (d) => { return d.source.x })
