@@ -882,32 +882,60 @@
                 $('#link-custom-menu').hide();
             },
 
-            drag(){
-                // 监听拖拽开始
-                function dragStarted(d) {
-                    if(!d3.event.active)
-                        this.simulation.alphaTarget(0.3).restart()
-                    d.fx = d.x;
-                    d.fy = d.y;
+            // drag(){
+            //     // 监听拖拽开始
+            //     function dragStarted(d) {
+            //         if(!d3.event.active)
+            //             this.simulation.alphaTarget(0.3).restart()
+            //         d.fx = d.x;
+            //         d.fy = d.y;
+            //     }
+
+            //     //监听拖拽中
+            //     function dragged(d) {
+            //         d.fx = d3.event.x;  //fevent.x为拖拽移动时的坐标
+            //         d.fy = d3.event.y;
+            //     }
+
+            //     //监听拖拽结束
+            //     function dragended(d) {
+            //         if (!d3.event.active) this.simulation.alphaTarget(0);
+            //         d.fx = null;        //固定坐标清空
+            //         d.fy = null;
+            //     }
+
+            //     return d3.drag()
+            //         .on("start",this.dragStarted)
+            //         .on("drag",this.dragged)
+            //         .on("end",this.dragended)
+            // },
+
+            drag(simulation){
+                function dragstarted(event) {
+                    if (!event.active) {
+                        simulation.alphaTarget(0.3).restart()
+                    }
+                    event.subject.fx = event.subject.x
+                    event.subject.fy = event.subject.y
                 }
 
-                //监听拖拽中
-                function dragged(d) {
-                    d.fx = d3.event.x;  //fevent.x为拖拽移动时的坐标
-                    d.fy = d3.event.y;
+                function dragged(event) {
+                    event.subject.fx = event.x
+                    event.subject.fy = event.y
                 }
 
-                //监听拖拽结束
-                function dragended(d) {
-                    if (!d3.event.active) this.simulation.alphaTarget(0);
-                    d.fx = null;        //固定坐标清空
-                    d.fy = null;
+                function dragended(event) {
+                    if (!event.active) { 
+                        simulation.alphaTarget(0)
+                    }
+                    event.subject.fx = null
+                    event.subject.fy = null
                 }
 
                 return d3.drag()
-                    .on("start",this.dragStarted)
-                    .on("drag",this.dragged)
-                    .on("end",this.dragended)
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended)
             },
 
             addMarker(){
