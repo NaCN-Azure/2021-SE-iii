@@ -179,7 +179,7 @@
                     nodeType:'',
                     description:'',
                     r: '',
-                    font_size: 20,  //字体大小
+                    fontSize: 20,  //字体大小
                 },
                 selectedLink:{
                     id:'',
@@ -261,11 +261,16 @@
                         .on("zoom", function (event) { g.attr("transform", event.transform) }))
                     .attr("class", "svgCanvas")
 
+                //清空svg内容!!!!!!
+                this.svg.selectAll("*").remove()
+
                 this.addMarker()
 
                 const g = this.svg.append('g').attr("class", "content")
 
                 //虚线   stroke-dasharray 5, 5
+
+                var _this = this
 
                 this.links = g.append("g")
                     .selectAll("path")
@@ -285,7 +290,27 @@
                     .attr("fill-opacity", 0)
                     .attr("stroke-width", 2)
                     .attr("class", "link")
-                    //.on("click", this.linkClick)
+                    .on("contextmenu",function(d){
+                        var cc = $(this).offset()
+                        _this.selectedLink.id = d.id
+                        _this.selectedLink.name = d.name
+                        _this.selectedLink.fromId = d.source.id
+                        _this.selectedLink.toId = d.target.id
+                        _this.selectedLink.domainId = d.domainId
+                        d3.select('#link-custom-menu')
+                            .style('position','absolute')
+                            .style('left',cc.left-300+"px")
+                            .style('top', cc.top-80+"px")
+                            .style('display','block')
+                        d3.event.preventDefault() 
+                        d3.event.stopPropagation() 
+                    })
+                    .on('mouseenter',function (d) {
+                        d3.select(this).style("stroke-width", "10").style("stroke", "#C6C1C5")
+                    })
+                    .on('mouseleave',function (d) {
+                        d3.select(this).style("stroke-width", "3")
+                    })
                     .attr("id", function (d) {
                         if(typeof (d.source) === 'object'){
                             return d.source.id+"_"+d.name+"_"+d.target.id
@@ -321,6 +346,7 @@
                     .attr('startOffset', '50%')
                     .text(d=>d.name)
 
+
                 //圆形节点初始化
                 this.nodes = g.append("g")
                     .selectAll("circle")
@@ -344,7 +370,8 @@
                     })
                     .on("contextmenu", function(d){
                         var cc = $(this).offset()
-                        this.selectedNode = d
+                        //console.log(d)
+                        _this.selectedNode = d
                         d3.select('#node-custom-menu')
                             .style('position', 'absolute')
                             .style('left', cc.left -250 + "px")
@@ -353,9 +380,9 @@
                         d3.event.preventDefault() // 禁止系统默认右键
                         d3.event.stopPropagation() // 禁止空白处右键
                     })
-                    .on('mouseenter',function (d) {
+                    .on('mouseenter', function (d) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
-                        this.selectedNode = d
+                        _this.selectedNode = d
                     })
                     // 鼠标在节点上停留2s时，显示节点描述信息
                     .on('mouseover',function (d, i){
@@ -406,7 +433,7 @@
                     })
                     .on("contextmenu", function(d){
                         var cc = $(this).offset()
-                        this.selectedNode = d
+                        _this.selectedNode = d
                         d3.select('#node-custom-menu')
                             .style('position', 'absolute')
                             .style('left', cc.left -250 + "px")
@@ -417,12 +444,12 @@
                     })
                     .on('mouseenter',function (d) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
-                        this.selectedNode = d
+                        _this.selectedNode = d
                     })
                     // 鼠标在节点上停留2s时，显示节点描述信息
                     .on('mouseover',function (d, i){
                         this.timer = setTimeout(function (d) {
-                            this.popoverContent = d.description
+                            _this.popoverContent = d.description
                             d3.select("#rich-container")
                                 .style('position', 'absolute')
                                 .style('left', d.x + "px")
@@ -454,7 +481,7 @@
                     })
                     .on("contextmenu", function(d){
                         var cc = $(this).offset()
-                        this.selectedNode = d
+                        _this.selectedNode = d
                         d3.select('#node-custom-menu')
                             .style('position', 'absolute')
                             .style('left', cc.left -250 + "px")
@@ -465,12 +492,12 @@
                     })
                     .on('mouseenter',function (d) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
-                        this.selectedNode = d
+                        _this.selectedNode = d
                     })
                     // 鼠标在节点上停留2s时，显示节点描述信息
                     .on('mouseover',function (d, i){
                         this.timer = setTimeout(function (d) {
-                            this.popoverContent = d.description
+                            _this.popoverContent = d.description
                             d3.select("#rich-container")
                                 .style('position', 'absolute')
                                 .style('left', d.x + "px")
@@ -494,25 +521,39 @@
                     .data(this.nodesData)
                     .enter()
                     .append('text')
-                    .text(function (d) {
+                    .text(function(d){
+                        if(d.name.length > 4){
+                            var s = d.name.slice(0,4) + "..."
+                            return s
+                        }
                         return d.name
                     })
                     .attr("dx", function (d) {
-                        //现在后端没有font_size，前端就先给出来，到迭代三再加入
-                        d.font_size = 20
-                        return (d.r/2 + d.font_size)/2*(-1)
+                        //现在后端没有fontSize，前端就先给出来，到迭代三再加入
+                        d.fontSize = 20
+                        return (d.r/2 + d.fontSize)/2*(-1)
                     })
                     .attr("dy", function (d) {
-                        d.font_size = 20
-                        return d.r + d.font_size - 5
+                        d.fontSize = 20
+                        return d.r + d.fontSize - 5
                     })
                     .style("font-size", function(d){
-                        d.font_size = 20
-                        return d.font_size
+                        d.fontSize = 20
+                        return d.fontSize
                     })
                     .attr("class", "node-name")
                     .attr("fill", "black")
-                
+                    .on("contextmenu", function (d) {
+                        var cc = $(this).offset()
+                        _this.selectedNode = d
+                        d3.select('#node-custom-menu')
+                            .style('position','absolute')
+                            .style('left', cc.left -250 + "px")
+                            .style('top', cc.top -130+ "px")
+                            .style('display','block')
+                        d3.event.preventDefault()
+                        d3.event.stopPropagation()
+                    })
 
                 this.simulation.on("tick", () => {
                     this.links.attr("d", function(d) {
@@ -591,7 +632,13 @@
                     this.nodeText
                         .attr("x", d => d.x)
                         .attr("y", d => d.y)
+
                     })
+
+                //缩放
+                this.svg.call(d3.zoom().on('zoom', function() {
+                    this.svg.selectAll('g').attr('transform', d3.event.transform)
+                }))
 
                 // 点击空白处，关闭点开的菜单
                 this.svg.on("click", function () {
@@ -618,7 +665,7 @@
                         r: '',
                         x:0.0,
                         y:0.0,
-                        font_size: 20,
+                        fontSize: 20,
                     })
                     this.set_createNodeDialogVisible(true);
                 }
@@ -655,13 +702,13 @@
             // 选择domain，展示它的图谱
             selectDomain(domain){
                 this.set_selectedDomain(domain)
-                this.getDomainById(this.selectedDomain.id);
+                this.getDomainById(this.selectedDomain.id)
                 this.initGraph()
             },
             // 其他方法更新图谱时使用
             selectDomainById(domainId){
-                this.getDomainById(domainId);
-                this.initGraph();
+                this.getDomainById(domainId)
+                this.initGraph()
             },
             deleteDomain(domainId){
                 this.$confirm('此操作将删除图谱及其中所有节点和关系（不可恢复），是否继续？',{
@@ -763,9 +810,9 @@
             },
             editNode(){
                 // 编辑节点表单初始值即为选中节点属性值
-                this.set_editNodeParams(this.selectedNode);
-                this.set_editNodeDialogVisible(true);
-                $('#node-custom-menu').hide();
+                this.set_editNodeParams(this.selectedNode)
+                this.set_editNodeDialogVisible(true)
+                $('#node-custom-menu').hide()
             },
             deleteNode(){
                 this.$confirm('此操作将删除节点及与其关联的所有关系（不可恢复），是否继续？',{
