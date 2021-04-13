@@ -66,9 +66,15 @@
                 </div>
                 <div class="multi-mode">
                     <el-button-group>
-                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small">力导图模式</el-button>
-                        <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small">排版模式</el-button>
+                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="selectDomain(scope.row)">力导图模式</el-button>
+                        <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small" v-show="selectedDomain.name!=''">排版模式</el-button>
                     </el-button-group>
+                </div>
+                <div v-show="selectedDomain.name!=''" style="margin-left:670px;position: fixed">
+                    <span class="">节点个数：</span>
+                    <el-input v-model="nodesData.length" size="small" style="width: 40px"></el-input>
+                    <span class="" style="margin-left: 20px">关系个数：</span>
+                    <el-input v-model="linksData.length" size="small" style="width: 40px"></el-input>
                 </div>
                 <!-- 固定的工具 -->
                 <div class="fixed-tools">
@@ -1426,7 +1432,7 @@
     .multi-mode{
         width: 300px;
         position: absolute;
-        right: 800px;
+        right: 850px;
     }
     .fixed-tools{
         width: 300px;
