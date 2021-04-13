@@ -29,4 +29,7 @@ public interface TypeMapper {
     @Select("select type from nodetype where domain_id =#{domainId}")
     List<String> searchAll(@Param("domainId") int domainId);
 
+    @Select("select color from nodetype where domain_id =#{domainId}")
+    List<String> searchColor(@Param("domainId") int domainId);
+
 }

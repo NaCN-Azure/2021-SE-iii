@@ -26,6 +26,7 @@ public class TypeServiceImpl implements TypeService {
     public String insertType(int domainId,String nodeType){
         String check=typeMapper.searchColorByType(domainId,nodeType);
         if(check==null){
+            DefaultUtil.checkColor(typeMapper.searchColor(domainId));
             String color= DefaultUtil.useDefaultColor();
             typeMapper.insertType(domainId,color,nodeType);
             return color;

@@ -1,6 +1,7 @@
 package com.heap.commonutils;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class DefaultUtil {
 
@@ -47,6 +48,12 @@ public class DefaultUtil {
 
     public static void releaseColor(String color){
         DEFAULT_TYPE_COLORS.put(color,false);
+    }
+
+    public static void checkColor(List<String> colors){
+        for(String color:colors){
+            DEFAULT_TYPE_COLORS.put(color,true);
+        }
     }
 
 }
