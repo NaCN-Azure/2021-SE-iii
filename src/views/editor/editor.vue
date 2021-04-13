@@ -96,8 +96,7 @@
             <!-- 右边中间-图谱渲染区域 -->
             <div class="graph">
                 <el-scrollbar style="width: 100%;height: 100%">
-<!--                    <show-graph v-bind:relationships="relationships"></show-graph>-->
-                    <svg id="kgGraph" width="1200" height="1000"></svg>
+                    <svg id="kgGraph" width="2000" height="1000"></svg>
                 </el-scrollbar>
             </div>
             <div class="right-side-bar">
@@ -173,7 +172,7 @@
         inject:['reload'],
         data(){
             return{
-                width: 1200,
+                width: 2000,
                 height: 1000,
                 // 选中要进行操作的节点
                 selectedNode:{
@@ -493,7 +492,7 @@
                             .style('left', cc.left -250 + "px")
                             .style('top', cc.top -130 + "px")
                             .style('display', 'block');
-                        d3.event.preventDefault() // 禁止系统默认右键
+                        // d3.event.preventDefault() // 禁止系统默认右键
                         d3.event.stopPropagation() // 禁止空白处右键
                     })
                     .on('mouseenter',function (d) {
@@ -528,10 +527,10 @@
                     .enter()
                     .append('text')
                     .text(function(d){
-                        if(d.name.length > 4){
-                            var s = d.name.slice(0,4) + "..."
-                            return s
-                        }
+                        // if(d.name.length > 4){
+                        //     var s = d.name.slice(0,4) + "..."
+                        //     return s
+                        // }
                         return d.name
                     })
                     .attr("dx", function (d) {
@@ -642,9 +641,9 @@
                     })
 
                 //缩放
-                this.svg.call(d3.zoom().on('zoom', function() {
-                    this.svg.selectAll('g').attr('transform', d3.event.transform)
-                }))
+                this.svg.call(d3.zoom().scaleExtent([0.3, 3]).on("zoom", function (event) { 
+                        g.attr("transform", event.transform) 
+                    }))
 
                 // 点击空白处，关闭点开的菜单
                 this.svg.on("click", function () {
