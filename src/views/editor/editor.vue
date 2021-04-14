@@ -261,9 +261,6 @@
 
                 this.svg = d3.select('svg')
                     .attr("viewBox", [0, 0, this.width, this.height])
-                    // .call(d3.zoom()
-                    //     .scaleExtent([0.3, 3])
-                    //     .on("zoom", function (event) { g.attr("transform", event.transform) }))
                     .attr("class", "svgCanvas")
 
                 //清空svg内容!!!!!!
@@ -307,8 +304,8 @@
                             .style('left',cc.left-300+"px")
                             .style('top', cc.top-80+"px")
                             .style('display','block')
-                        d3.event.preventDefault() 
-                        d3.event.stopPropagation() 
+                        event.preventDefault()
+                        event.stopPropagation()
                     })
                     .on('mouseenter',function (d) {
                         d3.select(this).style("stroke-width", "10").style("stroke", "#C6C1C5")
@@ -382,8 +379,8 @@
                             .style('left', cc.left -250 + "px")
                             .style('top', cc.top -130 + "px")
                             .style('display', 'block');
-                        d3.event.preventDefault() // 禁止系统默认右键
-                        d3.event.stopPropagation() // 禁止空白处右键
+                        event.preventDefault() // 禁止系统默认右键
+                        event.stopPropagation() // 禁止空白处右键
                     })
                     .on('mouseenter', function (d) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
@@ -444,8 +441,8 @@
                             .style('left', cc.left -250 + "px")
                             .style('top', cc.top -130 + "px")
                             .style('display', 'block');
-                        d3.event.preventDefault() // 禁止系统默认右键
-                        d3.event.stopPropagation() // 禁止空白处右键
+                        event.preventDefault() // 禁止系统默认右键
+                        event.stopPropagation() // 禁止空白处右键
                     })
                     .on('mouseenter',function (d) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
@@ -492,8 +489,8 @@
                             .style('left', cc.left -250 + "px")
                             .style('top', cc.top -130 + "px")
                             .style('display', 'block');
-                        // d3.event.preventDefault() // 禁止系统默认右键
-                        d3.event.stopPropagation() // 禁止空白处右键
+                        event.preventDefault() // 禁止系统默认右键
+                        event.stopPropagation() // 禁止空白处右键
                     })
                     .on('mouseenter',function (d) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
@@ -556,8 +553,8 @@
                             .style('left', cc.left -250 + "px")
                             .style('top', cc.top -130+ "px")
                             .style('display','block')
-                        d3.event.preventDefault()
-                        d3.event.stopPropagation()
+                        event.preventDefault()
+                        event.stopPropagation()
                     })
 
                 this.simulation.on("tick", () => {
@@ -706,7 +703,6 @@
             },
             // 选择domain，展示它的图谱
             selectDomain(domain){
-                console.log(domain)
                 this.set_selectedDomain(domain)
                 this.getDomainById(this.selectedDomain.id)
                 this.initGraph()
@@ -885,7 +881,7 @@
             // drag(){
             //     // 监听拖拽开始
             //     function dragStarted(d) {
-            //         if(!d3.event.active)
+            //         if(!event.active)
             //             this.simulation.alphaTarget(0.3).restart()
             //         d.fx = d.x;
             //         d.fy = d.y;
@@ -893,13 +889,13 @@
 
             //     //监听拖拽中
             //     function dragged(d) {
-            //         d.fx = d3.event.x;  //fevent.x为拖拽移动时的坐标
-            //         d.fy = d3.event.y;
+            //         d.fx = event.x;  //fevent.x为拖拽移动时的坐标
+            //         d.fy = event.y;
             //     }
 
             //     //监听拖拽结束
             //     function dragended(d) {
-            //         if (!d3.event.active) this.simulation.alphaTarget(0);
+            //         if (!event.active) this.simulation.alphaTarget(0);
             //         d.fx = null;        //固定坐标清空
             //         d.fy = null;
             //     }
@@ -994,8 +990,8 @@
                         .style('left', cc.left -250 + "px")
                         .style('top', cc.top -130+ "px")
                         .style('display', 'block');
-                    d3.event.preventDefault() // 禁止系统默认右键
-                    d3.event.stopPropagation() // 禁止空白处右键
+                    event.preventDefault() // 禁止系统默认右键
+                    event.stopPropagation() // 禁止空白处右键
                 })
                 nodeEnter.on('mouseenter', function (d) {
                     d3.select(this).style("stroke-width", "10").style("stroke", "#C6C1C5")
@@ -1032,8 +1028,8 @@
                         .style('left', cc.left -250 + "px")
                         .style('top', cc.top -130+ "px")
                         .style('display','block');
-                    d3.event.preventDefault(); // 禁止系统默认右键
-                    d3.event.stopPropagation(); // 禁止空白处右键
+                    event.preventDefault(); // 禁止系统默认右键
+                    event.stopPropagation(); // 禁止空白处右键
                 });
                 rectNodeEnter.on('mouseenter',function (d) {
                     d3.select(this).style("stroke-width","10")
@@ -1071,8 +1067,8 @@
                         .style('left', cc.left -250 + "px")
                         .style('top', cc.top -130+ "px")
                         .style('display','block');
-                    d3.event.preventDefault(); // 禁止系统默认右键
-                    d3.event.stopPropagation(); // 禁止空白处右键
+                    event.preventDefault(); // 禁止系统默认右键
+                    event.stopPropagation(); // 禁止空白处右键
                 });
                 triangleNodeEnter.on('mouseenter',function (d) {
                     d3.select(this).style("stroke-width","10")
@@ -1119,8 +1115,8 @@
                         .style('left',cc.left-300+"px")
                         .style('top',cc.top-80+"px")
                         .style('display','block')
-                    d3.event.preventDefault(); // 禁止系统默认右键
-                    d3.event.stopPropagation(); // 禁止空白处右键
+                    event.preventDefault(); // 禁止系统默认右键
+                    event.stopPropagation(); // 禁止空白处右键
                 })
                 linkEnter.on('mouseenter',function (d) {
                     d3.select(this).style("stroke-width","10")
@@ -1163,8 +1159,8 @@
                             .style('left', cc.left -250 + "px")
                             .style('top', cc.top -130+ "px")
                             .style('display','block');
-                        d3.event.preventDefault(); // 禁止系统默认右键
-                        d3.event.stopPropagation(); // 禁止空白处右键
+                        event.preventDefault(); // 禁止系统默认右键
+                        event.stopPropagation(); // 禁止空白处右键
                 });
                 return nodeTextEnter;
             },
@@ -1276,7 +1272,7 @@
                 }
 
                 this.svg.call(d3.zoom().on("zoom", function() {
-                    this.svg.selectAll("g").attr("transform", d3.event.transform);
+                    this.svg.selectAll("g").attr("transform", event.transform);
                 }));
 
                 // 点击空白处，关闭点开的菜单
