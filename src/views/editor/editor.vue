@@ -66,9 +66,15 @@
                 </div>
                 <div class="multi-mode">
                     <el-button-group>
-                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small">力导图模式</el-button>
-                        <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small">排版模式</el-button>
+                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="this.getDomainById(this.selectedDomain.id)">力导图模式</el-button>
+                        <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small" v-show="selectedDomain.name!=''">排版模式</el-button>
                     </el-button-group>
+                </div>
+                <div v-show="selectedDomain.name!=''" style="margin-left:670px;position: fixed">
+                    <span class="">节点个数：</span>
+                    <el-input v-model="nodesData.length" size="small" style="width: 40px"></el-input>
+                    <span class="" style="margin-left: 20px">关系个数：</span>
+                    <el-input v-model="linksData.length" size="small" style="width: 40px"></el-input>
                 </div>
                 <!-- 固定的工具 -->
                 <div class="fixed-tools">
@@ -90,7 +96,7 @@
             <!-- 右边中间-图谱渲染区域 -->
             <div class="graph">
                 <el-scrollbar style="width: 100%;height: 100%">
-                    <svg id="kgGraph" width="1400" height="800"></svg>
+                    <svg id="kgGraph" width="1300" height="650"></svg>
                 </el-scrollbar>
             </div>
             <div class="right-side-bar">
@@ -166,8 +172,8 @@
         inject:['reload'],
         data(){
             return{
-                width: 1400,
-                height: 800,
+                width: 1300,
+                height: 650,
                 // 选中要进行操作的节点
                 selectedNode:{
                     id:'',
@@ -248,9 +254,9 @@
                 this.set_linksData(this.getLinksFromRelationships(this.relationships))
 
                 this.simulation = d3.forceSimulation(this.nodesData)
-                    .force("link", d3.forceLink(this.linksData).id(d => d.id).distance(200).strength(0))
+                    .force("link", d3.forceLink(this.linksData).id(d => d.id).distance(200).strength(0.3))
                     .force("collide", d3.forceCollide().radius(()=>50))
-                    .force("charge", d3.forceManyBody().strength(-40))
+                    .force("charge", d3.forceManyBody().strength(-100))
                     .force("center", d3.forceCenter(this.width / 2, this.height / 2))
 
                 this.svg = d3.select('svg')
@@ -298,8 +304,8 @@
                             .style('left',cc.left-300+"px")
                             .style('top', cc.top-80+"px")
                             .style('display','block')
-                        event.preventDefault() 
-                        event.stopPropagation() 
+                        event.preventDefault()
+                        event.stopPropagation()
                     })
                     .on('mouseenter',function (d) {
                         d3.select(this).style("stroke-width", "10").style("stroke", "#C6C1C5")
@@ -1451,7 +1457,7 @@
     .multi-mode{
         width: 300px;
         position: absolute;
-        right: 800px;
+        right: 850px;
     }
     .fixed-tools{
         width: 300px;
