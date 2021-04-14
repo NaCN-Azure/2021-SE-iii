@@ -112,7 +112,6 @@ const editor = {
         set_nodeListVisible: function (state, data) {
             state.nodeListVisible  = data
         },
-
     },
     actions:{
         // 根据Id获取图谱，用于更新图谱

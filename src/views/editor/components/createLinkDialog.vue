@@ -53,6 +53,8 @@
 
 <script>
     import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../../api/relationship";
+    import { Message } from 'element-ui'
 
     export default {
         name: "createLinkDialog",
@@ -66,7 +68,8 @@
         },
         methods:{
             ...mapMutations([
-                'set_createLinkDialogVisible'
+                'set_createLinkDialogVisible',
+                'set_relationships'
             ]),
             ...mapActions([
                 'createLink'
@@ -75,7 +78,34 @@
                 this.set_createLinkDialogVisible(false);
             },
             submitCreateLink(){
-                this.createLink();
+                createLinkAPI(this.createLinkParams.fromId, this.createLinkParams.toId, this.createLinkParams.name)
+                    .then(res => {
+                        if(res.data.code == 200){
+                            Message({
+                                message:'添加成功',
+                                type:'success'
+                            })
+                            this.set_createLinkDialogVisible(false)
+                            getLinkByDomainIdAPI(this.createLinkParams.domainId)
+                                .then(res => {
+                                    this.set_relationships(res.data.data.relationships)
+                                    this.$parent.init()
+                                })
+                        }
+                        else {
+                            Message({
+                                message:'添加失败',
+                                type:'error'
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        Message({
+                            message:'添加失败',
+                            type:'error'
+                        })
+                    })
             }
         }
     }

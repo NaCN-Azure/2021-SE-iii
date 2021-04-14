@@ -21,6 +21,8 @@
 
 <script>
     import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../../api/relationship";
+    import { Message } from 'element-ui'
 
     export default {
         name: "editLinkDialog",
@@ -38,7 +40,8 @@
         },
         methods:{
             ...mapMutations([
-                'set_editLinkDialogVisible'
+                'set_editLinkDialogVisible',
+                'set_relationships'
             ]),
             ...mapActions([
                 'editLink'
@@ -47,7 +50,33 @@
                 this.set_editLinkDialogVisible(false);
             },
             submitEditLink(){
-                this.editLink();
+                updateLinkAPI(this.editLinkParams)
+                    .then(res => {
+                        if(res.data.code == 200){
+                            Message({
+                                message: '修改成功',
+                                type: 'success'
+                            })
+                            this.set_editLinkDialogVisible(false)
+                            getLinkByDomainIdAPI(this.editLinkParams.domainId)
+                                .then(res => {
+                                    this.set_relationships(res.data.data.relationships)
+                                    this.$parent.init()
+                                })
+                        }else{
+                            Message({
+                                message: '修改失败',
+                                type:'error'
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        Message({
+                            message: '修改失败',
+                            type:'error'
+                        })
+                    })
             }
         }
     }

@@ -156,7 +156,7 @@
     import {mapActions, mapGetters, mapMutations} from "vuex";
     import {updateNodeAPI, deleteNodeAPI, updateXYAPI} from "../../api/entity";
     import {deleteDomainAPI} from "../../api/domain";
-    import {deleteLinkAPI} from "../../api/relationship";
+    import {deleteLinkAPI, getLinkByDomainIdAPI} from "../../api/relationship";
     import {downloadAPI, exportGraphXMLAPI} from "../../api/file";
     import CreateNodeDialog from "./components/createNodeDialog";
     import EditNodeDialog from "./components/editNodeDialog";
@@ -254,6 +254,7 @@
                 'set_nodesData',
                 'set_linksData',
                 'set_nodeListVisible',
+                'set_relationships',
             ]),
             ...mapActions([
                 'getAllDomains',
@@ -276,7 +277,7 @@
                 this.set_nodesData(this.getNodesFromRelationships(this.relationships))
                 this.set_linksData(this.getLinksFromRelationships(this.relationships))
 
-                console.log(this.nodesData)
+                //console.log(this.nodesData)
 
                 this.simulation = d3.forceSimulation(this.nodesData)
                     .force("link", d3.forceLink(this.linksData).id(d => d.id).distance(200).strength(elasticForce))
@@ -759,15 +760,25 @@
             // 选择domain，展示它的图谱
             selectDomain(domain){
                 this.set_selectedDomain(domain)
-                this.getDomainById(this.selectedDomain.id)
-                this.init()
-                document.getElementById('mode-button-first').focus();
+                getLinkByDomainIdAPI(this.selectedDomain.id)
+                    .then(res => {
+                        if(res.data.code == 200) {
+                            this.set_relationships(res.data.data.relationships)
+                            this.init()
+                            document.getElementById('mode-button-first').focus()
+                        }
+                    })                
             },
 
             // 其他方法更新图谱时使用
             selectDomainById(domainId){
-                this.getDomainById(domainId)
-                this.init()
+                getLinkByDomainIdAPI(domainId)
+                    .then(res => {
+                        if(res.data.code == 200) {
+                            this.set_relationships(res.data.data.relationships)
+                            this.init()
+                        }
+                    })   
             },
 
             deleteDomain(domainId){
