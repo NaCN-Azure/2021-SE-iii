@@ -66,8 +66,8 @@
                 </div>
                 <div class="multi-mode">
                     <el-button-group>
-                        <el-button class="mode-button" id="mode-button-first"  type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0.3,-100)">力导图模式</el-button>
-                        <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0,0)">排版模式</el-button>
+                        <el-button class="mode-button" id="mode-button-first"  type="primary" reserve-selection plain size="small" v-focus v-show="selectedDomain.name!=''" @click="initGraph(0.3,-100)">力导图模式</el-button>
+                        <el-button class="mode-button" id="mode-button-second" type="primary" reserve-selection plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0,0)">排版模式</el-button>
                     </el-button-group>
                 </div>
                 <div v-show="selectedDomain.name!=''" style="margin-left: 670px;position: absolute">
@@ -714,6 +714,7 @@
                 this.set_selectedDomain(domain)
                 this.getDomainById(this.selectedDomain.id)
                 this.initGraph(0.3,-100)
+                document.getElementById('mode-button-first').focus();
             },
             // 其他方法更新图谱时使用
             selectDomainById(domainId){
