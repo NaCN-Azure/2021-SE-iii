@@ -286,13 +286,13 @@
                     .attr("fill-opacity", 0)
                     .attr("stroke-width", 2)
                     .attr("class", "link")
-                    .on("contextmenu",function(d){
+                    .on("contextmenu",function(d, i){
                         var cc = $(this).offset()
-                        _this.selectedLink.id = d.id
-                        _this.selectedLink.name = d.name
-                        _this.selectedLink.fromId = d.source.id
-                        _this.selectedLink.toId = d.target.id
-                        _this.selectedLink.domainId = d.domainId
+                        _this.selectedLink.id = i.id
+                        _this.selectedLink.name = i.name
+                        _this.selectedLink.fromId = i.source.id
+                        _this.selectedLink.toId = i.target.id
+                        _this.selectedLink.domainId = i.domainId
                         d3.select('#link-custom-menu')
                             .style('position','absolute')
                             .style('left',cc.left-300+"px")
@@ -364,36 +364,37 @@
                         }
                         return "#5290F2"  //一种蓝色
                     })
-                    .on("contextmenu", function(d){
+                    .on("contextmenu", function(d, i){
+                        console.log(i)
                         var cc = $(this).offset()
-                        //console.log(d)
-                        _this.selectedNode = d
+                        _this.selectedNode = i
                         d3.select('#node-custom-menu')
                             .style('position', 'absolute')
                             .style('left', cc.left -250 + "px")
                             .style('top', cc.top -130 + "px")
-                            .style('display', 'block');
+                            .style('display', 'block')
                         event.preventDefault() // 禁止系统默认右键
                         event.stopPropagation() // 禁止空白处右键
                     })
-                    .on('mouseenter', function (d) {
+                    .on('mouseenter', function (d, i) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
-                        _this.selectedNode = d
+                        _this.selectedNode = i
                     })
-                    // 鼠标在节点上停留2s时，显示节点描述信息
-                    .on('mouseover',function (d, i){
-                        this.timer = setTimeout(function (d) {
-                            this.popoverContent = d.description
-                            d3.select("#rich-container")
-                                .style('position', 'absolute')
-                                .style('left', d.x + "px")
-                                .style('top', d.y + "px")
-                                .style('display', 'block')
-                        }, 2000)
-                    })
-                    .on('mouseout',function (d, i) {
-                        clearTimeout(this.timer)
-                    })
+                    // 鼠标在节点上停留2s时，显示节点描述信息  （此功能暂时禁用，后面再讨论具体使用细节）
+                    // .on('mouseover',function (d, i){
+                    //     console.log(i)
+                    //     _this.timer = setTimeout(function (d) {
+                    //         _this.popoverContent = i.description
+                    //         d3.select("#rich-container")
+                    //             .style('position', 'absolute')
+                    //             .style('left', i.x + "px")
+                    //             .style('top', i.y + "px")
+                    //             .style('display', 'block')
+                    //     }, 2000)
+                    // })
+                    // .on('mouseout',function (d, i) {
+                    //     clearTimeout(_this.timer)
+                    // })
                     .on('mouseleave',function (d) {
                         d3.select(this).style("stroke-width","0")
                     })
@@ -427,9 +428,9 @@
                         }
                         return "#5290F2"  //一种蓝色
                     })
-                    .on("contextmenu", function(d){
+                    .on("contextmenu", function(d, i){
                         var cc = $(this).offset()
-                        _this.selectedNode = d
+                        _this.selectedNode = i
                         d3.select('#node-custom-menu')
                             .style('position', 'absolute')
                             .style('left', cc.left -250 + "px")
@@ -438,24 +439,24 @@
                         event.preventDefault() // 禁止系统默认右键
                         event.stopPropagation() // 禁止空白处右键
                     })
-                    .on('mouseenter',function (d) {
+                    .on('mouseenter',function (d, i) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
-                        _this.selectedNode = d
+                        _this.selectedNode = i
                     })
                     // 鼠标在节点上停留2s时，显示节点描述信息
-                    .on('mouseover',function (d, i){
-                        this.timer = setTimeout(function (d) {
-                            _this.popoverContent = d.description
-                            d3.select("#rich-container")
-                                .style('position', 'absolute')
-                                .style('left', d.x + "px")
-                                .style('top', d.y + "px")
-                                .style('display', 'block')
-                        }, 2000)
-                    })
-                    .on('mouseout',function (d, i) {
-                        clearTimeout(this.timer)
-                    })
+                    // .on('mouseover',function (d, i){
+                    //     this.timer = setTimeout(function (d) {
+                    //         _this.popoverContent = d.description
+                    //         d3.select("#rich-container")
+                    //             .style('position', 'absolute')
+                    //             .style('left', d.x + "px")
+                    //             .style('top', d.y + "px")
+                    //             .style('display', 'block')
+                    //     }, 2000)
+                    // })
+                    // .on('mouseout',function (d, i) {
+                    //     clearTimeout(this.timer)
+                    // })
                     .on('mouseleave',function (d) {
                         d3.select(this).style("stroke-width","0")
                     })
@@ -475,9 +476,9 @@
                         }
                         return "#5290F2"  //一种蓝色
                     })
-                    .on("contextmenu", function(d){
+                    .on("contextmenu", function(d, i){
                         var cc = $(this).offset()
-                        _this.selectedNode = d
+                        _this.selectedNode = i
                         d3.select('#node-custom-menu')
                             .style('position', 'absolute')
                             .style('left', cc.left -250 + "px")
@@ -486,24 +487,24 @@
                         event.preventDefault() // 禁止系统默认右键
                         event.stopPropagation() // 禁止空白处右键
                     })
-                    .on('mouseenter',function (d) {
+                    .on('mouseenter',function (d, i) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
-                        _this.selectedNode = d
+                        _this.selectedNode = i
                     })
                     // 鼠标在节点上停留2s时，显示节点描述信息
-                    .on('mouseover',function (d, i){
-                        this.timer = setTimeout(function (d) {
-                            _this.popoverContent = d.description
-                            d3.select("#rich-container")
-                                .style('position', 'absolute')
-                                .style('left', d.x + "px")
-                                .style('top', d.y + "px")
-                                .style('display', 'block')
-                        }, 2000)
-                    })
-                    .on('mouseout',function (d, i) {
-                        clearTimeout(this.timer)
-                    })
+                    // .on('mouseover',function (d, i){
+                    //     this.timer = setTimeout(function (d) {
+                    //         _this.popoverContent = d.description
+                    //         d3.select("#rich-container")
+                    //             .style('position', 'absolute')
+                    //             .style('left', d.x + "px")
+                    //             .style('top', d.y + "px")
+                    //             .style('display', 'block')
+                    //     }, 2000)
+                    // })
+                    // .on('mouseout',function (d, i) {
+                    //     clearTimeout(this.timer)
+                    // })
                     .on('mouseleave',function (d) {
                         d3.select(this).style("stroke-width","0")
                     })
@@ -539,9 +540,9 @@
                     })
                     .attr("class", "node-name")
                     .attr("fill", "black")
-                    .on("contextmenu", function (d) {
+                    .on("contextmenu", function (d, i) {
                         var cc = $(this).offset()
-                        _this.selectedNode = d
+                        _this.selectedNode = i
                         d3.select('#node-custom-menu')
                             .style('position','absolute')
                             .style('left', cc.left -250 + "px")
