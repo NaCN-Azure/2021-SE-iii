@@ -66,8 +66,8 @@
                 </div>
                 <div class="multi-mode">
                     <el-button-group>
-                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="this.selectDomain(this.selectedDomain)">力导图模式</el-button>
-                        <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small" v-show="selectedDomain.name!=''">排版模式</el-button>
+                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0.3,-100)">力导图模式</el-button>
+                        <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0,0)">排版模式</el-button>
                     </el-button-group>
                 </div>
                 <div v-show="selectedDomain.name!=''" style="margin-left: 670px;position: absolute">
@@ -215,7 +215,7 @@
         },
 
         // async mounted(){
-        //     this.initGraph();
+        //     this.initGraph(0.3,-100);
         // },
         computed:{
             ...mapGetters([
@@ -249,14 +249,15 @@
                 'getAllDomains',
                 'getDomainById',
             ]),
-            initGraph(){
+            initGraph(elasticForce,electromagneticForce){
+                console.log(123)
                 this.set_nodesData(this.getNodesFromRelationships(this.relationships))
                 this.set_linksData(this.getLinksFromRelationships(this.relationships))
 
                 this.simulation = d3.forceSimulation(this.nodesData)
-                    .force("link", d3.forceLink(this.linksData).id(d => d.id).distance(200).strength(0.3))
+                    .force("link", d3.forceLink(this.linksData).id(d => d.id).distance(200).strength(elasticForce))
                     .force("collide", d3.forceCollide().radius(()=>50))
-                    .force("charge", d3.forceManyBody().strength(-100))
+                    .force("charge", d3.forceManyBody().strength(electromagneticForce))
                     .force("center", d3.forceCenter(this.width / 2, this.height / 2))
 
                 this.svg = d3.select('svg')
@@ -706,12 +707,12 @@
             selectDomain(domain){
                 this.set_selectedDomain(domain)
                 this.getDomainById(this.selectedDomain.id)
-                this.initGraph()
+                this.initGraph(0.3,-100)
             },
             // 其他方法更新图谱时使用
             selectDomainById(domainId){
                 this.getDomainById(domainId)
-                this.initGraph()
+                this.initGraph(0.3,-100)
             },
             deleteDomain(domainId){
                 this.$confirm('此操作将删除图谱及其中所有节点和关系（不可恢复），是否继续？',{
