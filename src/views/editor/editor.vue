@@ -66,7 +66,7 @@
                 </div>
                 <div class="multi-mode">
                     <el-button-group>
-                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0.3,-100)">力导图模式</el-button>
+                        <el-button class="mode-button" id="mode-button-first"  type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0.3,-100)">力导图模式</el-button>
                         <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0,0)">排版模式</el-button>
                     </el-button-group>
                 </div>
@@ -210,6 +210,14 @@
             }
         },
 
+        directives: {
+            focus: {
+                inserted: function(el) {
+                    el.focus();
+                }
+            }
+        },
+
         created(){
             this.getAllDomains();
         },
@@ -250,7 +258,6 @@
                 'getDomainById',
             ]),
             initGraph(elasticForce,electromagneticForce){
-                console.log(123)
                 this.set_nodesData(this.getNodesFromRelationships(this.relationships))
                 this.set_linksData(this.getLinksFromRelationships(this.relationships))
 
@@ -650,7 +657,6 @@
                     $('#node-custom-menu').hide()
                 })
             },
-
 
             showCreateNodeDialog(){
                 if(this.selectedDomain.id==''){
