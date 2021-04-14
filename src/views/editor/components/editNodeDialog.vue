@@ -47,6 +47,9 @@
 
 <script>
     import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {updateNodeAPI, deleteNodeAPI, updateXYAPI} from "../../../api/entity";
+    import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../../api/relationship";
+    import { Message } from 'element-ui'
 
     export default {
         name: "editNodeDialog",
@@ -56,11 +59,13 @@
                 'editNodeParams',
                 'shapes',
                 'domainList',
+                'relationships',
             ])
         },
         methods:{
             ...mapMutations([
-                'set_editNodeDialogVisible'
+                'set_editNodeDialogVisible',
+                'set_relationships'
             ]),
             ...mapActions([
                 'editNode',
@@ -69,7 +74,33 @@
                 this.set_editNodeDialogVisible(false);
             },
             submitEditNode(){
-                this.editNode();
+                updateNodeAPI(this.editNodeParams)
+                    .then(res => {
+                        if(res.data.code == 200){
+                            Message({
+                                message: '修改成功',
+                                type: 'success'
+                            });
+                            this.set_editNodeDialogVisible(false)
+                        }else{
+                            Message({
+                                message: '修改失败',
+                                type: 'error'
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                getLinkByDomainIdAPI(this.editNodeParams.domainId)
+                    .then(res => {
+                        console.log('res')
+                        console.log(res)
+                        this.set_relationships(res.data.data.relationships)
+                    })
+                //console.log(this.relationships)
+                this.$parent.init()  //调用父组件的初始化图谱方法
+                
             }
         }
     }
