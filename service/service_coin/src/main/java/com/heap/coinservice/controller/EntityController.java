@@ -44,8 +44,8 @@ public class EntityController {
 
     @PostMapping("/updateNode")
     public Result updateNode(@RequestBody Entity entity){
-        Entity newEntity = entityService.updateNode(entity);
-        return Result.ok().data("newEntity", newEntity);
+        entityService.updateNode(entity);
+        return Result.ok().data("newEntity", entity);
     }
 
     @DeleteMapping("/deleteNode")
