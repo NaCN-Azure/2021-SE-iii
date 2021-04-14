@@ -66,7 +66,7 @@
                 </div>
                 <div class="multi-mode">
                     <el-button-group>
-                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="selectDomain(scope.row)">力导图模式</el-button>
+                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="this.getDomainById(this.selectedDomain.id)">力导图模式</el-button>
                         <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small" v-show="selectedDomain.name!=''">排版模式</el-button>
                     </el-button-group>
                 </div>
@@ -96,7 +96,7 @@
             <!-- 右边中间-图谱渲染区域 -->
             <div class="graph">
                 <el-scrollbar style="width: 100%;height: 100%">
-                    <svg id="kgGraph" width="2000" height="1000"></svg>
+                    <svg id="kgGraph" width="1300" height="650"></svg>
                 </el-scrollbar>
             </div>
             <div class="right-side-bar">
@@ -172,8 +172,8 @@
         inject:['reload'],
         data(){
             return{
-                width: 2000,
-                height: 1000,
+                width: 1300,
+                height: 650,
                 // 选中要进行操作的节点
                 selectedNode:{
                     id:'',
@@ -254,16 +254,16 @@
                 this.set_linksData(this.getLinksFromRelationships(this.relationships))
 
                 this.simulation = d3.forceSimulation(this.nodesData)
-                    .force("link", d3.forceLink(this.linksData).id(d => d.id).distance(200).strength(0))
+                    .force("link", d3.forceLink(this.linksData).id(d => d.id).distance(200).strength(0.3))
                     .force("collide", d3.forceCollide().radius(()=>50))
-                    .force("charge", d3.forceManyBody().strength(-40))
+                    .force("charge", d3.forceManyBody().strength(-100))
                     .force("center", d3.forceCenter(this.width / 2, this.height / 2))
 
                 this.svg = d3.select('svg')
                     .attr("viewBox", [0, 0, this.width, this.height])
-                    .call(d3.zoom()
-                        .scaleExtent([0.3, 3])
-                        .on("zoom", function (event) { g.attr("transform", event.transform) }))
+                    // .call(d3.zoom()
+                    //     .scaleExtent([0.3, 3])
+                    //     .on("zoom", function (event) { g.attr("transform", event.transform) }))
                     .attr("class", "svgCanvas")
 
                 //清空svg内容!!!!!!
@@ -706,6 +706,7 @@
             },
             // 选择domain，展示它的图谱
             selectDomain(domain){
+                console.log(domain)
                 this.set_selectedDomain(domain)
                 this.getDomainById(this.selectedDomain.id)
                 this.initGraph()
