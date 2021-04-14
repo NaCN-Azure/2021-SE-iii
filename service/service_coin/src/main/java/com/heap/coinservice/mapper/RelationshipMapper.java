@@ -49,4 +49,13 @@ public interface RelationshipMapper extends Neo4jRepository<Relationship,Long> {
     @Query("MATCH (n{domainId:{0}})-[r]->(m{domainId:{0}}) RETURN COUNT(r)")
     int countAllLink(@Param("domainId") int domainId);
 
+    /**
+     * 根据起始节点查找关系
+     * @param fromId
+     * @param toId
+     * @return
+     */
+    @Query("MATCH (n)-[r]-(m) WHERE id(n) = {0} and id(m) = {1} RETURN r")
+    Relationship findByToNodes(@Param("fromId") Long fromId,@Param("toId") Long toId);
+
 }

@@ -33,11 +33,17 @@ public class RelationshipServiceImpl implements RelationshipService {
     public Relationship createLink(Long fromId, Long toId, String name){
         Entity startNode = entityMapper.findById(fromId).get();
         Entity endNode = entityMapper.findById(toId).get();
+        Relationship check = relationshipMapper.findByToNodes(fromId,toId);
+        if(check==null) {
+            Relationship relationship = Relationship.builder().startEntity(startNode).endEntity(endNode)
+                    .domainId(startNode.getDomainId()).name(name).fromId(fromId).toId(toId).type(1).build();
 
-        Relationship relationship = Relationship.builder().startEntity(startNode).endEntity(endNode)
-            .domainId(startNode.getDomainId()).name(name).fromId(fromId).toId(toId).type(1).build();
-
-        return relationshipMapper.save(relationship);
+            return relationshipMapper.save(relationship);
+        }
+        else {
+            relationshipMapper.updateLink(check.getId(),check.getName()+","+name);
+            return check;
+        }
     }
 
     @Override
