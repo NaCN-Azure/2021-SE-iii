@@ -62,19 +62,20 @@
                 'relationships',
             ])
         },
+
         methods:{
             ...mapMutations([
                 'set_editNodeDialogVisible',
-                'set_relationships'
+                'set_relationships',
+                'set_editNodeParams',
             ]),
             ...mapActions([
                 'editNode',
             ]),
             cancelEditNode(){
-                this.set_editNodeDialogVisible(false);
+                this.set_editNodeDialogVisible(false)
             },
             submitEditNode(){
-                console.log(this.editNodeParams)
                 updateNodeAPI(this.editNodeParams)
                     .then(res => {
                         if(res.data.code == 200){
@@ -87,6 +88,7 @@
                                 .then(res => {
                                     if(res.data.code == 200) {
                                         this.set_relationships(res.data.data.relationships)
+                                        console.log(this.relationships)
                                         this.$parent.init()  //调用父组件的初始化图谱方法
                                     }
                                 })

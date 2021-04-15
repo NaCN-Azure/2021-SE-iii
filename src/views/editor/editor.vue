@@ -89,6 +89,7 @@
                             <el-dropdown-item @click.native="exportPic">导出图片</el-dropdown-item>
                             <el-dropdown-item @click.native="exportXml">导出xml</el-dropdown-item>
                             <el-dropdown-item @click.native="saveGraph">保存布局</el-dropdown-item>
+                            <el-dropdown-item @click.native="cancelZoom">取消缩放</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -1040,8 +1041,7 @@
 
             // 将用户对图谱做出的改动进行保存，主要是更新位置
             saveGraph(){
-                console.log(this.touchedNodes)
-                updateXYAPI(this.touchedNodes)
+                updateXYAPI(this.nodesData)
                     .then(res => {
                         if(res.data.code == 200) {
                             Message({
@@ -1052,11 +1052,15 @@
                                 .then(res => {
                                     if(res.data.code == 200) {
                                         this.set_relationships(res.data.data.relationships)
-                                        console.log(this.relationships)
                                     }
                                 })   
                         }
                     })
+            },
+
+            //恢复用户对图谱的改动
+            cancelZoom() {
+                this.init()
             },
 
             //=================================导出图片部分=============================
