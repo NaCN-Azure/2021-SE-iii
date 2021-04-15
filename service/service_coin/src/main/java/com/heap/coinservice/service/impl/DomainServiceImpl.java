@@ -8,6 +8,7 @@ import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.mapper.RelationshipMapper;
 import com.heap.coinservice.service.DomainService;
 import com.heap.coinservice.service.EntityService;
+import com.heap.commonutils.DefaultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
