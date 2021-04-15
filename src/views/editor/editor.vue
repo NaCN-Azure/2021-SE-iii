@@ -88,7 +88,7 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="exportPic">导出图片</el-dropdown-item>
                             <el-dropdown-item @click.native="exportXml">导出xml</el-dropdown-item>
-                            <el-dropdown-item @click.native="highlight">搜索</el-dropdown-item>
+                            <el-dropdown-item @click.native="saveGraph">保存布局</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -106,7 +106,7 @@
                     style="display: block;margin-right: 15px;margin-top: 10px"
                     type="primary" plain
                 >节点与关系</el-button>
-            <node-list-drawer></node-list-drawer>
+                <node-list-drawer/>
             </div>
 
             <!-- 节点操作 -->
@@ -164,6 +164,7 @@
     import CreateLinkDialog from "./components/createLinkDialog";
     import EditLinkDialog from "./components/editLinkDialog";
     import NodeListDrawer from "./components/nodeListDrawer";
+    import { Message } from 'element-ui'
 
 
     export default {
@@ -196,7 +197,7 @@
                 },
                 popoverContent:'',
                 simulation: null,
-                cicleNodes: [], // cicleNodes
+                cicleNodes: [],
                 rectNodes: [],
                 triangleNodes: [],
                 links: [],
@@ -204,11 +205,9 @@
                 linkText: [],
                 svg: null,
                 timer: null,
-                searchContent: '',   //搜索内容
-                
-                searchLinksResult: [],  //搜索关系结果
 
                 mode: 0,  //两种模式，0代表力导图模式，1代表排版模式
+                touchedNodes: [],  //被动过的节点集合
             }
         },
 
@@ -386,8 +385,10 @@
                         })
 
                     this.cicleNodes
-                        .attr("cx", d => d.x)
-                        .attr("cy", d => d.y)
+                        .attr('cx', (d) => { 
+                            return d.x 
+                        })
+                        .attr('cy', (d) => { return d.y })
 
                     this.rectNodes
                         .attr("x", d => d.x - d.r * 0.707) //方形中心点
@@ -491,6 +492,9 @@
                         }
                     })
                     .attr('startOffset', '50%')
+                    // .style("font-size",function(d){
+                    //     return d.font_size
+                    // })
                     .text(d=>d.name)
             },
 
@@ -528,7 +532,6 @@
                     })
                     .on('mouseenter', function (d, i) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
-                        that.selectedNode = i
                     })
                     // 鼠标在节点上停留2s时，显示节点描述信息  （此功能暂时禁用，后面再讨论具体使用细节）
                     // .on('mouseover',function (d, i){
@@ -716,8 +719,8 @@
                         type:'',
                         description:'',
                         r: '',
-                        x:0.0,
-                        y:0.0,
+                        x: 200,
+                        y: 100,
                         fontSize: 20,
                     })
                     this.set_createNodeDialogVisible(true);
@@ -819,7 +822,6 @@
                 this.set_nodeListVisible(true);
             },
 
-            /* ==========================showGraph================================== */
             // 从前端返回的relationships数组中获取nodes
             getNodesFromRelationships (relationships) {
                 /*
@@ -954,6 +956,7 @@
             },
 
             drag(simulation){
+                var that = this
                 function dragstarted(event) {
                     if (!event.active) {
                         simulation.alphaTarget(0.3).restart()
@@ -966,6 +969,17 @@
                     event.subject.fy = event.y
                 }
                 function dragended(event) {
+                    //拖拽结束，将该节点加入touchedNodes，同时检测是否已经存在该节点
+                    var flag = false  //判断是否节点已经存在于数组中
+                    for(let i = 0; i < that.touchedNodes.length; i++) {
+                        if(event.subject.id === that.touchedNodes[i].id) {
+                            that.touchedNodes[i] = event.subject
+                            flag = true
+                        }
+                    }
+                    if(!flag) {
+                        that.touchedNodes.push(event.subject)
+                    }
                     if (!event.active) { 
                         simulation.alphaTarget(0)
                     }
@@ -1026,7 +1040,17 @@
 
             // 将用户对图谱做出的改动进行保存，主要是更新位置
             saveGraph(){
-
+                console.log(this.touchedNodes)
+                // updateXYAPI(this.nodesData)
+                //     .then(res => {
+                //         if(res.data.code == 200) {
+                //             Message({
+                //                 message: '修改成功',
+                //                 type: 'success'
+                //             })
+                //             this.init()
+                //         }
+                //     })
             },
 
             //=================================导出图片部分=============================

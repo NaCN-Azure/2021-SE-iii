@@ -74,13 +74,14 @@
                 this.set_editNodeDialogVisible(false);
             },
             submitEditNode(){
+                console.log(this.editNodeParams)
                 updateNodeAPI(this.editNodeParams)
                     .then(res => {
                         if(res.data.code == 200){
                             Message({
                                 message: '修改成功',
                                 type: 'success'
-                            });
+                            })
                             this.set_editNodeDialogVisible(false)
                             getLinkByDomainIdAPI(this.editNodeParams.domainId)
                                 .then(res => {
