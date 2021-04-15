@@ -70,7 +70,7 @@
                         <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0,0)">排版模式</el-button>
                     </el-button-group>
                 </div>
-                <div v-show="selectedDomain.name!=''" style="margin-left: 670px;position: absolute">
+                <div v-show="selectedDomain.name!=''" style="margin-left: 670px;position: absolute;">
                     <span class="">节点个数：</span>
                     <el-input v-model="nodesData.length" size="small" style="width: 40px"></el-input>
                     <span class="" style="margin-left: 20px">关系个数：</span>
@@ -1041,16 +1041,22 @@
             // 将用户对图谱做出的改动进行保存，主要是更新位置
             saveGraph(){
                 console.log(this.touchedNodes)
-                // updateXYAPI(this.nodesData)
-                //     .then(res => {
-                //         if(res.data.code == 200) {
-                //             Message({
-                //                 message: '修改成功',
-                //                 type: 'success'
-                //             })
-                //             this.init()
-                //         }
-                //     })
+                updateXYAPI(this.touchedNodes)
+                    .then(res => {
+                        if(res.data.code == 200) {
+                            Message({
+                                message: '保存成功',
+                                type: 'success'
+                            })
+                            getLinkByDomainIdAPI(this.selectedDomain.id)
+                                .then(res => {
+                                    if(res.data.code == 200) {
+                                        this.set_relationships(res.data.data.relationships)
+                                        console.log(this.relationships)
+                                    }
+                                })   
+                        }
+                    })
             },
 
             //=================================导出图片部分=============================
