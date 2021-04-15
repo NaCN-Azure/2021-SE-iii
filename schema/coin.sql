@@ -30,7 +30,6 @@ CREATE TABLE `domain`  (
 -- ----------------------------
 -- Records of domain
 -- ----------------------------
-INSERT INTO `domain` VALUES (8, 'as');
 
 -- ----------------------------
 -- Table structure for nodetype
@@ -47,6 +46,5 @@ CREATE TABLE `nodetype`  (
 -- ----------------------------
 -- Records of nodetype
 -- ----------------------------
-INSERT INTO `nodetype` VALUES (1, 'Char', '#dc44fw', 8);
 
 SET FOREIGN_KEY_CHECKS = 1;
