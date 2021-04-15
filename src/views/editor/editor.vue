@@ -65,10 +65,10 @@
                     <span>{{selectedNode.name}}</span>
                 </div>
                 <div class="multi-mode">
-                    <el-button-group>
-                        <el-button class="mode-button" id="mode-button-first" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0.3,-100)">力导图模式</el-button>
-                        <el-button class="mode-button" id="mode-button-second" type="primary" plain size="small" v-show="selectedDomain.name!=''" @click="initGraph(0,0)">排版模式</el-button>
-                    </el-button-group>
+                    <el-radio-group v-model="isCollapse" @change="buttonChange" size="small">
+                        <el-radio-button :label="true" class="mode-button" id="mode-button-first"  size="small" v-show="selectedDomain.name!=''">力导模式</el-radio-button>
+                        <el-radio-button :label="false" class="mode-button" id="mode-button-second"  size="small" v-show="selectedDomain.name!=''">排版模式</el-radio-button>
+                    </el-radio-group>
                 </div>
                 <div v-show="selectedDomain.name!=''" style="margin-left: 670px;position: absolute">
                     <span class="">节点个数：</span>
@@ -207,7 +207,7 @@
                 searchContent: '',   //搜索内容
                 
                 searchLinksResult: [],  //搜索关系结果
-
+                isCollapse:true,
                 mode: 0,  //两种模式，0代表力导图模式，1代表排版模式
             }
         },
@@ -761,7 +761,6 @@
                 this.set_selectedDomain(domain)
                 this.getDomainById(this.selectedDomain.id)
                 this.init()
-                document.getElementById('mode-button-first').focus();
             },
 
             // 其他方法更新图谱时使用
@@ -1147,6 +1146,13 @@
                 //
             },
 
+            buttonChange:function (val) {
+                if(val)
+                    this.initGraph(0.3,-100);
+                else
+                    this.initGraph(0,0);
+            },
+
         }
     }
 </script>
@@ -1177,7 +1183,7 @@
     .multi-mode{
         width: 300px;
         position: absolute;
-        right: 850px;
+        right: 820px;
     }
     .fixed-tools{
         width: 300px;
@@ -1186,7 +1192,7 @@
         /*很离谱啊这里，为什么浏览器在看不见的地方还多了300px*/
     }
     .mode-button{
-        width: 100px;
+        /*width: 100px;*/
     }
     .edit-tool{
         margin-left: 20px;
