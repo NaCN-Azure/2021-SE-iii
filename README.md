@@ -57,5 +57,5 @@ backend-parent：后端系统的根目录（父工程），暂时管理两个子
 - 2.修复update的null bug
 
 2021-04-15
-- 1.updateNode加入修改xy策略
+- 1.updateNode加入修改xy策略,颜色bug
 
