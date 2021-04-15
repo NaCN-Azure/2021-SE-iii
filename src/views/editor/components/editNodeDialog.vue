@@ -74,14 +74,22 @@
                 this.set_editNodeDialogVisible(false);
             },
             submitEditNode(){
+                console.log(this.editNodeParams)
                 updateNodeAPI(this.editNodeParams)
                     .then(res => {
                         if(res.data.code == 200){
                             Message({
                                 message: '修改成功',
                                 type: 'success'
-                            });
+                            })
                             this.set_editNodeDialogVisible(false)
+                            getLinkByDomainIdAPI(this.editNodeParams.domainId)
+                                .then(res => {
+                                    if(res.data.code == 200) {
+                                        this.set_relationships(res.data.data.relationships)
+                                        this.$parent.init()  //调用父组件的初始化图谱方法
+                                    }
+                                })
                         }else{
                             Message({
                                 message: '修改失败',
@@ -91,16 +99,11 @@
                     })
                     .catch(err => {
                         console.log(err)
+                        Message({
+                            message: '修改失败',
+                            type: 'error'
+                        })
                     })
-                getLinkByDomainIdAPI(this.editNodeParams.domainId)
-                    .then(res => {
-                        console.log('res')
-                        console.log(res)
-                        this.set_relationships(res.data.data.relationships)
-                    })
-                //console.log(this.relationships)
-                this.$parent.init()  //调用父组件的初始化图谱方法
-                
             }
         }
     }

@@ -59,6 +59,8 @@
 <script>
     import {mapActions, mapGetters, mapMutations} from "vuex";
     import {createNodeAPI} from "../../../api/entity";
+    import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../../api/relationship";
+    import { Message } from 'element-ui'
 
     export default {
         name: "createNodeDialog",
@@ -72,7 +74,8 @@
         },
         methods:{
             ...mapMutations([
-                'set_createNodeDialogVisible'
+                'set_createNodeDialogVisible',
+                'set_relationships',
             ]),
             ...mapActions([
                 'createNode'
@@ -81,7 +84,34 @@
                 this.set_createNodeDialogVisible(false);
             },
             submitCreateNode(){
-                this.createNode();
+                createNodeAPI(this.createNodeParams)
+                    .then(res => {
+                        if(res.data.code == 200){
+                            Message({
+                                message:'添加成功',
+                                type:'success'
+                            })
+                            this.set_createNodeDialogVisible(false)
+                            getLinkByDomainIdAPI(this.createNodeParams.domainId)
+                                .then(res => {
+                                    this.set_relationships(res.data.data.relationships)
+                                    this.$parent.init()
+                                })
+                        }
+                        else {
+                            Message({
+                                message: '添加失败',
+                                type: 'error'
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                        Message({
+                            message: '添加失败',
+                            type: 'error'
+                        })
+                    })
             }
         }
     }

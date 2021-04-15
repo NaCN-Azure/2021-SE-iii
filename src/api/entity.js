@@ -42,9 +42,10 @@ export function countNodeAPI(domainId) {
     })
 }
 
-export function updateXYAPI(id, x, y) {
+export function updateXYAPI(entites) {
     return axios({
-        url: `${api.entityPre}/updateXY/${id}/${x}/${y}`,
+        url: `${api.entityPre}/updateXY`,
         method: 'post',
+        data: entites
     })
 }
