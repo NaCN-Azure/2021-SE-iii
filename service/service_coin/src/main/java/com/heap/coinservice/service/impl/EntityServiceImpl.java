@@ -50,6 +50,7 @@ public class EntityServiceImpl implements EntityService {
     public Entity updateNode(Entity entity){
         String oldType = entityMapper.findById(entity.getId()).get().getType();
         updateType(entity.getId(),oldType,entity.getType(),entity.getDomainId());
+        entityMapper.updateXY(entity.getId(),entity.getX(),entity.getY());
         return entityMapper.updateNode(entity.getId(),entity.getName(), entity.getDescription(),entity.getR(),entity.getShape());
     }
 
