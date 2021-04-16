@@ -1327,7 +1327,6 @@
             //选择特定类型节点进行显示
             filterNodeType(types) {
                 var selectedNodes = []
-                console.log(this.nodesData)
                 for(let i = 0; i < this.nodesData.length; i++) {
                     for(let j = 0; j < types.length; j++) {
                         if(this.nodesData[i].type === types[j]) {
@@ -1335,7 +1334,6 @@
                         }
                     }
                 }
-                console.log(selectedNodes)
                 if(this.mode == 0) {
                     this.initGraph(selectedNodes, [], [], 0.3, -100, 'black')
                 }
