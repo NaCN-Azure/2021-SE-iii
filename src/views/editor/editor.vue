@@ -90,6 +90,7 @@
                             <el-dropdown-item @click.native="exportXml">导出xml</el-dropdown-item>
                             <el-dropdown-item @click.native="saveGraph">保存布局</el-dropdown-item>
                             <el-dropdown-item @click.native="cancelZoom">取消缩放</el-dropdown-item>
+                            <el-dropdown-item @click.native="highlight">高亮</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -198,17 +199,25 @@
                 },
                 popoverContent:'',
                 simulation: null,
-                cicleNodes: [],
+                markedSimulation: null,
+                circleNodes: [],
                 rectNodes: [],
                 triangleNodes: [],
                 links: [],
                 nodeText: [],
+                nodeTextWithColor: [],
                 linkText: [],
                 svg: null,
                 timer: null,
 
                 mode: 0,  //两种模式，0代表力导图模式，1代表排版模式
                 touchedNodes: [],  //被动过的节点集合
+
+                markedNodes: [],    //搜索节点结果，即标记的节点
+                circleMarkedNodes: [],
+                rectMarkedNodes: [],
+                triangleMarkedNodes: [],
+                ummarkedNodes: [],  //未标记的节点
             }
         },
 
@@ -263,24 +272,22 @@
 
             //初始化图谱
             init() {
+                this.set_nodesData(this.getNodesFromRelationships(this.relationships))
+                this.set_linksData(this.getLinksFromRelationships(this.relationships))
                 if (this.mode == 0) {
                     console.log('力导图初始化开始')
-                    this.initGraph(0.3, -100)
+                    this.initGraph(this.nodesData, this.linksData, [], 0.3, -100, 'black')
                 }
                 else {
                     console.log('排版模式初始化开始')
-                    this.initGraph(0, 0)
+                    this.initGraph(this.nodesData, this.linksData, [], 0, 0, 'black')
                 }
             },
 
-            initGraph(elasticForce, electromagneticForce){
-                this.set_nodesData(this.getNodesFromRelationships(this.relationships))
-                this.set_linksData(this.getLinksFromRelationships(this.relationships))
-
-                //console.log(this.nodesData)
-
+            initGraph(nodesData, linksData, colorNodes, elasticForce, electromagneticForce, nodeTextColor){
+                //simulation需要的是所有节点
                 this.simulation = d3.forceSimulation(this.nodesData)
-                    .force("link", d3.forceLink(this.linksData).id(d => d.id).distance(200).strength(elasticForce))
+                    .force("link", d3.forceLink(linksData).id(d => d.id).distance(200).strength(elasticForce))
                     .force("collide", d3.forceCollide().radius(()=>50))
                     .force("charge", d3.forceManyBody().strength(electromagneticForce))
                     .force("center", d3.forceCenter(this.width / 2, this.height / 2))
@@ -296,33 +303,40 @@
 
                 const g = this.svg.append('g').attr("class", "content")
 
-                //虚线   stroke-dasharray 5, 5
-
                 //保存this
                 var _this = this
 
                 //关系初始化
-                this.links = this.drawLinks(g, this.linksData, _this)
+                this.links = this.drawLinks(g, linksData, _this)
 
                 //关系内容初始化
-                this.linkText = this.drawLinkText(g, this.linksData)
+                this.linkText = this.drawLinkText(g, linksData)
 
                 //圆形节点初始化
-                this.cicleNodes = this.drawCircleNodes(g, this.nodesData, _this)
+                this.circleNodes = this.drawCircleNodes(g, nodesData, _this)
+                    .call(this.drag(this.simulation))
+                //圆形被标记节点初始化
+                this.circleMarkedNodes = this.drawCircleNodes(g, colorNodes, _this)
                     .call(this.drag(this.simulation))
 
                 //矩形节点初始化
-                this.rectNodes = this.drwaRectNodes(g, this.nodesData, _this)
+                this.rectNodes = this.drawRectNodes(g, nodesData, _this)
                     .call(this.drag(this.simulation))
-
+                //矩形被标记节点初始化
+                this.rectMarkedNodes = this.drawRectNodes(g, colorNodes, _this)
+                    .call(this.drag(this.simulation))
+    
                 //三角形节点初始化
-                this.triangleNodes = this.drawTriangleNodes(g, this.nodesData, _this)
+                this.triangleNodes = this.drawTriangleNodes(g, nodesData, _this)
                     .call(this.drag(this.simulation))
-
-                //this.nodes.append("title").text(d => d.name)
+                //三角形被标记节点初始化
+                this.triangleMarkedNodes = this.drawTriangleNodes(g, colorNodes, _this)
+                    .call(this.drag(this.simulation))
 
                 //节点内容初始化
-                this.nodeText = this.drawNodeText(g, this.nodesData, _this)
+                //分两步走，首先将没有标记的节点渲染，再将标记的节点渲染
+                this.nodeText = this.drawNodeText(g, nodesData, _this, 'black')
+                this.nodeTextWithColor = this.drawNodeText(g, colorNodes, _this, nodeTextColor)
 
                 this.simulation.on("tick", () => {
                     this.links.attr("d", function(d) {
@@ -385,22 +399,34 @@
                             }
                         })
 
-                    this.cicleNodes
-                        .attr('cx', (d) => { 
-                            return d.x 
-                        })
+                    this.circleNodes
+                        .attr('cx', (d) => { return d.x })
+                        .attr('cy', (d) => { return d.y })
+                    this.circleMarkedNodes
+                        .attr('cx', (d) => { return d.x })
                         .attr('cy', (d) => { return d.y })
 
                     this.rectNodes
                         .attr("x", d => d.x - d.r * 0.707) //方形中心点
+                        .attr("y", d => d.y - d.r * 0.707)
+                    this.rectMarkedNodes
+                        .attr("x", d => d.x - d.r * 0.707)
                         .attr("y", d => d.y - d.r * 0.707)
 
                     this.triangleNodes
                         .attr("d", function(d){
                             return "M "+(d.x-0.87*d.r)+" "+ (d.y+0.5*d.r)+" L "+(d.x+0.87*d.r-0.87*d.r)+" "+(d.y-1.5*d.r+0.5*d.r)+" L "+(d.x+d.r*1.73-0.87*d.r)+" "+(d.y+0.5*d.r)+" L "+(d.x-0.87*d.r)+" "+(d.y+0.5*d.r)
                         })
+                    this.triangleMarkedNodes
+                        .attr("d", function(d){
+                            return "M "+(d.x-0.87*d.r)+" "+ (d.y+0.5*d.r)+" L "+(d.x+0.87*d.r-0.87*d.r)+" "+(d.y-1.5*d.r+0.5*d.r)+" L "+(d.x+d.r*1.73-0.87*d.r)+" "+(d.y+0.5*d.r)+" L "+(d.x-0.87*d.r)+" "+(d.y+0.5*d.r)
+                        })
 
                     this.nodeText
+                        .attr("x", d => d.x)
+                        .attr("y", d => d.y)
+
+                    this.nodeTextWithColor
                         .attr("x", d => d.x)
                         .attr("y", d => d.y)
 
@@ -433,7 +459,7 @@
                     .append('path')
                     .attr("stroke", "#999")
                     .attr("stroke-opacity", 0.8)
-                    .attr("marker-end", "url(resolved)")
+                    .attr("marker-end", "url(#arrowMarker)")
                     .attr("fill-opacity", 0)
                     .attr("stroke-width", 2)
                     .attr("class", "link")
@@ -458,6 +484,7 @@
                     .on('mouseleave',function (d) {
                         d3.select(this).style("stroke-width", "3")
                     })
+                    //虚线   stroke-dasharray 5, 5
                     .attr("id", function (d) {
                         if(typeof (d.source) === 'object'){
                             return d.source.id+"_"+d.name+"_"+d.target.id
@@ -553,7 +580,7 @@
                     })
             },
 
-            drwaRectNodes(g, nodesData, that) {
+            drawRectNodes(g, nodesData, that) {
                 return g.append("g")
                     .selectAll("rect")
                     .data(nodesData)
@@ -663,45 +690,45 @@
                     })
             },
 
-            drawNodeText(g, nodesData, that) {
+            drawNodeText(g, nodesData, that, textColor) {
                 return g.append("g")
-                    .selectAll("text")
-                    .data(nodesData)
-                    .enter()
-                    .append('text')
-                    .text(function(d){
-                        // if(d.name.length > 4){
-                        //     var s = d.name.slice(0,4) + "..."
-                        //     return s
-                        // }
-                        return d.name
-                    })
-                    .attr("dx", function (d) {
-                        //现在后端没有fontSize，前端就先给出来，到迭代三再加入
-                        d.fontSize = 20
-                        return (d.r/2 + d.fontSize)/2*(-1)
-                    })
-                    .attr("dy", function (d) {
-                        d.fontSize = 20
-                        return d.r + d.fontSize - 5
-                    })
-                    .style("font-size", function(d){
-                        d.fontSize = 20
-                        return d.fontSize
-                    })
-                    .attr("class", "node-name")
-                    .attr("fill", "black")
-                    .on("contextmenu", function (d, i) {
-                        var cc = $(this).offset()
-                        that.selectedNode = i
-                        d3.select('#node-custom-menu')
-                            .style('position','absolute')
-                            .style('left', cc.left -250 + "px")
-                            .style('top', cc.top -130+ "px")
-                            .style('display','block')
-                        event.preventDefault()
-                        event.stopPropagation()
-                    })
+                            .selectAll("text")
+                            .data(nodesData)
+                            .enter()
+                            .append('text')
+                            .text(function(d){
+                                // if(d.name.length > 4){
+                                //     var s = d.name.slice(0,4) + "..."
+                                //     return s
+                                // }
+                                return d.name
+                            })
+                            .attr("dx", function (d) {
+                                //现在后端没有fontSize，前端就先给出来，到迭代三再加入
+                                d.fontSize = 20
+                                return (d.r/2 + d.fontSize)/2*(-1)
+                            })
+                            .attr("dy", function (d) {
+                                d.fontSize = 20
+                                return d.r + d.fontSize - 5
+                            })
+                            .style("font-size", function(d){
+                                d.fontSize = 20
+                                return d.fontSize
+                            })
+                            .attr("class", "node-name")
+                            .attr("fill", textColor)
+                            .on("contextmenu", function (d, i) {
+                                var cc = $(this).offset()
+                                that.selectedNode = i
+                                d3.select('#node-custom-menu')
+                                    .style('position','absolute')
+                                    .style('left', cc.left -250 + "px")
+                                    .style('top', cc.top -130+ "px")
+                                    .style('display','block')
+                                event.preventDefault()
+                                event.stopPropagation()
+                            })
             },
 
             //显示创建节点对话框
@@ -1187,9 +1214,25 @@
             },
             //=================================导出xml结束=============================
 
+            //搜索节点
+            searchNodes(content) {
+                this.markedNodes = []
+                this.ummarkedNodes = []
+                for(var i = 0; i < this.nodesData.length; i++) {
+                    //将所有节点分为两部分，一部分为标记节点，剩下为未标记节点
+                    if(this.nodesData[i].name.search(content) != -1) {
+                        this.markedNodes.push(this.nodesData[i])
+                    }
+                    else {
+                        this.ummarkedNodes.push(this.nodesData[i])
+                    }
+                }
+            },
 
+            //对指定的节点文本进行标记
             highlight() {
-                //
+                this.searchNodes('1')
+                this.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0.3, -100, 'red')
             },
 
         }
