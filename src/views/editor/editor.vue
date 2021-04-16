@@ -347,8 +347,8 @@
 
                 //节点内容初始化
                 //分两步走，首先将没有标记的节点渲染，再将标记的节点渲染
-                this.nodeText = this.drawNodeText(g, nodesData, _this, 'black', false)
-                this.nodeTextWithColor = this.drawNodeText(g, colorNodes, _this, nodeTextColor, true)
+                this.nodeText = this.drawNodeText(g, nodesData, _this, 'black', 20, false)
+                this.nodeTextWithColor = this.drawNodeText(g, colorNodes, _this, nodeTextColor, 20, true)
 
                 this.simulation.on("tick", () => {
                     this.links.attr("d", function(d) {
@@ -702,7 +702,7 @@
                     })
             },
 
-            drawNodeText(g, nodesData, that, textColor, bold) {
+            drawNodeText(g, nodesData, that, textColor, fontSize, bold) {
                 const nodeText =  g.append("g")
                                     .selectAll("text")
                                     .data(nodesData)
@@ -717,17 +717,13 @@
                                     })
                                     .attr("dx", function (d) {
                                         //现在后端没有fontSize，前端就先给出来，到迭代三再加入
-                                        d.fontSize = 20
-                                        return (d.r/2 + d.fontSize)/2*(-1)
+                                        // d.fontSize = 20
+                                        return (d.r/2 + fontSize)/2*(-1)
                                     })
                                     .attr("dy", function (d) {
-                                        d.fontSize = 20
-                                        return d.r + d.fontSize - 5
+                                        return d.r + fontSize - 5
                                     })
-                                    .style("font-size", function(d){
-                                        d.fontSize = 20
-                                        return d.fontSize
-                                    })
+                                    .style("font-size", fontSize)
                                     .attr("class", "node-name")
                                     .attr("fill", textColor)
                                     .on("contextmenu", function (d, i) {
@@ -764,7 +760,7 @@
                         domainId: this.selectedDomain.id,
                         type:'',
                         description:'',
-                        r: '',
+                        r: 40,
                         x: 200,
                         y: 100,
                         fontSize: 20,
@@ -1319,8 +1315,15 @@
                     nodesData[i].x=newData[i].x;
                     nodesData[i].y=newData[i].y;
                 }
+            },
 
+            //让所有关系消失
+            vanishAllRelationships() {
+                if(this.mode == 0) {
+                    //
+                }
             }
+
         }
     }
 </script>
@@ -1358,9 +1361,6 @@
         position: absolute;
         right: 300px;
         /*很离谱啊这里，为什么浏览器在看不见的地方还多了300px*/
-    }
-    .mode-button{
-        /*width: 100px;*/
     }
     .edit-tool{
         margin-left: 20px;
