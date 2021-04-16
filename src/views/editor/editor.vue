@@ -91,6 +91,7 @@
                             <el-dropdown-item @click.native="cancelZoom">取消缩放</el-dropdown-item>
                             <el-dropdown-item @click.native="highlight">高亮</el-dropdown-item>
                             <el-dropdown-item @click.native="vanishAllRelationships">消失</el-dropdown-item>
+                            <!-- <el-dropdown-item @click.native="test">过滤</el-dropdown-item> -->
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -290,16 +291,16 @@
                 console.log(this.nodesData)
                 if (this.mode == 0) {
                     console.log('力导图初始化开始')
-                    this.initGraph(this.nodesData, this.linksData, [], 0.3, -100, 'black')
+                    this.initGraph(this.nodesData, this.linksData, [], 0.3, -100, 'black', 1, 1)
                 }
                 else {
                     console.log('排版模式初始化开始')
                     this.composeModeSet(this.nodesData);
-                    this.initGraph(this.nodesData, this.linksData, [], 0, 0, 'black')
+                    this.initGraph(this.nodesData, this.linksData, [], 0, 0, 'black', 1, 1)
                 }
             },
 
-            initGraph(nodesData, linksData, colorNodes, elasticForce, electromagneticForce, nodeTextColor){
+            initGraph(nodesData, linksData, colorNodes, elasticForce, electromagneticForce, nodeTextColor, nodesDataOpacity, colorNodesOpacity){
                 //simulation需要的是所有节点
                 this.simulation = d3.forceSimulation(this.nodesData)
                     .force("link", d3.forceLink(linksData).id(d => d.id).distance(200).strength(elasticForce))
@@ -328,24 +329,24 @@
                 this.linkText = this.drawLinkText(g, linksData)
 
                 //圆形节点初始化
-                this.circleNodes = this.drawCircleNodes(g, nodesData, _this)
+                this.circleNodes = this.drawCircleNodes(g, nodesData, _this, nodesDataOpacity)
                     .call(this.drag(this.simulation))
                 //圆形被标记节点初始化
-                this.circleMarkedNodes = this.drawCircleNodes(g, colorNodes, _this)
+                this.circleMarkedNodes = this.drawCircleNodes(g, colorNodes, _this, colorNodesOpacity)
                     .call(this.drag(this.simulation))
 
                 //矩形节点初始化
-                this.rectNodes = this.drawRectNodes(g, nodesData, _this)
+                this.rectNodes = this.drawRectNodes(g, nodesData, _this, nodesDataOpacity)
                     .call(this.drag(this.simulation))
                 //矩形被标记节点初始化
-                this.rectMarkedNodes = this.drawRectNodes(g, colorNodes, _this)
+                this.rectMarkedNodes = this.drawRectNodes(g, colorNodes, _this, colorNodesOpacity)
                     .call(this.drag(this.simulation))
 
                 //三角形节点初始化
-                this.triangleNodes = this.drawTriangleNodes(g, nodesData, _this)
+                this.triangleNodes = this.drawTriangleNodes(g, nodesData, _this, nodesDataOpacity)
                     .call(this.drag(this.simulation))
                 //三角形被标记节点初始化
-                this.triangleMarkedNodes = this.drawTriangleNodes(g, colorNodes, _this)
+                this.triangleMarkedNodes = this.drawTriangleNodes(g, colorNodes, _this, colorNodesOpacity)
                     .call(this.drag(this.simulation))
 
                 //节点内容初始化
@@ -541,7 +542,7 @@
                     .text(d=>d.name)
             },
 
-            drawCircleNodes(g, nodesData, that) {
+            drawCircleNodes(g, nodesData, that, opacity) {
                 return g.append("g")
                     .selectAll("circle")
                     .data(nodesData)
@@ -556,6 +557,7 @@
                         return 40   //默认半径是40
                     })
                     .attr("class","node")
+                    .attr("fill-opacity", opacity)  //透明度
                     .attr("fill", function(d){
                         if(typeof(d.bgColor) != "undefined" && d.bgColor != ''){
                             return d.bgColor
@@ -595,7 +597,7 @@
                     })
             },
 
-            drawRectNodes(g, nodesData, that) {
+            drawRectNodes(g, nodesData, that, opacity) {
                 return g.append("g")
                     .selectAll("rect")
                     .data(nodesData)
@@ -617,6 +619,7 @@
                         return 40 * 1.41   
                     }) 
                     .attr("class", "node")
+                    .attr("fill-opacity", opacity)  //透明度
                     .attr("fill", function(d){
                         if(typeof(d.bgColor) != "undefined" && d.bgColor != ''){
                             return d.bgColor
@@ -657,7 +660,7 @@
                     })
             },
 
-            drawTriangleNodes(g, nodesData, that) {
+            drawTriangleNodes(g, nodesData, that, opacity) {
                 return g.append("g")
                     .selectAll("triangle-up")
                     .data(nodesData)
@@ -665,6 +668,7 @@
                     .filter(d => d.shape == 2)
                     .append('path')
                     .attr("class", "node")
+                    .attr("fill-opacity", opacity)  //透明度
                     .attr("fill", function(d){
                         if(typeof(d.bgColor) != "undefined" && d.bgColor != ''){
                             return d.bgColor
@@ -1247,11 +1251,11 @@
 
             //对指定的节点文本进行标记
             highlight() {
-                this.searchNodes('a')
+                this.searchNodes('1')
                 if(this.mode==0)
-                    this.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0.3, -100, 'red');
+                    this.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0.3, -100, 'red', 0.1, 1);
                 else
-                    this.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0, 0, 'red');
+                    this.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0, 0, 'red', 0.1, 1);
             },
 
             buttonChange:function (val) {
@@ -1335,10 +1339,10 @@
                     }
                 }
                 if(this.mode == 0) {
-                    this.initGraph(selectedNodes, [], [], 0.3, -100, 'black')
+                    this.initGraph(this.nodesData, this.linksData, selectedNodes, 0.3, -100, 'black', 0.2, 1)
                 }
                 else {
-                    this.initGraph(selectedNodes, [], [], 0, 0, 'black')
+                    this.initGraph(this.nodesData, this.linksData, selectedNodes, 0, 0, 'black', 0.2, 1)
                 }
             },
 
