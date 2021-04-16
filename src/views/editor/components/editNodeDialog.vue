@@ -88,7 +88,6 @@
                                 .then(res => {
                                     if(res.data.code == 200) {
                                         this.set_relationships(res.data.data.relationships)
-                                        console.log(this.relationships)
                                         this.$parent.init()  //调用父组件的初始化图谱方法
                                     }
                                 })
