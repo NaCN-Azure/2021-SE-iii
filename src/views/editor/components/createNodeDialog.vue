@@ -31,9 +31,9 @@
                     v-model="createNodeParams.description"
                 />
             </el-form-item>
-            <el-form-item label="输入半径">
+            <!-- <el-form-item label="输入半径">
                 <el-input v-model="createNodeParams.r" style="width: 330px"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="所属图谱">
                 <el-select 
                     v-model="createNodeParams.domainId" 
@@ -84,6 +84,7 @@
                 this.set_createNodeDialogVisible(false);
             },
             submitCreateNode(){
+                console.log(this.createNodeParams)
                 createNodeAPI(this.createNodeParams)
                     .then(res => {
                         if(res.data.code == 200){

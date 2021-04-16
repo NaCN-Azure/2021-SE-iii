@@ -62,19 +62,20 @@
                 'relationships',
             ])
         },
+
         methods:{
             ...mapMutations([
                 'set_editNodeDialogVisible',
-                'set_relationships'
+                'set_relationships',
+                'set_editNodeParams',
             ]),
             ...mapActions([
                 'editNode',
             ]),
             cancelEditNode(){
-                this.set_editNodeDialogVisible(false);
+                this.set_editNodeDialogVisible(false)
             },
             submitEditNode(){
-                console.log(this.editNodeParams)
                 updateNodeAPI(this.editNodeParams)
                     .then(res => {
                         if(res.data.code == 200){

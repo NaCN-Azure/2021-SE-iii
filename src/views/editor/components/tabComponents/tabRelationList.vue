@@ -82,7 +82,6 @@
         },
         mounted(){
             console.log("tab2组件");
-            console.log(this.linksData);
             this.showSearchRelations(this.linksData);
 
         },
