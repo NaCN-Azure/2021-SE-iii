@@ -21,10 +21,10 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="修改类型">
+            <el-form-item label="选择类型">
                 <el-input v-model="editNodeParams.type" style="width: 450px" placeholder="请输入节点类型"></el-input>
             </el-form-item>
-            <el-form-item label="修改描述">
+            <el-form-item label="描述内容">
                 <el-input
                         type="textarea"
                         autosize
@@ -33,8 +33,11 @@
                         v-model="editNodeParams.description"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="修改半径">
+            <el-form-item label="半径长度">
                 <el-input style="width: 330px" v-model="editNodeParams.r"></el-input>
+            </el-form-item>
+            <el-form-item label="字体大小">
+                <el-input style="width: 330px" v-model="editNodeParams.fontSize"></el-input>
             </el-form-item>
         </el-form>
         <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->
