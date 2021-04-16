@@ -27,6 +27,7 @@ const editor = {
             x:0.0,
             y:0.0,
             r: '',
+            fontSize: '',
         },
         addDomainDialogVisible: false,
         createLinkDialogVisible: false,
