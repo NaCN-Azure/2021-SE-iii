@@ -335,8 +335,8 @@
 
                 //节点内容初始化
                 //分两步走，首先将没有标记的节点渲染，再将标记的节点渲染
-                this.nodeText = this.drawNodeText(g, nodesData, _this, 'black')
-                this.nodeTextWithColor = this.drawNodeText(g, colorNodes, _this, nodeTextColor)
+                this.nodeText = this.drawNodeText(g, nodesData, _this, 'black', false)
+                this.nodeTextWithColor = this.drawNodeText(g, colorNodes, _this, nodeTextColor, true)
 
                 this.simulation.on("tick", () => {
                     this.links.attr("d", function(d) {
@@ -690,45 +690,51 @@
                     })
             },
 
-            drawNodeText(g, nodesData, that, textColor) {
-                return g.append("g")
-                            .selectAll("text")
-                            .data(nodesData)
-                            .enter()
-                            .append('text')
-                            .text(function(d){
-                                // if(d.name.length > 4){
-                                //     var s = d.name.slice(0,4) + "..."
-                                //     return s
-                                // }
-                                return d.name
-                            })
-                            .attr("dx", function (d) {
-                                //现在后端没有fontSize，前端就先给出来，到迭代三再加入
-                                d.fontSize = 20
-                                return (d.r/2 + d.fontSize)/2*(-1)
-                            })
-                            .attr("dy", function (d) {
-                                d.fontSize = 20
-                                return d.r + d.fontSize - 5
-                            })
-                            .style("font-size", function(d){
-                                d.fontSize = 20
-                                return d.fontSize
-                            })
-                            .attr("class", "node-name")
-                            .attr("fill", textColor)
-                            .on("contextmenu", function (d, i) {
-                                var cc = $(this).offset()
-                                that.selectedNode = i
-                                d3.select('#node-custom-menu')
-                                    .style('position','absolute')
-                                    .style('left', cc.left -250 + "px")
-                                    .style('top', cc.top -130+ "px")
-                                    .style('display','block')
-                                event.preventDefault()
-                                event.stopPropagation()
-                            })
+            drawNodeText(g, nodesData, that, textColor, bold) {
+                const nodeText =  g.append("g")
+                                    .selectAll("text")
+                                    .data(nodesData)
+                                    .enter()
+                                    .append('text')
+                                    .text(function(d){
+                                        // if(d.name.length > 4){
+                                        //     var s = d.name.slice(0,4) + "..."
+                                        //     return s
+                                        // }
+                                        return d.name
+                                    })
+                                    .attr("dx", function (d) {
+                                        //现在后端没有fontSize，前端就先给出来，到迭代三再加入
+                                        d.fontSize = 20
+                                        return (d.r/2 + d.fontSize)/2*(-1)
+                                    })
+                                    .attr("dy", function (d) {
+                                        d.fontSize = 20
+                                        return d.r + d.fontSize - 5
+                                    })
+                                    .style("font-size", function(d){
+                                        d.fontSize = 20
+                                        return d.fontSize
+                                    })
+                                    .attr("class", "node-name")
+                                    .attr("fill", textColor)
+                                    .on("contextmenu", function (d, i) {
+                                        var cc = $(this).offset()
+                                        that.selectedNode = i
+                                        d3.select('#node-custom-menu')
+                                            .style('position','absolute')
+                                            .style('left', cc.left -250 + "px")
+                                            .style('top', cc.top -130+ "px")
+                                            .style('display','block')
+                                        event.preventDefault()
+                                        event.stopPropagation()
+                                    })
+                if(bold) {
+                    return nodeText.style('font-weight', 'bold')
+                }
+                else {
+                    return nodeText
+                }
             },
 
             //显示创建节点对话框
@@ -1231,7 +1237,7 @@
 
             //对指定的节点文本进行标记
             highlight() {
-                this.searchNodes('1')
+                this.searchNodes('三')
                 this.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0.3, -100, 'red')
             },
 
