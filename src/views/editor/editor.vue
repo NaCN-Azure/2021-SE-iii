@@ -208,6 +208,7 @@
 
                 mode: 0,  //两种模式，0代表力导图模式，1代表排版模式
                 touchedNodes: [],  //被动过的节点集合
+                isCollapse: true
             }
         },
 
@@ -268,6 +269,7 @@
                 }
                 else {
                     console.log('排版模式初始化开始')
+                    this.composeModeSet(this.nodesData);
                     this.initGraph(0, 0)
                 }
             },
@@ -276,6 +278,10 @@
                 this.set_nodesData(this.getNodesFromRelationships(this.relationships))
                 this.set_linksData(this.getLinksFromRelationships(this.relationships))
 
+                for(let i=0;i<this.nodesData.length;i++){
+                    this.nodesData[i].vx=0;
+                    this.nodesData[i].vy=0;
+                }
                 //console.log(this.nodesData)
 
                 this.simulation = d3.forceSimulation(this.nodesData)
@@ -768,7 +774,6 @@
                         if(res.data.code == 200) {
                             this.set_relationships(res.data.data.relationships)
                             this.init()
-                            document.getElementById('mode-button-first').focus()
                         }
                     })
             },
@@ -1184,11 +1189,70 @@
 
             buttonChange:function (val) {
                 if(val)
-                    this.initGraph(0.3,-100);
+                    this.mode=0;
                 else
-                    this.initGraph(0,0);
+                    this.mode=1;
+
+                this.init();
+
             },
 
+            compareArr(arr1,arr2){
+                return arr1.length-arr2.length;
+            },
+            composeModeSet(nodesData){
+                let newData = JSON.parse(JSON.stringify(nodesData))
+
+                let returnData=[[]];
+                returnData[0].push(newData[0]);
+                for(let i=1;i<newData.length;i++){
+                    let judge=true; //是否需要新增类
+                    let tempj=0;
+                    for(let j=0;j<returnData.length;j++){
+                        if(newData[i].type==returnData[j][0].type){
+                            judge=false;
+                            tempj=j;
+                        }
+                    }
+                    if(judge){
+                        returnData.push([]);
+                        returnData[returnData.length-1].push(newData[i]);
+                    }else{
+                        returnData[tempj].push(newData[i]);
+                    }
+                }
+
+
+                console.log(returnData);
+                returnData.sort(this.compareArr);
+                returnData.reverse();
+                console.log(returnData);
+
+                let collision=100+200;
+                let startx =this.width/4;
+                let starty =this.height/4;
+
+                for(let i=0;i<returnData.length;i++){
+                    for(let j=0;j<returnData[i].length;j++){
+                        for(let z=0;z<newData.length;z++){
+                            if(newData[z].id==returnData[i][j].id){
+                                newData[z].x=startx;
+                                newData[z].y=starty;
+                            }
+                        }
+                        starty+=collision;
+                    }
+                    starty=this.height/4;
+                    startx+=collision;
+                }
+
+                console.log(newData);
+                for(let i=0;i<newData.length;i++){
+                    nodesData[i].x=newData[i].x;
+                    nodesData[i].y=newData[i].y;
+                }
+
+            }
         }
     }
 </script>
