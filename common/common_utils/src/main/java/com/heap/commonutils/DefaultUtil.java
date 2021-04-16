@@ -9,6 +9,8 @@ public class DefaultUtil {
 
     public static int DEFAULT_SHAPE=0;
 
+    public static int DEFAULT_FONT=20;
+
     public static String DEFAULT_TYPE="NULL";
 
     public static String DEFAULT_DESCRIPTION="";
