@@ -90,6 +90,7 @@
                             <el-dropdown-item @click.native="exportXml">导出xml</el-dropdown-item>
                             <el-dropdown-item @click.native="cancelZoom">取消缩放</el-dropdown-item>
                             <el-dropdown-item @click.native="highlight">高亮</el-dropdown-item>
+                            <el-dropdown-item @click.native="vanishAllRelationships">消失</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -227,7 +228,9 @@
                 rectMarkedNodes: [],
                 triangleMarkedNodes: [],
                 ummarkedNodes: [],  //未标记的节点
-                isCollapse: true
+
+                isCollapse: true,
+
             }
         },
 
@@ -284,6 +287,7 @@
             init() {
                 this.set_nodesData(this.getNodesFromRelationships(this.relationships))
                 this.set_linksData(this.getLinksFromRelationships(this.relationships))
+                console.log(this.nodesData)
                 if (this.mode == 0) {
                     console.log('力导图初始化开始')
                     this.initGraph(this.nodesData, this.linksData, [], 0.3, -100, 'black')
@@ -1099,7 +1103,6 @@
 
             //恢复用户对图谱的改动
             cancelZoom() {
-                console.log("realClick");
                 this.init()
             },
 
@@ -1285,12 +1288,8 @@
                         returnData[tempj].push(newData[i]);
                     }
                 }
-
-
-                console.log(returnData);
                 returnData.sort(this.compareArr);
                 returnData.reverse();
-                console.log(returnData);
 
                 let collision=100+200;
                 let startx =this.width/4;
@@ -1309,8 +1308,6 @@
                     starty=this.height/4;
                     startx+=collision;
                 }
-
-                console.log(newData);
                 for(let i=0;i<newData.length;i++){
                     nodesData[i].x=newData[i].x;
                     nodesData[i].y=newData[i].y;
@@ -1320,9 +1317,33 @@
             //让所有关系消失
             vanishAllRelationships() {
                 if(this.mode == 0) {
-                    //
+                    this.initGraph(this.nodesData, [], [], 0.3, -100, 'black')
                 }
-            }
+                else {
+                    this.initGraph(this.nodesData, [], [], 0, 0, 'black')
+                }
+            },
+
+            //选择特定类型节点进行显示
+            filterNodeType(types) {
+                var selectedNodes = []
+                console.log(this.nodesData)
+                for(let i = 0; i < this.nodesData.length; i++) {
+                    for(let j = 0; j < types.length; j++) {
+                        if(this.nodesData[i].type === types[j]) {
+                            selectedNodes.push(this.nodesData[i])
+                        }
+                    }
+                }
+                console.log(selectedNodes)
+                if(this.mode == 0) {
+                    this.initGraph(selectedNodes, [], [], 0.3, -100, 'black')
+                }
+                else {
+                    this.initGraph(selectedNodes, [], [], 0, 0, 'black')
+                }
+            },
+
 
         }
     }
