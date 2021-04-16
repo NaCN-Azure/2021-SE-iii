@@ -386,8 +386,8 @@
                         })
 
                     this.cicleNodes
-                        .attr('cx', (d) => { 
-                            return d.x 
+                        .attr('cx', (d) => {
+                            return d.x
                         })
                         .attr('cy', (d) => { return d.y })
 
@@ -565,15 +565,15 @@
                             return d.r * 1.41
                         }
                         d.r = 40 * 1.41
-                        return 40 * 1.41   
-                    }) 
+                        return 40 * 1.41
+                    })
                     .attr("height", function (d) {
                         if(typeof(d.r) != "undefined" && d.r != ''){
                             return d.r * 1.41
                         }
                         d.r = 40 * 1.41
-                        return 40 * 1.41   
-                    }) 
+                        return 40 * 1.41
+                    })
                     .attr("class", "node")
                     .attr("fill", function(d){
                         if(typeof(d.bgColor) != "undefined" && d.bgColor != ''){
@@ -771,7 +771,7 @@
                             this.init()
                             document.getElementById('mode-button-first').focus()
                         }
-                    })                
+                    })
             },
 
             // 其他方法更新图谱时使用
@@ -782,7 +782,7 @@
                             this.set_relationships(res.data.data.relationships)
                             this.init()
                         }
-                    })   
+                    })
             },
 
             deleteDomain(domainId){
@@ -981,7 +981,7 @@
                     if(!flag) {
                         that.touchedNodes.push(event.subject)
                     }
-                    if (!event.active) { 
+                    if (!event.active) {
                         simulation.alphaTarget(0)
                     }
                     event.subject.fx = null
@@ -1053,7 +1053,7 @@
                                     if(res.data.code == 200) {
                                         this.set_relationships(res.data.data.relationships)
                                     }
-                                })   
+                                })
                         }
                     })
             },
