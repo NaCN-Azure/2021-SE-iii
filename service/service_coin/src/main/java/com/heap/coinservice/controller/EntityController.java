@@ -32,7 +32,7 @@ public class EntityController {
 
     @PostMapping("/createNode")
     public Result createNode(@RequestBody Entity entity){
-        Entity newEntity = entityService.createNode(entity.getName(), entity.getShape(),entity.getType(), entity.getDomainId(),entity.getDescription(),entity.getR());
+        Entity newEntity = entityService.createNode(entity.getName(), entity.getShape(),entity.getType(), entity.getDomainId(),entity.getDescription(),entity.getR(),entity.getFontSize());
         return newEntity != null ? Result.ok().data("entity", newEntity) : Result.error().message("存在同名节点");
     }
 

@@ -25,7 +25,7 @@ public interface EntityService  {
      * @param description
      * @return
      */
-    Entity createNode(String name, int shape, String type,int domainId,String description,double r);
+    Entity createNode(String name, int shape, String type,int domainId,String description,double r,int fontSize);
 
     /**
      *

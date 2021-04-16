@@ -35,11 +35,10 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
      *
      * 更新节点信息
      * @param id name bgColor
-     * @return
      */
-    @Query("MATCH (n) WHERE id(n) = {0} SET n.name = {1},n.description = {2}, n.r = {3}, n.shape = {4} RETURN n")
-    Entity updateNode(@Param("id") Long id, @Param("name") String name, @Param("description") String description,
-                      @Param("r") double r,@Param("shape") int shape);
+    @Query("MATCH (n) WHERE id(n) = {0} SET n.name = {1},n.description = {2}, n.r = {3}, n.shape = {4} ,n.fontSize = {5} RETURN n")
+    void updateNode(@Param("id") Long id, @Param("name") String name, @Param("description") String description,
+                      @Param("r") double r,@Param("shape") int shape,@Param("fontSize") int fontSize);
 
     /**
      *

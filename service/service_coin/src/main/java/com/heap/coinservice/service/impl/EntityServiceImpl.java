@@ -29,11 +29,12 @@ public class EntityServiceImpl implements EntityService {
     private EntityMapper entityMapper;
 
     @Override
-    public Entity createNode(String name, int shape, String type,int domainId,String description,double r){
+    public Entity createNode(String name, int shape, String type,int domainId,String description,double r,int fontSize){
         Entity entity = entityMapper.findByName(name,domainId);
         if(entity == null) {
             String color=typeService.insertType(domainId,type);
-            entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).x(0).y(0).r(r).description(description).build();
+            entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).x(0).y(0).r(r).description(description).
+                    fontSize(fontSize).build();
             return entityMapper.save(entity);
         }
         else {
@@ -53,7 +54,7 @@ public class EntityServiceImpl implements EntityService {
             updateType(entity.getId(), oldType, entity.getType(), entity.getDomainId());
         }
         entityMapper.updateXY(entity.getId(),entity.getX(),entity.getY());
-        entityMapper.updateNode(entity.getId(),entity.getName(), entity.getDescription(),entity.getR(),entity.getShape());
+        entityMapper.updateNode(entity.getId(),entity.getName(), entity.getDescription(),entity.getR(),entity.getShape(),entity.getFontSize());
         return entityMapper.findById(entity.getId()).get();
     }
 
