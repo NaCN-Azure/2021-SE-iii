@@ -13,7 +13,7 @@ const editor = {
             domainId: '',
             type: '',
             description: '',
-            r: '',
+            r: 40,
         },
         editNodeDialogVisible: false,
         editNodeParams:{
