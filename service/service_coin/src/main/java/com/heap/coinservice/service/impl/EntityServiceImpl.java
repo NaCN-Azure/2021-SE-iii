@@ -33,7 +33,7 @@ public class EntityServiceImpl implements EntityService {
         Entity entity = entityMapper.findByName(name,domainId);
         if(entity == null) {
             String color=typeService.insertType(domainId,type);
-            entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).x(0).y(0).r(r).description(description).
+            entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).r(r).description(description).
                     fontSize(fontSize).build();
             return entityMapper.save(entity);
         }
@@ -53,7 +53,8 @@ public class EntityServiceImpl implements EntityService {
         if(!oldType.equals(entity.getType())) {
             updateType(entity.getId(), oldType, entity.getType(), entity.getDomainId());
         }
-        entityMapper.updateXY(entity.getId(),entity.getX(),entity.getY());
+        entityMapper.updateForceXY(entity.getId(),entity.getX(),entity.getY());
+        //entityMapper.updateComposeXY(entity.getId(),entity.getComposeX(),entity.getComposeY());
         entityMapper.updateNode(entity.getId(),entity.getName(), entity.getDescription(),entity.getR(),entity.getShape(),entity.getFontSize());
         return entityMapper.findById(entity.getId()).get();
     }
@@ -107,8 +108,13 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public void updateXY(Long id, double x, double y){
-        entityMapper.updateXY(id, x, y);
+    public void updateXY(Long id, double X, double Y){
+        entityMapper.updateForceXY(id, X, Y);
+    }
+
+    @Override
+    public void updateComposeXY(Long id,double composeX,double composeY){
+        entityMapper.updateComposeXY(id,composeX,composeY);
     }
 
     @Override

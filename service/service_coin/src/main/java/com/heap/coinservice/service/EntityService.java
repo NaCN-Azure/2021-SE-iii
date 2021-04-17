@@ -70,12 +70,21 @@ public interface EntityService  {
     int countAllEntity(int domainId);
 
     /**
-     * 改变单个节点坐标
+     * 改变单个节点坐标（力导图）
      * @param id
-     * @param x
-     * @param y
+     * @param X
+     * @param Y
      */
-    void updateXY(Long id, double x, double y);
+    void updateXY(Long id, double X, double Y);
+
+    /**
+     * 改变单个节点坐标（排版图）
+     * @param id
+     * @param composeX
+     * @param composeY
+     */
+    void updateComposeXY(Long id,double composeX,double composeY);
+
 
     /**
      * 统计某类型节点个数

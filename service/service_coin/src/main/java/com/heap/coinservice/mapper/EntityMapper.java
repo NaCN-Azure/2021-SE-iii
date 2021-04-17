@@ -75,13 +75,22 @@ public interface EntityMapper extends Neo4jRepository<Entity,Long> {
     int countAllEntity(@Param("domainId") int domainId);
 
     /**
-     * 改变位置
+     * 改变位置(力导图)
      * @param id
-     * @param x
-     * @param y
+     * @param X
+     * @param Y
      */
-    @Query("MATCH (n) WHERE id(n) = {0} SET n.x = {1},n.y = {2} RETURN n")
-    void updateXY(@Param("id") Long id, @Param("x") double x, @Param("y") double y);
+    @Query("MATCH (n) WHERE id(n) = {0} SET n.X = {1},n.Y = {2} RETURN n")
+    void updateForceXY(@Param("id") Long id, @Param("X") double X, @Param("Y") double Y);
+
+    /**
+     * 改变位置(排版图)
+     * @param id
+     * @param composeX
+     * @param composeY
+     */
+    @Query("MATCH (n) WHERE id(n) = {0} SET n.composeX = {1},n.composeY = {2} RETURN n")
+    void updateComposeXY(@Param("id") Long id, @Param("composeX") double composeX, @Param("composeY") double composeY);
 
     /**
      *

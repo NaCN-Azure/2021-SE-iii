@@ -71,6 +71,14 @@ public class EntityController {
         return Result.ok().message("location save!");
     }
 
+    @PostMapping("/updateComposeXY")
+    public Result updateComposeXY(@RequestBody List<Entity> entities){
+        for(Entity entity:entities) {
+            entityService.updateComposeXY(entity.getId(), entity.getComposeX(), entity.getComposeY());
+        }
+        return Result.ok().message("location save!");
+    }
+
     @GetMapping("/getTypes/{domainId}")
     public Result getTypes(int domainId){
         return Result.ok().data("Types",typeService.searchAll(domainId));

@@ -56,9 +56,9 @@ backend-parent：后端系统的根目录（父工程），暂时管理两个子
 - 1.createLink优化，现在如果对“两节点已存在关系”的两节点新增关系，则改为对关系名字加长处理
 - 2.修复update的null bug
 
-2021-04-15
+2021-04-15 - 2021-04-17
 - 1.updateNode加入修改xy策略,颜色bug
-
-2021-04-16
-- 1.加入fontsize
+- 2.加入fontsize的更新
+- 3.加入排版模式的xy成员，暂时不做改动
+- 4.更新DefaultUtils的颜色库
 

@@ -19,21 +19,14 @@ public class DefaultUtil {
 
     public static HashMap<String,Boolean> DEFAULT_TYPE_COLORS=new HashMap<String, Boolean>(){
         {
-                    put("#0000FF", false);
-                    put("#FF00FF", false);
-                    put("#4B0082", false);
-                    put("#238E23", false);
-                    put("#FFFF00", false);
-                    put("#FF6EC7", false);
-                    put("#A8A8A8", false);
-                    put("#FF2400", false);
-                    put("#CC3299", false);
-                    put("#5C4033", false);
-                    put("#FF0000", false);
-                    put("#E6E8FA", false);
-                    put("#38B0DE", false);
-                    put("#D8D8BF", false);
-                    put("#32CD32", false);
+                    put("#409EFF", false);
+                    put("#67C23A", false);
+                    put("#909399", false);
+                    put("#FFC300", false);
+                    put("#FF5733", false);
+                    put("#C70039", false);
+                    put("#900C3F", false);
+                    put("#581845", false);
         }
     };
 
