@@ -8,6 +8,7 @@ import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.mapper.RelationshipMapper;
 import com.heap.coinservice.service.DomainService;
 import com.heap.coinservice.service.EntityService;
+import com.heap.coinservice.service.RelationshipService;
 import com.heap.commonutils.DefaultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,12 @@ public class DomainServiceImpl implements DomainService {
 
     @Autowired
     private DomainMapper domainMapper;
+
+    @Autowired
+    private EntityService entityService;
+
+    @Autowired
+    private RelationshipService relationshipService;
 
     @Autowired
     private EntityMapper entityMapper;
@@ -52,11 +59,11 @@ public class DomainServiceImpl implements DomainService {
         domainMapper.deleteDomain(domainId);
         List<Entity> entities = entityMapper.getNodeByDomainId(domainId);
         List<Relationship> relationships = relationshipMapper.getLinkByDomainId(domainId);
-        for(Entity entity : entities){
-            entityMapper.delete(entity);
-        }
         for(Relationship relationship : relationships){
-            relationshipMapper.delete(relationship);
+            relationshipService.deleteLink(relationship);
+        }
+        for(Entity entity : entities){
+            entityService.deleteNode(entity);
         }
     }
 

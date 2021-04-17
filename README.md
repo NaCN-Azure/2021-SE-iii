@@ -61,4 +61,6 @@ backend-parent：后端系统的根目录（父工程），暂时管理两个子
 - 2.加入fontsize的更新
 - 3.加入排版模式的xy成员，暂时不做改动
 - 4.更新DefaultUtils的颜色库
+- 5.domaindelete方法
+- 6.待解决事宜，颜色库必须移植到数据库且和domainId绑定
 
