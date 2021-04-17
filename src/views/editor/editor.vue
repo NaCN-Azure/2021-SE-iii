@@ -221,7 +221,6 @@
                 svg: null,
                 timer: null,
 
-                mode: 0,  //两种模式，0代表力导图模式，1代表排版模式
                 touchedNodes: [],  //被动过的节点集合
 
                 markedNodes: [],    //搜索节点结果，即标记的节点
@@ -247,9 +246,6 @@
             this.getAllDomains();
         },
 
-        // async mounted(){
-        //     this.initGraph(0.3,-100);
-        // },
         computed:{
             ...mapGetters([
                 'selectedDomain',
@@ -259,6 +255,7 @@
                 'nodesData',
                 'linksData',
                 'nodeListVisible',
+                'mode',
             ])
         },
 
@@ -278,6 +275,7 @@
                 'set_linksData',
                 'set_nodeListVisible',
                 'set_relationships',
+                'set_mode'
             ]),
             ...mapActions([
                 'getAllDomains',
@@ -553,7 +551,6 @@
                         if(typeof(d.r) != "undefined" && d.r != ''){
                             return d.r
                         }
-                        d.r = 40
                         return 40   //默认半径是40
                     })
                     .attr("class","node")
@@ -577,6 +574,7 @@
                     })
                     .on('mouseenter', function (d, i) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
+                        that.selectedNode = i
                     })
                     // 鼠标在节点上停留2s时，显示节点描述信息  （此功能暂时禁用，后面再讨论具体使用细节）
                     // .on('mouseover',function (d, i){
@@ -608,14 +606,12 @@
                         if(typeof(d.r) != "undefined" && d.r != ''){
                             return d.r * 1.41
                         }
-                        d.r = 40 * 1.41
                         return 40 * 1.41   
                     }) 
                     .attr("height", function (d) {
                         if(typeof(d.r) != "undefined" && d.r != ''){
                             return d.r * 1.41
                         }
-                        d.r = 40 * 1.41
                         return 40 * 1.41   
                     }) 
                     .attr("class", "node")
@@ -1260,11 +1256,11 @@
 
             buttonChange:function (val) {
                 if(val)
-                    this.mode=0;
+                    this.set_mode(0)
                 else
-                    this.mode=1;
+                    this.set_mode(1)
 
-                this.init();
+                this.init()
 
             },
 
