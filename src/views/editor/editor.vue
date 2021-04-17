@@ -88,7 +88,6 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="exportPic">导出图片</el-dropdown-item>
                             <el-dropdown-item @click.native="exportXml">导出xml</el-dropdown-item>
-                            <el-dropdown-item @click.native="highlight">高亮</el-dropdown-item>
                             <!-- <el-dropdown-item @click.native="test">过滤</el-dropdown-item> -->
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -122,7 +121,21 @@
             </div>
 
             <div class="center-side-bar">
-            <search-local-cache style="margin-left: 18%;margin-top: -10px"></search-local-cache>
+                <el-select
+                    v-model="value"
+                    multiple
+                    collapse-tags
+                    style="margin-left: 70px;margin-top: 5px;width: 155px"
+                    placeholder="类型筛选...">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+            <search-local-cache style="margin-left: 35%;margin-top: -55px;"></search-local-cache>
+
             </div>
 
 
@@ -283,7 +296,9 @@
                 'set_linksData',
                 'set_nodeListVisible',
                 'set_relationships',
-                'set_mode'
+                'set_mode',
+                'set_options',
+                'set_value',
             ]),
             ...mapActions([
                 'getAllDomains',
@@ -1237,23 +1252,6 @@
                 )
             },
             //=================================导出xml结束=============================
-
-            //搜索节点
-            searchNodes(content) {
-                this.markedNodes = []
-                this.ummarkedNodes = []
-                for(var i = 0; i < this.nodesData.length; i++) {
-                    //将所有节点分为两部分，一部分为标记节点，剩下为未标记节点
-                    if(this.nodesData[i].name.search(content) != -1) {
-                        this.markedNodes.push(this.nodesData[i])
-                    }
-                    else {
-                        this.ummarkedNodes.push(this.nodesData[i])
-                    }
-                }
-            },
-
-
 
             buttonChange:function (val) {
                 if(val)

@@ -18,6 +18,8 @@ const getters = {
   nodeListVisible: state => state.editor.nodeListVisible,
   nodePositions: state => state.editor.nodePositions,
   mode: state => state.editor.mode,
+  options: state => state.editor.options,
+  value: state => state.editor.value
 }
 
   export default getters

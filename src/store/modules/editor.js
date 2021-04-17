@@ -63,6 +63,8 @@ const editor = {
         linksData:[],
         nodeListVisible: false,
         mode: 0,  //两种模式，0代表力导图模式，1代表排版模式
+        options: [],
+        value: [],
     },
     mutations:{
         set_createNodeDialogVisible:function (state,data) {
@@ -114,7 +116,13 @@ const editor = {
             state.nodeListVisible  = data
         },
         set_mode: function (state, data) {
-            state.nodeListVisible  = data
+            state.mode  = data
+        },
+        set_options: function (state, data) {
+            state.options  = data
+        },
+        set_value: function (state, data) {
+            state.value  = data
         },
     },
     actions:{

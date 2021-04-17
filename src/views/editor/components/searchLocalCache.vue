@@ -8,7 +8,7 @@
                         @blur="blur"
                         @keyup.enter.native="searchHandler"
                         placeholder="搜索感兴趣的内容..."
-                        style="width: 350px;text-align: center"
+                        style="width: 350px;"
                 >
                     <el-button slot="append" icon="el-icon-search" style="color:white;" id="search" @click="searchHandler"></el-button>
                 </el-input>
@@ -18,10 +18,10 @@
                         v-if="isSearch"
                         class="box-card"
                         id="search-box"
-                        style="position:relative;z-index:15;width: 347px"
+                        style="position:relative;z-index:150;width: 345px;height: 200px"
                 >
                     <dl v-if="isHistorySearch">
-                        <dt class="search-title" v-show="history">历史搜索</dt>
+                        <dt class="search-title" v-show="history" style="margin-top: -30px">历史搜索</dt>
                         <dt class="remove-history" v-show="history" @click="removeAllHeadHistory">
                             <i class="el-icon-delete"></i>清空历史记录
                         </dt>
@@ -46,7 +46,7 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
+    import {mapGetters, mapMutations} from "vuex";
     import RandomUtil from "../../../utils/randomUtil"
     import Store from "../../../utils/store";
     export default {
@@ -62,13 +62,21 @@
                 history: false,
                 types: ["", "success", "info", "warning", "danger"], //搜索历史tag式样
                 searchNodesResult: [],  //搜索节点结果
+                markedNodes: [],
+                ummarkedNodes: [],
             };
         },
         computed:{
             ...mapGetters([
-                'nodeListVisible',
                 'nodesData',
                 'linksData',
+                'mode',
+                'options',
+                'value',
+            ]),
+            ...mapMutations([
+                'set_options',
+                'set_value',
             ]),
             isHistorySearch() {
                 return this.isFocus && !this.search;
@@ -99,6 +107,7 @@
                 clearTimeout(this.searchBoxTimeout);
             },
             searchHandler() {
+                
                 this.highlight(this.search);
                 //随机生成搜索历史tag式样
                 let n = RandomUtil.getRandomNumber(0, 5);
@@ -127,22 +136,25 @@
             },
             //对指定的节点文本进行标记
             highlight(content) {
-                console.log(content)
                 this.searchNodes(content)
                 if(this.mode==0)
-                    this.$parent.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0.3, -100, 'red', 0.1, 1);
+                    this.$parent.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0.3, -100, 'red', 0.2, 1);
                 else
-                    this.$parent.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0, 0, 'red', 0.1, 1);
+                    this.$parent.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0, 0, 'red', 0.2, 1);
             },
             //搜索节点
             searchNodes(content) {
-                this.searchNodesResult = []
+                this.markedNodes = []
+                this.ummarkedNodes = []
                 for(var i = 0; i < this.nodesData.length; i++) {
+                    //将所有节点分为两部分，一部分为标记节点，剩下为未标记节点
                     if(this.nodesData[i].name.search(content) != -1) {
-                        this.searchNodesResult.push(this.nodesData[i])
+                        this.markedNodes.push(this.nodesData[i])
+                    }
+                    else {
+                        this.ummarkedNodes.push(this.nodesData[i])
                     }
                 }
-                //searchNodesResult就是结果数组
             },
         }
     }
@@ -162,17 +174,6 @@
         height: 70px;
         width: 300px;
         padding-right: 20px;
-    }
-    .result{
-        margin-top: 0;
-        margin-left: 2px;
-        padding-top: -10px;
-        margin-bottom: 10px;
-        width: 300px;
-        height: 600px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        /*border: solid 1px black;*/
     }
     #search {
         background-color: rgb(64,158,255);
