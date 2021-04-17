@@ -122,13 +122,13 @@
 
             <div class="center-side-bar">
                 <el-select
-                    v-model="value"
+                    v-model="typeValue"
                     multiple
                     collapse-tags
                     style="margin-left: 70px;margin-top: 5px;width: 155px"
                     placeholder="类型筛选...">
                 <el-option
-                        v-for="item in options"
+                        v-for="item in this.options"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -251,7 +251,7 @@
                 ummarkedNodes: [],  //未标记的节点
 
                 isCollapse: true,
-
+                typeValue: [],
             }
         },
 
@@ -277,6 +277,8 @@
                 'linksData',
                 'nodeListVisible',
                 'mode',
+                'value',
+                'options',
             ])
         },
 
@@ -836,8 +838,29 @@
                         if(res.data.code == 200) {
                             this.set_relationships(res.data.data.relationships)
                             this.init()
+                            this.set_options([])
+                            this.typeValue=[]
+                            let count=1;
+                            for(let i=0;i<this.nodesData.length;i++){
+                                let judge=true
+                                for(let j=0;j<this.options.length;j++){
+                                    if(this.nodesData[i].type==this.options[j].label)
+                                        judge=false;
+                                }
+                                if(judge) {
+                                    this.options.push(
+                                        {
+                                            value: this.nodesData[i].type,
+                                            label: this.nodesData[i].type
+                                        }
+                                    )
+                                    count+=1;
+                                }
+                            }
+                        console.log(this.options)
                         }
                     })
+
             },
 
             // 其他方法更新图谱时使用

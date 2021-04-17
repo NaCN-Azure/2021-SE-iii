@@ -107,21 +107,25 @@
                 clearTimeout(this.searchBoxTimeout);
             },
             searchHandler() {
-                
-                this.highlight(this.search);
-                //随机生成搜索历史tag式样
-                let n = RandomUtil.getRandomNumber(0, 5);
-                let exist =
-                    this.historySearchNodeList.filter(value => {
-                        return value.name == this.search;
-                    }).length == 0
-                        ? false
-                        : true;
-                if (!exist) {
-                    this.historySearchNodeList.push({ name: this.search, type: this.types[n] });
-                    Store.saveHeadHistory(this.historySearchNodeList);
+                if(this.$parent.typeValue.length==0){
+                    this.highlight(this.search);
+                    //随机生成搜索历史tag式样
+                    let n = RandomUtil.getRandomNumber(0, 5);
+                    let exist =
+                        this.historySearchNodeList.filter(value => {
+                            return value.name == this.search;
+                        }).length == 0
+                            ? false
+                            : true;
+                    if (!exist) {
+                        this.historySearchNodeList.push({name: this.search, type: this.types[n]});
+                        Store.saveHeadHistory(this.historySearchNodeList);
+                    }
+                    this.history = this.historySearchNodeList.length == 0 ? false : true;
+                }else{
+                    this.$parent.filterNodeType(this.$parent.typeValue);
+                    console.log(this.$parent.typeValue);
                 }
-                this.history = this.historySearchNodeList.length == 0 ? false : true;
             },
             closeHandler(search){
                 this.historySearchNodeList.splice(this.historySearchNodeList.indexOf(search), 1);
