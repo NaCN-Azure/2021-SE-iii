@@ -18,10 +18,10 @@
                         v-if="isSearch"
                         class="box-card"
                         id="search-box"
-                        style="position:relative;z-index:15;width: 267px"
+                        style="position:relative;z-index:15;width: 265px;height: 200px"
                 >
                     <dl v-if="isHistorySearch">
-                        <dt class="search-title" v-show="history">历史搜索</dt>
+                        <dt class="search-title" v-show="history" style="margin-top: -30px">历史搜索</dt>
                         <dt class="remove-history" v-show="history" @click="removeAllNodeHistory">
                             <i class="el-icon-delete"></i>清空历史记录
                         </dt>
