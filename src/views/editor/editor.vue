@@ -51,8 +51,8 @@
                 <div class="edit-tool" v-show="selectedDomain.name!=''" style="display: flex">
                     当前图谱：<el-input v-model="selectedDomain.name" size="small" style="width: 100px"></el-input>
                 </div>
-                <!-- 不知道是要搜索什么 -->
-<!--                <div class="edit-tool" v-show="domain.name!=''">-->
+<!--                 不知道是要搜索什么 -->
+<!--                <div class="edit-tool" v-show="selectedDomain.name!=''">-->
 <!--                    <el-input-->
 <!--                            placeholder="请输入关键词"-->
 <!--                            @keyup.native.enter="searchInCurrentDomain"-->
@@ -66,8 +66,8 @@
                 </div>
                 <div class="multi-mode">
                     <el-radio-group v-model="isCollapse" @change="buttonChange" size="small">
-                        <el-radio-button :label="true" class="mode-button" id="mode-button-first"  size="small" v-show="selectedDomain.name!=''">力导模式</el-radio-button>
-                        <el-radio-button :label="false" class="mode-button" id="mode-button-second"  size="small" v-show="selectedDomain.name!=''">排版模式</el-radio-button>
+                        <el-radio-button :label="true" class="mode-button" id="mode-button-first"  size="small">力导模式</el-radio-button>
+                        <el-radio-button :label="false" class="mode-button" id="mode-button-second"  size="small">排版模式</el-radio-button>
                     </el-radio-group>
                 </div>
                 <div v-show="selectedDomain.name!=''" style="margin-left: 650px;position: absolute">
@@ -88,9 +88,7 @@
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item @click.native="exportPic">导出图片</el-dropdown-item>
                             <el-dropdown-item @click.native="exportXml">导出xml</el-dropdown-item>
-                            <el-dropdown-item @click.native="cancelZoom">取消缩放</el-dropdown-item>
                             <el-dropdown-item @click.native="highlight">高亮</el-dropdown-item>
-                            <el-dropdown-item @click.native="vanishAllRelationships">消失</el-dropdown-item>
                             <!-- <el-dropdown-item @click.native="test">过滤</el-dropdown-item> -->
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -104,6 +102,7 @@
             </div>
             <div class="left-side-bar">
                 <el-button @click="cancelZoom" size="mini" type="primary" plain icon="el-icon-full-screen" style="margin-left: 10px;margin-top: 10px" circle></el-button>
+                <el-button @click="vanishAllRelationships" size="mini" type="primary" plain icon="el-icon-view" style="margin-left: 10px;margin-top: 10px" circle></el-button>
 
             </div>
             <div class="right-side-bar">
@@ -121,6 +120,12 @@
                 >节点与关系</el-button>
                 <node-list-drawer/>
             </div>
+
+            <div class="center-side-bar">
+            <search-local-cache style="margin-left: 18%;margin-top: -10px"></search-local-cache>
+            </div>
+
+
 
             <!-- 节点操作 -->
             <ul class="el-dropdown-menu el-popper" id="node-custom-menu" style="display: none">
@@ -177,12 +182,15 @@
     import CreateLinkDialog from "./components/createLinkDialog";
     import EditLinkDialog from "./components/editLinkDialog";
     import NodeListDrawer from "./components/nodeListDrawer";
+    import searchLocalCache from "./components/searchLocalCache";
     import { Message } from 'element-ui'
 
 
     export default {
         name: "editor",
-        components: {NodeListDrawer, EditLinkDialog, CreateLinkDialog, AddDomainDialog, EditNodeDialog, CreateNodeDialog},
+        components: {
+            searchLocalCache,
+            NodeListDrawer, EditLinkDialog, CreateLinkDialog, AddDomainDialog, EditNodeDialog, CreateNodeDialog},
         inject:['reload'],
         data(){
             return{
@@ -1249,14 +1257,7 @@
                 }
             },
 
-            //对指定的节点文本进行标记
-            highlight() {
-                this.searchNodes('1')
-                if(this.mode==0)
-                    this.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0.3, -100, 'red', 0.1, 1);
-                else
-                    this.initGraph(this.ummarkedNodes, this.linksData, this.markedNodes, 0, 0, 'red', 0.1, 1);
-            },
+
 
             buttonChange:function (val) {
                 if(val)
@@ -1410,6 +1411,16 @@
         height: 100%;
         vertical-align:center
     }
+    .center-side-bar{
+        margin-left: 15%;
+        display: table-row;
+        position: absolute;
+        width: 40%;
+        height: 7%;
+        /*border: 1px solid black;*/
+        vertical-align:center
+    }
+
     .domain-table >>> .el-table__row > td{
         /* 去除表格线 */
         border: none;

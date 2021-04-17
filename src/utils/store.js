@@ -1,5 +1,6 @@
 const LOCAL_STORAGE_NODE_KEY = "searchNodeHistory";
 const LOCAL_STORAGE_LINK_KEY = "searchLinkHistory";
+const LOCAL_STORAGE_HEAD_KEY = "searchHeadHistory";
 
 class Store { }
 
@@ -18,6 +19,14 @@ Store.saveLinkHistory = (arr) => {
 Store.loadLinkHistory = () =>JSON.parse(localStorage.getItem(LOCAL_STORAGE_LINK_KEY))
 
 Store.removeAllLinkHistory=()=>{localStorage.removeItem(LOCAL_STORAGE_LINK_KEY)}
+
+Store.saveHeadHistory = (arr) => {
+    localStorage.setItem(LOCAL_STORAGE_HEAD_KEY, JSON.stringify(arr));
+}
+
+Store.loadHeadHistory = () =>JSON.parse(localStorage.getItem(LOCAL_STORAGE_HEAD_KEY))
+
+Store.removeAllHeadHistory=()=>{localStorage.removeItem(LOCAL_STORAGE_HEAD_KEY)}
 
 
 module.exports = Store
