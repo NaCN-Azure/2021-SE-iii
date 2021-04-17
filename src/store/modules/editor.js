@@ -2,7 +2,6 @@ import {createNodeAPI, updateNodeAPI} from "../../api/entity";
 import {  Message } from 'element-ui'
 import {createDomainAPI, selectAllDomainAPI} from "../../api/domain";
 import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../api/relationship";
-import * as d3 from "d3";
 
 const editor = {
     state: {
@@ -27,7 +26,7 @@ const editor = {
             x:0.0,
             y:0.0,
             r: '',
-            fontSize: '',
+            fontSize: 20,
         },
         addDomainDialogVisible: false,
         createLinkDialogVisible: false,
@@ -63,6 +62,7 @@ const editor = {
         nodesData:[],
         linksData:[],
         nodeListVisible: false,
+        mode: 0,  //两种模式，0代表力导图模式，1代表排版模式
     },
     mutations:{
         set_createNodeDialogVisible:function (state,data) {
@@ -111,6 +111,9 @@ const editor = {
             state.nodePositions = data
         },
         set_nodeListVisible: function (state, data) {
+            state.nodeListVisible  = data
+        },
+        set_mode: function (state, data) {
             state.nodeListVisible  = data
         },
     },
