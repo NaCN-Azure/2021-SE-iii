@@ -57,4 +57,10 @@ public class FileServiceImplTest {
         }
 
 }
+
+    @Test
+    public void deleteFile() {
+//        boolean judge= fileService.deleteFile("wb",0);
+//        assertTrue(judge);
+    }
 }

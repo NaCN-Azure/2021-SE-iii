@@ -1,6 +1,7 @@
 package com.heap.coinservice.service.impl;
 
 import com.heap.coinservice.COINApplication;
+import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -68,5 +70,31 @@ public class RelationshipServiceImplTest {
     public void getLinkByDomainId() {
 //        List<Relationship> relationships = relationshipService.getLinkByDomainId(2);
 //        assertEquals(1,relationships.size());
+    }
+
+    @Test
+    public void countAllLink() {
+//        int result=relationshipService.countAllLink(0);
+//        assertEquals(result,1);
+    }
+
+    @Test
+    public void getLinkByName() {
+//        List<Relationship> result= relationshipService.getLinkByName(0,"test");
+//        assertEquals(1,result.size());
+//        assertEquals("test",result.get(0).getName());
+//        assertEquals(0,result.get(0).getDomainId());
+    }
+
+    @Test
+    public void getGraphScreen() {
+//        Entity entity = Entity.builder().build();
+//        entity.setName("test");
+//        List<Entity> list=new ArrayList<>();
+//        list.add(entity);
+//        List<Relationship> result= relationshipService.getGraphScreen(0,list);
+//        assertEquals(1,result.size());
+//        assertEquals("test",result.get(0).getName());
+//        assertEquals(0,result.get(0).getDomainId());
     }
 }
