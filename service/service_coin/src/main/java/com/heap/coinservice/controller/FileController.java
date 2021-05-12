@@ -1,5 +1,6 @@
 package com.heap.coinservice.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.service.DomainService;
 import com.heap.coinservice.service.FileService;
@@ -34,6 +35,16 @@ public class FileController {
         Domain csvDomain = Domain.builder().name(file.getOriginalFilename()).build();
         int domainId = domainService.createDomain(csvDomain);
         return fileService.createGraphByCsv(content, domainId) ? Result.ok().message("导入成功") : Result.error().message("导入失败");
+    }
+
+    @PostMapping("/getJsonCompany")
+    public Result getJsonCompany (@RequestParam(value="file", required = true) MultipartFile file) throws IOException{
+        JSONArray jsonArray = FileUtil.readJsonCompany(file);
+        Domain jsonDomain = Domain.builder().name(file.getOriginalFilename()).build();
+        int domainId = domainService.createDomain(jsonDomain);
+        return fileService.createJsonCompany(jsonArray,domainId)?
+                Result.ok().message("导入成功") : Result.error().message("导入失败");
+
     }
 
     @GetMapping(value="/exportXml/{domainId}", produces = "application/json;charset=UTF-8")

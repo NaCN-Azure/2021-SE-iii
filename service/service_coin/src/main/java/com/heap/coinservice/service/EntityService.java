@@ -60,7 +60,7 @@ public interface EntityService  {
      * @param strict
      * @return
      */
-    List<Entity> findByName(String name, int domainId,boolean strict);
+    Entity findByName(String name, int domainId,boolean strict);
 
     /**
      * 获取域内节点个数

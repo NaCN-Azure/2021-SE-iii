@@ -79,22 +79,10 @@ public class EntityServiceImpl implements EntityService {
     }
 
     @Override
-    public List<Entity> findByName(String name, int domainId,boolean strict){
+    public Entity findByName(String name, int domainId,boolean strict){
         //strict=true 严格模式下，name严格按照完全一致匹配
         //strict=false 模糊模式下，name可根据部分字段进行匹配
-        List<Entity> entities=new ArrayList<>();
-        if(strict) {
-            entities.add(entityMapper.findByName(name, domainId));
-        }
-        else{
-            List<Entity> checks=entityMapper.getNodeByDomainId(domainId);
-            for(Entity nodes:checks){
-                if(nodes.getName().contains(name)){
-                    entities.add(nodes);
-                }
-            }
-        }
-        return entities;
+        return entityMapper.findByName(name, domainId);
     }
 
     @Override
