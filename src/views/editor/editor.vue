@@ -100,8 +100,8 @@
                 </el-scrollbar>
             </div>
             <div class="left-side-bar">
-                <el-button @click="cancelZoom" size="mini" type="primary" plain icon="el-icon-full-screen" style="margin-left: 10px;margin-top: 10px" circle></el-button>
-                <el-button @click="vanishAllRelationships" size="mini" type="primary" plain icon="el-icon-view" style="margin-left: 10px;margin-top: 10px" circle></el-button>
+                <el-button @click="cancelZoom" size="mini" type="primary" title="全屏" plain icon="el-icon-full-screen" style="margin-left: 10px;margin-top: 10px" circle></el-button>
+                <el-button @click="vanishAllRelationships" size="mini" type="primary" title="隐藏关系" plain icon="el-icon-view" style="margin-left: 10px;margin-top: 10px" circle></el-button>
 
             </div>
             <div class="right-side-bar">
@@ -631,14 +631,14 @@
                         if(typeof(d.r) != "undefined" && d.r != ''){
                             return d.r * 1.41
                         }
-                        return 40 * 1.41   
-                    }) 
+                        return 40 * 1.41
+                    })
                     .attr("height", function (d) {
                         if(typeof(d.r) != "undefined" && d.r != ''){
                             return d.r * 1.41
                         }
-                        return 40 * 1.41   
-                    }) 
+                        return 40 * 1.41
+                    })
                     .attr("class", "node")
                     .attr("fill-opacity", opacity)  //透明度
                     .attr("fill", function(d){

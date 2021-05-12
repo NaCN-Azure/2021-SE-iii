@@ -4,7 +4,7 @@ const api = {
 }
 
 // 注册
-export function registerMember(formItem) {
+export function registerAPI(formItem) {
     return axios({
         url: `${api.filePre}/register`,
         method: 'post',

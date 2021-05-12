@@ -2,14 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Create from '../views/create/index'
 import Editor from '../views/editor/editor'
+import Login from '../views/login'
+import Register from '../views/register'
 
 Vue.use(VueRouter)
 const routes = [
-  // {
-  //   path: '/login',
-  //   name: 'login',
-  //   component: Login
-  // },
   {
     path: '/',
     redirect: '/home'
@@ -20,6 +17,16 @@ const routes = [
     component: Create
   },
   {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register,
+  },
+  {
     path: '/COINHEAP',
     name: 'layout',
     redirect: '/editor',
@@ -28,8 +35,8 @@ const routes = [
       {
         path:'/editor',
         name:'editor',
-        component: () => import('@/views/editor/editor')
-      }
+        component: Editor
+      },
     ]
   },
   // {

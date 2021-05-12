@@ -4,7 +4,7 @@ const api = {
 }
 
 //登录
-export function submitLoginUser(userInfo) {
+export function loginAPI(userInfo) {
     return axios({
         url: `${api.filePre}/login`,
         method: 'post',
@@ -13,7 +13,7 @@ export function submitLoginUser(userInfo) {
 }
 
 //根据token获取用户信息
-export function getLoginUserInfo() {
+export function getUserInfoAPI() {
     return axios({
         url: `${api.filePre}/getMemberInfo`,
         method: 'get'

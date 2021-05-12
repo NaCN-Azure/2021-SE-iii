@@ -19,7 +19,12 @@ const getters = {
   nodePositions: state => state.editor.nodePositions,
   mode: state => state.editor.mode,
   options: state => state.editor.options,
-  value: state => state.editor.value
+  value: state => state.editor.value,
+
+  // user
+  isLogin: state => state.user.isLogin,
+  userId: state => state.user.userId,
+  userInfo: state => state.user.userInfo,
 }
 
   export default getters
