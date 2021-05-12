@@ -1,5 +1,18 @@
 <template>
     <div class="create-container">
+        <div class="right-info">
+            <el-dropdown v-if="isLogin">
+                <div class="user">
+                    <el-avatar :src=userInfo.avatar alt="user" :size="45" v-if="isLogin"></el-avatar>
+                    <span class="username">{{userInfo.nickname}}</span>
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="personalInfo">个人中心</el-dropdown-item>
+                    <el-dropdown-item command="logout">退出</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <el-button type="primary" size="mini" round="true" @click="goLogin" v-else>登录</el-button>
+        </div>
         <h1 class="title">快来创建属于你的知识图谱！</h1>
         <div class="createPane">
         <el-tabs v-model="createType"
@@ -83,8 +96,8 @@
         },
         computed: {
             ...mapGetters([
-                'nodeList',
-                'testdata',
+                'userInfo',
+                'isLogin'
             ])
         },
         methods: {
@@ -106,17 +119,15 @@
             addRouterToEditor() {
                 this.$router.push('/editor');
             },
+            goLogin(){
+                this.$router.push('/login');
+            }
 
         }
     }
 </script>
 
-<style>
-    body{
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-    }
+<style scoped>
 .title{
     padding-top: 8%;
     color: #333361;
@@ -133,11 +144,26 @@
     width: 100%;
     position: fixed;
     background-size: 100% 100%;
-    background-image: url("../../assets/kg-background4.jpg");
+    background-image: url("../../assets/kg-background3.jpg");
 }
 .uploading {
     margin-top: 10px;
     width: 100%;
 }
+    .right-info{
+        height: 45px;
+        float: right;
+        margin-right: 20px;
+        margin-top: 10px;
+    }
+    .user{
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .username{
+        margin-left: 15px;
+        font-size: 15px;
+    }
 
 </style>

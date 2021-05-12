@@ -5,42 +5,71 @@
             <span class="title">Coinheap</span>
         </div>
         <el-menu
-                default-active="activeIndex"
+                :default-active="activeIndex"
                 mode="horizontal"
                 text-color="#a9a9a9"
                 active-text-color="#1e90ff"
-                style="margin-left: 100px"
         >
-            <el-menu-item class="nav-item" index="/home">
+            <el-menu-item class="nav-item" index="1">
                 <router-link to="/home">
                     <i class="el-icon-s-home"></i>
                     <span class="nav-name">首页</span>
                 </router-link>
             </el-menu-item>
-            <el-menu-item class="nav-item" index="/editor">
+            <el-menu-item class="nav-item" index="2">
                 <router-link to="/editor">
                     <i class="el-icon-edit-outline"></i>
                     <span class="nav-name">工作区</span>
                 </router-link>
             </el-menu-item>
         </el-menu>
+<!--        用户信息-->
+        <div class="right-info">
+            <el-dropdown v-if="isLogin">
+                <div>
+                    <el-avatar :src=userInfo.avatar alt="user" :size="45" v-if="isLogin"></el-avatar>
+                    <span class="username">{{userInfo.nickname}}</span>
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="personalInfo">个人中心</el-dropdown-item>
+                    <el-dropdown-item command="logout">退出</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+            <el-button type="primary" size="mini" round="true" @click="goLogin" v-else>登录</el-button>
+        </div>
     </div>
 </template>
 
 <script>
+    import {mapGetters} from "vuex";
+
     export default {
         name: "header.vue",
         mounted() {
 
         },
+        data(){
+            return{
+                activeIndex:'2'
+            }
+        },
+        computed:{
+            ...mapGetters([
+                'userInfo',
+                'isLogin'
+            ])
+        }
     }
 </script>
 
 <style scoped>
     .header{
         display: flex;
+        width: 100%;
         height: 60px;
         line-height: 60px;
+        align-items: center;
+        justify-content: space-between;
     }
     .label{
         height: 60px;
@@ -70,5 +99,17 @@
     }
     a{
         text-decoration: none;
+    }
+    .right-info{
+        margin-right: 30px;
+    }
+    .user{
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    .username{
+        margin-left: 15px;
+        font-size: 15px;
     }
 </style>
