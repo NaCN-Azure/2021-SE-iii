@@ -26,7 +26,7 @@
 <!--        用户信息-->
         <div class="right-info">
             <el-dropdown v-if="isLogin">
-                <div>
+                <div class="user">
                     <el-avatar :src=userInfo.avatar alt="user" :size="45" v-if="isLogin"></el-avatar>
                     <span class="username">{{userInfo.nickname}}</span>
                 </div>
@@ -58,6 +58,11 @@
                 'userInfo',
                 'isLogin'
             ])
+        },
+        methods:{
+            goLogin(){
+                this.$router.push('/login');
+            }
         }
     }
 </script>

@@ -17,6 +17,9 @@ const user = {
             // Boolean isDeleted;
             // String sign;
         },
+        modifyUserInfoParams:{
+
+        }
 
     },
     mutations: {
@@ -28,6 +31,9 @@ const user = {
         },
         set_userInfo: function (state, data) {
             state.userInfo = data;
+        },
+        set_modifyUserInfo: function (state, data) {
+            state.modifyUserInfoParams = data;
         }
     },
     actions: {

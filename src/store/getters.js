@@ -25,6 +25,7 @@ const getters = {
   isLogin: state => state.user.isLogin,
   userId: state => state.user.userId,
   userInfo: state => state.user.userInfo,
+  modifyUserInfoParams: state => state.user.modifyUserInfoParams,
 }
 
   export default getters
