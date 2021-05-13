@@ -4,6 +4,7 @@ import Create from '../views/create/index'
 import Editor from '../views/editor/editor'
 import Login from '../views/login'
 import Register from '../views/register'
+import UserCenter from '../views/user/userCenter'
 
 Vue.use(VueRouter)
 const routes = [
@@ -37,35 +38,13 @@ const routes = [
         name:'editor',
         component: Editor
       },
+      {
+        path: '/userCenter',
+        name: 'userCenter',
+        component: UserCenter
+      }
     ]
   },
-  // {
-  //   path: '/',
-  //   redirect: '/NJUSE'
-  // },
-  // {
-  //   path: '/NJUSE',
-  //   name: 'layout',
-  //   redirect: '/hotel/hotelList',
-  //   component: ()=> import('@/views/layout'),
-  //   children: [
-  //     {
-  //       path: '/admin/manageUser',
-  //       name: 'manageUser',
-  //       component: () => import('@/views/admin/manageUser')
-  //     },
-  //     {
-  //       path: '/admin/manageAllHotel',
-  //       name: 'manageAllHotel',
-  //       component: ()=>import('@/views/admin/manageAllHotel')
-  //     },
-  //     {
-  //       path: '/marketer/marketing',
-  //       name: 'marketing',
-  //       component: () => import('@/views/marketer/marketing')
-  //     },
-  //   ]
-  // },
 ]
 const createRouter = () => new VueRouter({
   // mode: 'history', // require service support

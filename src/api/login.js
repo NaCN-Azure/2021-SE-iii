@@ -1,12 +1,12 @@
 import {axios} from "../utils/request";
 const api = {
-    filePre: '/userservice/users'
+    loginPre: '/userservice/users'
 }
 
 //登录
 export function loginAPI(userInfo) {
     return axios({
-        url: `${api.filePre}/login`,
+        url: `${api.loginPre}/login`,
         method: 'post',
         data: userInfo
     })
@@ -15,7 +15,7 @@ export function loginAPI(userInfo) {
 //根据token获取用户信息
 export function getUserInfoAPI() {
     return axios({
-        url: `${api.filePre}/getMemberInfo`,
+        url: `${api.loginPre}/getMemberInfo`,
         method: 'get'
     })
 }
