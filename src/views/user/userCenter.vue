@@ -21,12 +21,12 @@
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess"
                     :before-upload="beforeAvatarUpload">
-                <img v-if="userInfo.avatar!=null" :src="userInfo.avatar" class="avatar">
+                <img v-if="userInfo.avatar!=''" :src="userInfo.avatar" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <el-form>
+            <el-form class="modifyForm" label-width="70px">
                 <el-form-item label="用户名">
-                    <el-input v-if="modify" v-model="modifyUserInfoParams.nickname" placeholder="请输入用户名">
+                    <el-input v-if="modify" v-model="modifyUserInfoParams.nickname" placeholder="请输入用户名" >
                     </el-input>
                     <span v-else>{{userInfo.nickname}}</span>
                 </el-form-item>
@@ -35,7 +35,7 @@
                     </el-input>
                     <span v-else>{{userInfo.mobile}}</span>
                 </el-form-item>
-                <el-form-item label="签名">
+                <el-form-item label="个性签名">
                     <el-input v-if="modify" v-model="modifyUserInfoParams.sign" placeholder="清输入个性签名">
                     </el-input>
                     <span v-else>{{userInfo.sign}}</span>
@@ -59,13 +59,25 @@
         data(){
             return{
                 modify: false,
+                userInfo:{
+                    id: 1,
+                    mobile: '10000000001',
+                    password: '123456',
+                    nickname: 'fcrrrr',
+                    avatar:'',
+                    isDisabled: false,
+                    isDeleted: false,
+                    sign: '别迷恋哥，哥只是个传说'
+                },
+                modifyUserInfoParams:{
+                }
             }
         },
         computed:{
-            ...mapGetters([
-                'userInfo',
-                'modifyUserInfoParams',
-            ])
+            // ...mapGetters([
+            //     'userInfo',
+            //     'modifyUserInfoParams',
+            // ])
         },
         methods:{
             modifyInfo(){
@@ -93,7 +105,8 @@
         width: 100%;
         height: 100%;
     }
-    .avatar-uploader .el-upload {
+    .el-upload el-upload--text{
+        /*为啥这个不起作用呢*/
         border: 1px dashed gray;
         border-radius: 6px;
         cursor: pointer;
@@ -114,5 +127,8 @@
         width: 178px;
         height: 178px;
         display: block;
+    }
+    .modifyForm .el-form-item{
+        display: flex;
     }
 </style>

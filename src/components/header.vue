@@ -25,13 +25,13 @@
         </el-menu>
 <!--        用户信息-->
         <div class="right-info">
-            <el-dropdown v-if="isLogin">
+            <el-dropdown @command="handleCommand" v-if="isLogin">
                 <div class="user">
                     <el-avatar :src=userInfo.avatar alt="user" :size="45" v-if="isLogin"></el-avatar>
                     <span class="username">{{userInfo.nickname}}</span>
                 </div>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="personalInfo">个人中心</el-dropdown-item>
+                    <el-dropdown-item command="userCenter">个人中心</el-dropdown-item>
                     <el-dropdown-item command="logout">退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -62,6 +62,14 @@
         methods:{
             goLogin(){
                 this.$router.push('/login');
+            },
+            handleCommand(command){
+                if(command=='userCenter'){
+                    // 个人中心
+                    this.$router.push('/userCenter');
+                }else{
+                    // logout
+                }
             }
         }
     }
@@ -106,6 +114,7 @@
         text-decoration: none;
     }
     .right-info{
+        height: 100%;
         margin-right: 30px;
     }
     .user{

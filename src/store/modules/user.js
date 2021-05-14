@@ -5,7 +5,7 @@ import {Message} from "element-ui";
 
 const user = {
     state: {
-        isLogin: false,
+        isLogin: true,
         userId: '',
         userInfo:{
             // String id;
@@ -16,6 +16,15 @@ const user = {
             // Boolean isDisabled;
             // Boolean isDeleted;
             // String sign;
+            // 测试用数据
+            id: 1,
+            mobile: '10000000001',
+            password: '123456',
+            nickname: 'fcrrrr',
+            avatar:'',
+            isDisabled: false,
+            isDeleted: false,
+            sign: '别迷恋哥，哥只是个传说'
         },
         modifyUserInfoParams:{
 
