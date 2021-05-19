@@ -51,15 +51,6 @@
                 <div class="edit-tool" v-show="selectedDomain.name!=''" style="display: flex">
                     当前图谱：<el-input v-model="selectedDomain.name" size="small" style="width: 100px"></el-input>
                 </div>
-<!--                 不知道是要搜索什么 -->
-<!--                <div class="edit-tool" v-show="selectedDomain.name!=''">-->
-<!--                    <el-input-->
-<!--                            placeholder="请输入关键词"-->
-<!--                            @keyup.native.enter="searchInCurrentDomain"-->
-<!--                            clearable="true"-->
-<!--                            size="small"-->
-<!--                    ></el-input>-->
-<!--                </div>-->
                 <div class="edit-tool" v-show="selectedDomain.name!=''">
                     <span class="">选中节点：</span>
                     <span>{{selectedNode.name}}</span>
@@ -102,15 +93,9 @@
             <div class="left-side-bar">
                 <el-button @click="cancelZoom" size="mini" type="primary" title="全屏" plain icon="el-icon-full-screen" style="margin-left: 10px;margin-top: 10px" circle></el-button>
                 <el-button @click="vanishAllRelationships" size="mini" type="primary" title="隐藏关系" plain icon="el-icon-view" style="margin-left: 10px;margin-top: 10px" circle></el-button>
-
+                <el-button @click="saveGraph" size="mini" type="primary" title="保存" plain icon="el-icon-document-checked" style="margin-left: 10px;margin-top: 10px" circle></el-button>
             </div>
             <div class="right-side-bar">
-                <el-button
-                        @click="saveGraph"
-                        size="mini"
-                        style="margin-top: 10px;width: 90px"
-                        type="primary" plain
-                >保存布局</el-button>
                 <el-button
                     @click="showNodeList"
                     size="mini"
