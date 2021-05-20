@@ -10,4 +10,5 @@ import lombok.EqualsAndHashCode;
 public class Domain {
     private int id;
     private String name;
+    private String userId;
 }

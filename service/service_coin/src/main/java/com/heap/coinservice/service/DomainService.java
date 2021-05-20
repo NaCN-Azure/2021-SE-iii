@@ -49,6 +49,6 @@ public interface DomainService {
       * 返回所有域的列表
       * @return
       */
-     List<Domain> getAllDomain();
+     List<Domain> getAllDomain(String userId);
 
 }
