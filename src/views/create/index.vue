@@ -85,7 +85,8 @@
 </template>
 
 <script>
-    import {mapActions, mapGetters} from "vuex";
+    import {mapActions, mapGetters, mapMutations} from "vuex";
+    import cookie from 'js-cookie';
 
     export default {
         name: "index.vue",
@@ -96,6 +97,11 @@
                 uploadParam: {},
             }
         },
+        created() {
+            // this.set_userInfo(cookie.get('coin_user'))
+            console.log(this.userInfo)
+            console.log(this.isLogin)
+        },
         computed: {
             ...mapGetters([
                 'userInfo',
@@ -103,6 +109,10 @@
             ])
         },
         methods: {
+            ...mapMutations([
+                'set_userInfo',
+                'set_isLogin',
+            ]),
             ...mapActions([
                 'test'
             ]),

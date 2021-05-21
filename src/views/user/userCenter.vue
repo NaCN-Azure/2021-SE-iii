@@ -59,25 +59,25 @@
         data(){
             return{
                 modify: false,
-                userInfo:{
-                    id: 1,
-                    mobile: '10000000001',
-                    password: '123456',
-                    nickname: 'fcrrrr',
-                    avatar:'',
-                    isDisabled: false,
-                    isDeleted: false,
-                    sign: '别迷恋哥，哥只是个传说'
-                },
+                // userInfo:{
+                //     id: 1,
+                //     mobile: '10000000001',
+                //     password: '123456',
+                //     nickname: 'fcrrrr',
+                //     avatar:'',
+                //     isDisabled: false,
+                //     isDeleted: false,
+                //     sign: '别迷恋哥，哥只是个传说'
+                // },
                 modifyUserInfoParams:{
                 }
             }
         },
         computed:{
-            // ...mapGetters([
-            //     'userInfo',
-            //     'modifyUserInfoParams',
-            // ])
+            ...mapGetters([
+                'userInfo',
+                'modifyUserInfoParams',
+            ])
         },
         methods:{
             modifyInfo(){

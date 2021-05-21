@@ -5,7 +5,7 @@ import {Message} from "element-ui";
 
 const user = {
     state: {
-        isLogin: true,
+        isLogin: false,
         userId: '',
         userInfo:{
             // String id;
