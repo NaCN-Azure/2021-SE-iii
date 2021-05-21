@@ -26,8 +26,11 @@ public class TypeServiceImpl implements TypeService {
     public String insertType(int domainId,String nodeType){
         String check=typeMapper.searchColorByType(domainId,nodeType);
         if(check==null){
-            DefaultUtil.checkColor(typeMapper.searchColor(domainId));
-            String color= DefaultUtil.useDefaultColor();
+            //DefaultUtil.checkColor(typeMapper.searchColor(domainId));
+            String color= typeMapper.getNewColor();
+            if(color == null || color.equals("")){
+                color= DefaultUtil.DEFAULT_COLOR;
+            }
             typeMapper.insertType(domainId,color,nodeType);
             return color;
         }
@@ -36,8 +39,8 @@ public class TypeServiceImpl implements TypeService {
 
     @Override
     public void deleteType(int domainId,String type){
-        String color = typeMapper.searchColorByType(domainId,type);
-        DefaultUtil.releaseColor(color);
+        //String color = typeMapper.searchColorByType(domainId,type);
+        //DefaultUtil.releaseColor(color);
         typeMapper.deleteType(domainId,type);
     }
 
