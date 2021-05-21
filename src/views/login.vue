@@ -106,34 +106,53 @@
     .login-box{
         background-color: white;
         position: absolute;
+        display: flex;
+        flex-direction: column;
         left: 50%;
         top: 50%;
         transform: translate(-50%,-50%);
-        width: 450px;
-        height: 390px;
+        /*width: 450px;*/
+        width: 33%;
+        min-width: 300px;
+        /*height: 390px;*/
+        height: 51.7%;
         border-radius: 15px;
         box-shadow:0 0 10px gray;
     }
     .login-title{
         width: 100%;
-        text-align: center;
-        font-size: 40px;
-        margin-top: 15px;
-        font-weight: bold;
+        height: 20%;
+        line-height: 20%;
+        /*text-align: center;*/
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /*margin-top: 15px;*/
+        margin-top: 3.8%;
+        margin-bottom: 4%;
     }
     .login-title img{
         width: 50%;
+        min-height: 60%;
+        /*height: 90%;*/
     }
     .login-form{
-        width: 410px;
-        position: absolute;
-        bottom: 0;
-        padding: 0 20px;
-        display: block;
+        /*width: 410px;*/
+        width: 91.1%;
+        flex: 1;
+        /*position: absolute;*/
+        /*bottom: 0;*/
+        /*padding: 0 20px;*/
+        padding: 0 4.4%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
     .inputBox{
-        height: 60px;
-        margin-bottom: 15px;
+        /*height: 60px;*/
+        height: 14.6%;
+        /*margin-bottom: 15px;*/
+        margin-bottom: 5%;
     }
     .el-form-item{
         margin-bottom: 0px;
@@ -143,8 +162,10 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        margin-top: 10px;
-        margin-bottom: 35px;
+        /*margin-top: 10px;*/
+        margin-top: 2.5%;
+        /*margin-bottom: 35px;*/
+        margin-bottom: 9.0%;
     }
     .login-choice a{
         font-size: 13px;
