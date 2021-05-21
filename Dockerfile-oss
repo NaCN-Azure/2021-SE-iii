@@ -1,0 +1,6 @@
+FROM openjdk:8u262-jre-slim-buster
+ADD service/service_oss/target/service_oss-0.0.1-SNAPSHOT.jar /backend-coin/backend-oss.jar
+ADD runboot-oss.sh /backend-coin/
+WORKDIR /backend-coin
+RUN chmod a+x runboot-oss.sh
+CMD /backend-coin/runboot-oss.sh

@@ -1,0 +1,1 @@
+java -Duser.timezone=Asia/Shanghai -Djava.security.egd=file:/dev/./urandom -jar /backend-coin/backend-oss.jar > /log/oss.log 2> /log/error_oss.log
