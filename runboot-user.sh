@@ -1,0 +1,1 @@
+java -Duser.timezone=Asia/Shanghai -Djava.security.egd=file:/dev/./urandom -jar /backend-users/backend-users.jar > /log/users.log 2> /log/error_users.log
