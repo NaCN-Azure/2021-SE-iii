@@ -1,4 +1,7 @@
 package com.heap.coinservice.utils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.entity.Relationship;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,13 +16,12 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class FileUtil {
 
@@ -109,4 +111,59 @@ public class FileUtil {
         }
     }
 
+    public static JSONArray readJsonCompany(MultipartFile file) throws IOException{
+        String parserWord = readJsonFile(file).replace("'","\"").replace("None","\"Unknown\"");
+        return JSONArray.parseArray(parserWord);
+    }
+
+    private static String readJsonFile(MultipartFile file) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        String line=reader.readLine();
+        String result="";
+        while (line != null) {
+            result=result+line;
+            line=reader.readLine();
+        }
+        return result;
+    }
+
+    public static void main(String[] args) throws IOException {
+        String jsonStr="";
+        File jsonFile = new File("F:\\大三下\\数据集成\\test.json");
+            try {
+                FileReader fileReader = new FileReader(jsonFile);
+                Reader reader = new InputStreamReader(new FileInputStream(jsonFile));
+                int ch = 0;
+                StringBuffer sb = new StringBuffer();
+                while ((ch = reader.read()) != -1) {
+                    sb.append((char) ch);
+                }
+                fileReader.close();
+                reader.close();
+                jsonStr = sb.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        String parserWord = jsonStr.replace("'","\"").replace("None","\"Unknown\"");
+        JSONArray companys = JSONArray.parseArray(parserWord);
+        System.out.println(companys.size());
+        for(int i=0;i<companys.size();i++){
+            JSONObject company = companys.getJSONObject(i);
+            for(Map.Entry<String,Object> entry: company.entrySet()){
+                System.out.println(entry.getKey());
+                JSONArray people = (JSONArray) entry.getValue();
+                for(int j=0;j<people.size();j++){
+                    JSONObject person = people.getJSONObject(j);
+                    String name = person.get("name").toString();
+                    String sex = person.get("sex").toString();
+                    String position = person.get("position").toString();
+                    String year = person.get("year").toString();
+                    //System.out.println(name+" "+sex+" "+position+" "+year);
+
+                }
+            }
+        }
+        System.out.println("----------------------");
+        System.out.println(companys.get(3556).toString());
+    }
 }

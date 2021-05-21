@@ -79,7 +79,7 @@ public class DomainServiceImpl implements DomainService {
     }
 
     @Override
-    public List<Domain> getAllDomain(){
-        return domainMapper.selectAllDomain();
+    public List<Domain> getAllDomain(String userId){
+        return domainMapper.selectAllDomain(userId);
     }
 }

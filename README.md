@@ -70,5 +70,10 @@ backend-parent：后端系统的根目录（父工程），暂时管理两个子
 
 2021-05-07
 
-+ 新建多个模块
-+ 数据库更新
+- 新建多个模块
+- 数据库更新
+
+2021-05-20
+- domain表新增String的user_id,对应类新增了userId，服务器数据库记得改
+- getAlldomain方法加入新参数userId，返回该用户的所有domain
+- 创建domain记得传userId！

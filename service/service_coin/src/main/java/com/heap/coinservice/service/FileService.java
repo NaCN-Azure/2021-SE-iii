@@ -1,5 +1,6 @@
 package com.heap.coinservice.service;
 
+import com.alibaba.fastjson.JSONArray;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
@@ -25,6 +26,14 @@ public interface FileService {
      * @return
      */
     boolean createGraphByCsv(List<List<String>> content, int domainId);
+
+    /**
+     * 根据json格式创建公司（数据集成用）
+     * @param jsonArray
+     * @param domainId
+     * @return
+     */
+    boolean createJsonCompany(JSONArray jsonArray,int domainId);
 
     /**
      * 导出图谱为csv文件

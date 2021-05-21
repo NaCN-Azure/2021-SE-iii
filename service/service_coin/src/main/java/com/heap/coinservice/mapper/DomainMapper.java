@@ -22,7 +22,7 @@ public interface DomainMapper  {
      * 新增域
      * @param domain
      */
-    @Insert("insert into domain(name) values (#{name})")
+    @Insert("insert into domain(name,user_id) values (#{name},#{user_id})")
     void createDomain(Domain domain);
 
     /**
@@ -52,8 +52,8 @@ public interface DomainMapper  {
      * 返回所有域
      * @return
      */
-    @Select("select * from domain")
-    List<Domain> selectAllDomain();
+    @Select("select * from domain where user_id = #{user_id} ")
+    List<Domain> selectAllDomain(@Param("user_id") String userId);
 
     /**
      * 返回最近新增域的id

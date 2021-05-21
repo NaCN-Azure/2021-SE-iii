@@ -36,9 +36,9 @@ public class DomainController {
         return Result.ok().data("domain", domainService.getDomainById(domainId));
     }
 
-    @GetMapping("/selectAllDomain")
-    public Result selectAllDomain(){
-        return Result.ok().data("domain", domainService.getAllDomain());
+    @GetMapping("/selectAllDomain/{userId}")
+    public Result selectAllDomain(@PathVariable String userId){
+        return Result.ok().data("domain", domainService.getAllDomain(userId));
     }
 
 }
