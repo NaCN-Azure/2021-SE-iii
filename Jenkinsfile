@@ -19,8 +19,8 @@ pipeline {
 	    stage('Image Clear'){
 	        steps{
 	            echo 'Image Clear Stage'
-	            sh "if (docker ps -a| grep coin) then (docker container stop coin && docker container rm coin) fi"
-                sh "if (docker images | grep coin) then (docker rmi \$(docker images coin -q)) fi"
+// 	            sh "if (docker ps -a| grep coin) then (docker container stop coin && docker container rm coin) fi"
+//                 sh "if (docker images | grep coin) then (docker rmi \$(docker images coin -q)) fi"
 	        }
 	    }
 
