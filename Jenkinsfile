@@ -50,7 +50,7 @@ pipeline {
 
         stage('Deploy'){
             steps{
-                sh "docker run -p 8002:8002 --name coin -v /log:/log -d coin:${BUILD_ID}"
+//                 sh "docker run -p 8002:8002 --name coin -v /log:/log -d coin:${BUILD_ID}"
                 sh "docker run -p 8004:8004 --name coin-user -v /log:/log -d coin-user:${BUILD_ID}"
             }
         }
