@@ -94,7 +94,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         //这时注册成功，将数据添加到数据库中
         User user = new User();
         user.setMobile(mobile);
-        user.setNickname(mobile);
+        user.setNickname(nickname);
         user.setPassword(MD5.encrypt(password));
         user.setIsDisabled(false);
         user.setAvatar("http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eoj0hHXhgJNOTSOFsS4uZs8x1ConecaVOB8eIl115xmJZcT4oCicvia7wMEufibKtTLqiaJeanU2Lpg3w/132");
