@@ -28,11 +28,12 @@
                         <el-input v-model="form.password"
                                   prefix-icon="el-icon-lock"
                                   placeholder="请输入密码"
+                                  type="password"
                         ></el-input>
                     </el-form-item>
                     <span class="promptMsg" id="pwdMsg">密码最少6位，至少包括一个字母、一个数字、一个特殊字符</span>
                 </div>
-                <el-button type="primary" @click="handleRegister" style="float: right;margin-top:5px;margin-bottom: 45px;width: 100%">注册</el-button>
+                <el-button type="primary" @click="handleRegister" style="margin-top:5px;margin-bottom:10%;width: 100%">注册</el-button>
             </el-form>
         </div>
     </div>
@@ -127,30 +128,40 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%,-50%);
-        width: 450px;
-        height: 450px;
+        /*width: 450px;*/
+        width: 33%;
+        min-width: 300px;
+        /*height: 450px;*/
+        /*min-height: 350px;*/
         border-radius: 15px;
         box-shadow:0 0 10px gray;
     }
     .register-title{
         width: 100%;
-        text-align: center;
-        font-size: 40px;
-        margin-top: 20px;
-        font-weight: bold;
+        /*height: 20%;*/
+        /*line-height: 20%;*/
+        /*text-align: center;*/
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 4%;
+        margin-bottom: 4%;
     }
     .register-title img{
         width: 50%;
+        min-height: 60%;
     }
     .register-form{
-        width: 410px;
-        position: absolute;
-        bottom: 0;
-        padding: 0 20px;
+        /*width: 410px;*/
+        width: 91.1%;
+        flex: 1;
+        /*position: absolute;*/
+        /*bottom: 0;*/
+        padding: 0 4.4%;
     }
     .inputBox{
-        height: 60px;
-        margin-bottom: 15px;;
+        height: 12.7%;
+        margin-bottom: 3.3%;
     }
     .el-form-item{
         margin-bottom: 0px;

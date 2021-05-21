@@ -1,23 +1,23 @@
 <template>
     <div class="create-container">
         <div class="right-info">
-            <el-dropdown v-if="isLogin">
+            <el-dropdown @command="handleCommand" v-if="isLogin">
                 <div class="user">
                     <el-avatar :src=userInfo.avatar alt="user" :size="45" v-if="isLogin"></el-avatar>
                     <span class="username">{{userInfo.nickname}}</span>
                 </div>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="personalInfo">个人中心</el-dropdown-item>
+                    <el-dropdown-item command="userCenter">个人中心</el-dropdown-item>
                     <el-dropdown-item command="logout">退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
             <el-button type="primary" size="mini" round="true" @click="goLogin" v-else>登录</el-button>
         </div>
-        <h1 class="title">快来创建属于你的知识图谱！</h1>
+        <div class="title">快来创建属于你的知识图谱!</div>
         <div class="createPane">
         <el-tabs v-model="createType"
                  type="border-card"
-                 style="width:550px;display: inline-block"
+                 class="createTab"
                  @tab-click="handleClick">
             <el-tab-pane label="上传csv文件" name="importCSV">
                 csv文件格式：节点-节点-关系 三元组
@@ -73,12 +73,14 @@
             </el-tab-pane>
         </el-tabs>
         </div>
-        <el-button style="margin-top: 10px;" @click="submitUpload">
-            生成图谱
-        </el-button>
-        <el-button @click="addRouterToEditor">
-            进入工作区
-        </el-button>
+<!--        <div class="createButton">-->
+            <el-button style="margin-top: 1%" @click="submitUpload">
+                生成图谱
+            </el-button>
+            <el-button @click="addRouterToEditor">
+                进入工作区
+            </el-button>
+<!--        </div>-->
     </div>
 </template>
 
@@ -111,6 +113,14 @@
                     type: 'success'
                 })
             },
+            handleCommand(command){
+                if(command=='userCenter'){
+                    // 个人中心
+                    this.$router.push('/userCenter');
+                }else{
+                    // logout
+                }
+            },
             submitUpload() {
                 console.log('submiting');
                 this.$refs.upload.submit();
@@ -128,28 +138,69 @@
 </script>
 
 <style scoped>
-.title{
-    padding-top: 8%;
-    color: #333361;
-    font-size: 50px;
-}
-.create-container {
-    text-align: center;
-    margin: auto;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    height: auto;
-    width: 100%;
-    position: fixed;
-    background-size: 100% 100%;
-    background-image: url("../../assets/kg-background3.jpg");
-}
-.uploading {
-    margin-top: 10px;
-    width: 100%;
-}
+    .title{
+        margin-top: 20%;
+        font-size: 7vw;
+        color: #333361;
+        font-weight: bold;
+        margin-bottom: 3%;
+    }
+    @media (max-height: 410px){
+        .title{
+            margin-top: 10%;
+            font-size: 50px;
+        }
+    }
+    @media (min-width: 500px) {
+        .title{
+            margin-top: 10%;
+            font-size: 50px;
+        }
+    }
+    .create-container {
+        text-align: center;
+        margin: auto;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        height: auto;
+        width: 100%;
+        position: absolute;
+        background-size: 100% 100%;
+        background-image: url("../../assets/kg-background3.jpg");
+    }
+    .createTab{
+        width:47%;
+        height: 35%;
+        /*max-width:550px;*/
+        min-width:287px;
+        display: inline-block;
+    }
+    @media (min-width: 501px) {
+        .createTab{
+            width: 500px;
+        }
+
+    }
+    /*@media (max-width: 500px){*/
+    /*    .title{*/
+    /*        margin-top: 20%;*/
+    /*        font-size: 7vw;*/
+    /*    }*/
+    /*    !*.createTab{*!*/
+    /*    !*    width: 90%;*!*/
+    /*    !*    font-size: 15px;*!*/
+    /*    !*}*!*/
+
+    /*}*/
+    .createButton{
+        width: 100%;
+    }
+    .uploading {
+        margin-top: 10px;
+        width: 100%;
+    }
     .right-info{
         height: 45px;
         float: right;

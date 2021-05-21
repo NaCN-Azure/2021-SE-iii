@@ -18,7 +18,9 @@
                     <el-form-item>
                         <el-input v-model="form.password"
                                   prefix-icon="el-icon-lock"
-                                  placeholder="请输入密码"></el-input>
+                                  placeholder="请输入密码"
+                                  type="password"
+                        ></el-input>
                     </el-form-item>
                     <span class="promptMsg" id="pwdMsg">请输入密码</span>
                 </div>
@@ -111,11 +113,11 @@
         left: 50%;
         top: 50%;
         transform: translate(-50%,-50%);
-        /*width: 450px;*/
         width: 33%;
         min-width: 300px;
-        /*height: 390px;*/
-        height: 51.7%;
+        /*height: 51.7%;*/
+        /*min-height: 300px;*/
+        max-height: 400px;
         border-radius: 15px;
         box-shadow:0 0 10px gray;
     }
@@ -137,22 +139,19 @@
         /*height: 90%;*/
     }
     .login-form{
-        /*width: 410px;*/
         width: 91.1%;
         flex: 1;
         /*position: absolute;*/
         /*bottom: 0;*/
         /*padding: 0 20px;*/
         padding: 0 4.4%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        /*display: flex;*/
+        /*flex-direction: column;*/
+        /*justify-content: space-between;*/
     }
     .inputBox{
-        /*height: 60px;*/
         height: 14.6%;
-        /*margin-bottom: 15px;*/
-        margin-bottom: 5%;
+        margin-bottom: 6%;
     }
     .el-form-item{
         margin-bottom: 0px;
@@ -162,9 +161,7 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        /*margin-top: 10px;*/
         margin-top: 2.5%;
-        /*margin-bottom: 35px;*/
         margin-bottom: 9.0%;
     }
     .login-choice a{
