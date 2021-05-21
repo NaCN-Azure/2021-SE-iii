@@ -1,0 +1,6 @@
+FROM openjdk:8u262-jre-slim-buster
+ADD service/service_users/target/service_users-0.0.1-SNAPSHOT.jar /backend-coin/backend-users.jar
+ADD runboot-user.sh /backend-coin/
+WORKDIR /backend-coin
+RUN chmod a+x runboot-user.sh
+CMD /backend-coin/runboot-user.sh
