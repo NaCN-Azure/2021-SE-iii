@@ -33,9 +33,9 @@ export function selectDomainByIdAPI(domainId) {
     })
 }
 
-export function selectAllDomainAPI() {
+export function selectAllDomainAPI(userId) {
     return axios({
-        url: `${api.domainPre}/selectAllDomain`,
+        url: `${api.domainPre}/selectAllDomain/${userId}`,
         method: 'get'
     })
 }

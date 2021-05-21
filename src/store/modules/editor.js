@@ -134,8 +134,8 @@ const editor = {
             }
         },
         // 获取图谱列表
-        getAllDomains: async ({state, commit}) => {
-            const res = await selectAllDomainAPI();
+        getAllDomains: async ({state, commit}, userId) => {
+            const res = await selectAllDomainAPI(userId);
             if(res.data.code == 200){
                 commit('set_domainList',res.data.data.domain);
             }

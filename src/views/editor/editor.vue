@@ -249,7 +249,7 @@
         },
 
         created(){
-            this.getAllDomains();
+            this.getAllDomains(this.userInfo.id);
         },
 
         computed:{
@@ -264,6 +264,8 @@
                 'mode',
                 'value',
                 'options',
+                'userInfo',
+                'isLogin',
             ])
         },
 
@@ -800,7 +802,14 @@
             },
 
             addDomain(){
-                this.set_addDomainDialogVisible(true);
+                if(!this.isLogin){
+                    this.$message({
+                        message:'请先登录哦',
+                        type:'warning',
+                    })
+                }else{
+                    this.set_addDomainDialogVisible(true);
+                }
             },
 
             addLinkFromNode(){

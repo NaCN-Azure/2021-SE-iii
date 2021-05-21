@@ -51,12 +51,14 @@
                 addDomainParams: {
                     id:1,
                     name:'',
+                    user_id: this.userInfo.id,
                 },
             }
         },
         computed:{
             ...mapGetters([
                 'addDomainDialogVisible',
+                'userInfo',
             ])
         },
         methods:{
@@ -71,6 +73,7 @@
                 this.addDomainParams = {
                     id:1,
                     name:'',
+                    user_id: this.userInfo.id,
                 }
             },
             cancelAddDomain(){
@@ -89,7 +92,7 @@
                         message:'添加成功',
                         type:'success'
                     })
-                    this.getAllDomains();
+                    this.getAllDomains(this.userInfo.id);
                 }
             }
         }
