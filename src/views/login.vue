@@ -34,7 +34,9 @@
 </template>
 
 <script>
-    import {mapActions} from "vuex";
+    import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {loginAPI, getUserInfoAPI} from '../api/login';
+    import cookie from 'js-cookie';
 
     export default {
         name: "login",
@@ -43,16 +45,41 @@
                 form:{
                     mobile:'',
                     password:'',
-                }
+                },
             }
         },
+        computed:{
+            ...mapGetters([
+                'userInfo',
+                'isLogin'
+            ])
+        },
         methods: {
+            ...mapMutations([
+                'set_userInfo',
+                'set_isLogin',
+            ]),
             ...mapActions([
                 'login'
             ]),
             handleLogin(){
                 if(this.checkUser()&&this.checkPwd()){
-                    this.login(this.form);
+                    // this.login(this.form);
+                    loginAPI(this.form)
+                        .then(res => {
+                            this.set_isLogin(true)
+                            this.$message({
+                                type: 'success',
+                                message: '登录成功'
+                            })
+                            cookie.set('coin_token', res.data.data.token, { domain: 'localhost' })
+                            getUserInfoAPI()
+                                .then(res2 => {
+                                    this.set_userInfo(res2.data.data.userInfo)
+                                    cookie.set('coin_user', this.userInfo, { domain: 'localhost' })
+                                    this.$router.push('/');
+                                })
+                        })
                     this.form = {
                         mobile: '',
                         password: '',

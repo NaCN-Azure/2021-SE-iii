@@ -40,6 +40,7 @@
 
 <script>
     import {mapActions} from "vuex";
+    import {registerAPI} from '../api/register';
 
     export default {
         name: "register",
@@ -58,12 +59,19 @@
             ]),
             handleRegister(){
                 if(this.checkMobile()&&this.checkName()&&this.checkPwd()) {
-                    this.register(this.form);
-                    this.form = {
-                        mobile: '',
-                        nickname: '',
-                        password: ''
-                    }
+                    // this.register(this.form);
+                    registerAPI(this.form).then(res => {
+                        this.$message({
+                            type: 'success',
+                            message: '注册成功'
+                        })
+                        this.$router.push({ path: '/login' })
+                        this.form = {
+                            mobile: '',
+                            nickname: '',
+                            password: ''
+                        }
+                    })
                 }else{
                     this.checkMobile();
                     this.checkName();
