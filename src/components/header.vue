@@ -42,6 +42,7 @@
 
 <script>
     import {mapGetters} from "vuex";
+    import cookie from "js-cookie";
 
     export default {
         name: "header.vue",
@@ -69,8 +70,11 @@
                     this.$router.push('/userCenter');
                 }else{
                     // logout
+                    cookie.set('coin_token', '')
+                    cookie.set('coin_user', '')
+                    this.$router.push('/login')
                 }
-            }
+            },
         }
     }
 </script>

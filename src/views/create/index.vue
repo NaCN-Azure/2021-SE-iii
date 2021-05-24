@@ -97,11 +97,6 @@
                 uploadParam: {},
             }
         },
-        created() {
-            // this.set_userInfo(cookie.get('coin_user'))
-            console.log(this.userInfo)
-            console.log(this.isLogin)
-        },
         computed: {
             ...mapGetters([
                 'userInfo',
@@ -129,6 +124,9 @@
                     this.$router.push('/userCenter');
                 }else{
                     // logout
+                    cookie.set('coin_token', '')
+                    cookie.set('coin_user', '')
+                    this.$router.push('/login')
                 }
             },
             submitUpload() {

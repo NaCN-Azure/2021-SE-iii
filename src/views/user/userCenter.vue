@@ -17,7 +17,7 @@
         <div class="right-container">
             <el-upload
                     class="avatar-uploader"
-                    action=""
+                    action="http://106.15.93.81:8003/ossservice/fileoss/uploadOssFile"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess"
                     :before-upload="beforeAvatarUpload">
@@ -69,8 +69,6 @@
                 //     isDeleted: false,
                 //     sign: '别迷恋哥，哥只是个传说'
                 // },
-                modifyUserInfoParams:{
-                }
             }
         },
         computed:{
@@ -85,7 +83,23 @@
             },
             saveModify(){
 
-            }
+            },
+            //关闭上传弹框的方法
+            close() {
+                this.imagecropperShow = false
+                //上传组件初始化
+                this.imagecropperKey = this.imagecropperKey + 1
+            },
+            //上传成功的方法
+            handleAvatarSuccess(res) {
+                console.log(res)
+                // this.imagecropperShow = false
+                // //上传之后接口返回图片地址
+                // this.userInfo.avatar = res.url
+                // //上传组件初始化
+                // this.imagecropperKey = this.imagecropperKey + 1
+            },
+            beforeAvatarUpload() {}
         }
     }
 </script>
