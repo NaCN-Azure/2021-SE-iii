@@ -7,6 +7,7 @@ import com.heap.servicebase.exceptionhandler.COINException;
 import com.heap.userservice.entity.User;
 import com.heap.userservice.entity.vo.LoginVo;
 import com.heap.userservice.entity.vo.RegisterVO;
+import com.heap.userservice.entity.vo.UserInfoVO;
 import com.heap.userservice.mapper.UsersMapper;
 import com.heap.userservice.service.UsersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -97,9 +98,42 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         user.setNickname(nickname);
         user.setPassword(MD5.encrypt(password));
         user.setIsDisabled(false);
-        user.setAvatar("http://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eoj0hHXhgJNOTSOFsS4uZs8x1ConecaVOB8eIl115xmJZcT4oCicvia7wMEufibKtTLqiaJeanU2Lpg3w/132");
+        user.setAvatar("https://heap-coin.oss-cn-beijing.aliyuncs.com/default.PNG");
         baseMapper.insert(user);
 
-
     }
+
+    @Override
+    public String updateInfo(UserInfoVO userInfoVO) {
+        String id = userInfoVO.getId();
+        String mobile = userInfoVO.getMobile();
+        String nickname = userInfoVO.getNickname();
+        String sign = userInfoVO.getSign();
+        String avatar = userInfoVO.getAvatar();
+
+        //先查找到需要修改信息的用户
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("id", id);
+        User user = baseMapper.selectOne(wrapper);
+
+        //检查是否修改了手机号码
+        if(!mobile.equals(user.getMobile())) {
+            //检查新手机号码是否重复
+            wrapper = new QueryWrapper<>();
+            wrapper.eq("mobile", mobile);
+            Integer count = baseMapper.selectCount(wrapper);
+            if(count > 0) {
+                return "duplicateMobile";
+            }
+        }
+
+        user.setNickname(nickname);
+        user.setSign(sign);
+        user.setAvatar(avatar);
+
+        int flag = baseMapper.updateById(user);
+
+        return flag != 0 ? "success" : "error";
+    }
+
 }
