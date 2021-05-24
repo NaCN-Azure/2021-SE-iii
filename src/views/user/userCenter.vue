@@ -16,27 +16,26 @@
 <!--        </div>-->
         <div class="right-container">
             <el-upload
+                    v-if="modify"
                     class="avatar-uploader"
-                    action="http://106.15.93.81:8003/ossservice/fileoss/uploadOssFile"
+                    action="http://106.15.93.81:9001/ossservice/fileoss"
                     :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload">
+                    :on-success="handleAvatarSuccess">
                 <img v-if="userInfo.avatar!=''" :src="userInfo.avatar" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
+            <img v-if="!modify" :src="userInfo.avatar" class="avatar">
             <el-form class="modifyForm" label-width="70px">
+                <el-form-item label="手机号">
+                    <span>{{userInfo.mobile}}</span>
+                </el-form-item>
                 <el-form-item label="用户名">
-                    <el-input v-if="modify" v-model="modifyUserInfoParams.nickname" placeholder="请输入用户名" >
+                    <el-input v-if="modify" v-model="userInfoParams.nickname" placeholder="请输入用户名" >
                     </el-input>
                     <span v-else>{{userInfo.nickname}}</span>
                 </el-form-item>
-                <el-form-item label="手机号">
-                    <el-input v-if="modify" v-model="modifyUserInfoParams.mobile" placeholder="请输入手机号">
-                    </el-input>
-                    <span v-else>{{userInfo.mobile}}</span>
-                </el-form-item>
                 <el-form-item label="个性签名">
-                    <el-input v-if="modify" v-model="modifyUserInfoParams.sign" placeholder="清输入个性签名">
+                    <el-input v-if="modify" v-model="userInfoParams.sign" placeholder="请输入个性签名">
                     </el-input>
                     <span v-else>{{userInfo.sign}}</span>
                 </el-form-item>
@@ -53,22 +52,20 @@
 
 <script>
     import {mapGetters} from "vuex";
+    import {updateUserInfoAPI} from "../../api/users";
 
     export default {
         name: "userCenter",
         data(){
             return{
                 modify: false,
-                // userInfo:{
-                //     id: 1,
-                //     mobile: '10000000001',
-                //     password: '123456',
-                //     nickname: 'fcrrrr',
-                //     avatar:'',
-                //     isDisabled: false,
-                //     isDeleted: false,
-                //     sign: '别迷恋哥，哥只是个传说'
-                // },
+                userInfoParams: {
+                    id: '',
+                    nickname: '',
+                    mobile: '',
+                    sign: '',
+                    avatar: ''
+                },
             }
         },
         computed:{
@@ -82,24 +79,30 @@
                 this.modify = true
             },
             saveModify(){
-
-            },
-            //关闭上传弹框的方法
-            close() {
-                this.imagecropperShow = false
-                //上传组件初始化
-                this.imagecropperKey = this.imagecropperKey + 1
+                this.userInfoParams.id = this.userInfo.id
+                this.userInfoParams.avatar = this.userInfo.avatar
+                updateUserInfoAPI(this.userInfoParams)
+                    .then(res => {
+                        console.log(res)
+                        if(res.data.code == 200) {
+                            this.$message({
+                                type: 'success',
+                                message: '修改成功'
+                            })
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: '该手机号码已经存在'
+                            })
+                        }
+                    })
             },
             //上传成功的方法
             handleAvatarSuccess(res) {
-                console.log(res)
-                // this.imagecropperShow = false
-                // //上传之后接口返回图片地址
-                // this.userInfo.avatar = res.url
-                // //上传组件初始化
-                // this.imagecropperKey = this.imagecropperKey + 1
+                console.log(this.userInfo)
+                this.userInfo.avatar = res.url
+                console.log(this.userInfo)
             },
-            beforeAvatarUpload() {}
         }
     }
 </script>

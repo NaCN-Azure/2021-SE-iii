@@ -41,7 +41,7 @@
 
 <script>
     import {mapActions} from "vuex";
-    import {registerAPI} from '../api/register';
+    import {registerAPI} from '../api/users';
 
     export default {
         name: "register",

@@ -1,6 +1,6 @@
-import {loginAPI, getUserInfoAPI} from "../../api/login";
+import {loginAPI, getUserInfoAPI} from "../../api/users";
 import router from "../../router";
-import {registerAPI} from "../../api/register";
+import {registerAPI} from "../../api/users";
 import {Message} from "element-ui";
 
 const user = {
@@ -13,8 +13,6 @@ const user = {
             // String password;
             // String nickname;
             // String avatar;
-            // Boolean isDisabled;
-            // Boolean isDeleted;
             // String sign;
             // 测试用数据
             id: 1,
@@ -22,8 +20,6 @@ const user = {
             password: '123456',
             nickname: 'fcrrrr',
             avatar:'',
-            isDisabled: false,
-            isDeleted: false,
             sign: '别迷恋哥，哥只是个传说'
         },
         modifyUserInfoParams:{

@@ -37,7 +37,7 @@
 
 <script>
     import {mapActions, mapGetters, mapMutations} from "vuex";
-    import {loginAPI, getUserInfoAPI} from '../api/login';
+    import {loginAPI, getUserInfoAPI} from '../api/users';
     import cookie from 'js-cookie';
 
     export default {
