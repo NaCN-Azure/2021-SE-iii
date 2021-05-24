@@ -41,7 +41,7 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
+    import {mapGetters, mapMutations} from "vuex";
     import cookie from "js-cookie";
 
     export default {
@@ -61,6 +61,10 @@
             ])
         },
         methods:{
+            ...mapMutations([
+                'set_userInfo',
+                'set_isLogin'
+            ]),
             goLogin(){
                 this.$router.push('/login');
             },
@@ -72,7 +76,9 @@
                     // logout
                     cookie.set('coin_token', '')
                     cookie.set('coin_user', '')
-                    this.$router.push('/login')
+                    this.set_userInfo('')
+                    this.set_isLogin(false)
+                    this.$router.push('/home')
                 }
             },
         }
