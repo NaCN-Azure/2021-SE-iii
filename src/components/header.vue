@@ -22,6 +22,12 @@
                     <span class="nav-name">工作区</span>
                 </router-link>
             </el-menu-item>
+            <el-menu-item class="nav-item" index="3">
+                <router-link to="/userCenter">
+                    <i class="el-icon-user"></i>
+                    <span class="nav-name">个人中心</span>
+                </router-link>
+            </el-menu-item>
         </el-menu>
 <!--        用户信息-->
         <div class="right-info">

@@ -66,22 +66,22 @@
             ]),
             handleLogin(){
                 if(this.checkUser()&&this.checkPwd()){
-                    // this.login(this.form);
-                    loginAPI(this.form)
-                        .then(res => {
-                            this.set_isLogin(true)
-                            this.$message({
-                                type: 'success',
-                                message: '登录成功'
-                            })
-                            cookie.set('coin_token', res.data.data.token)
-                            getUserInfoAPI()
-                                .then(res2 => {
-                                    this.set_userInfo(res2.data.data.userInfo)
-                                    cookie.set('coin_user', this.userInfo)
-                                    this.$router.push('/');
-                                })
-                        })
+                    this.login(this.form);
+                    // loginAPI(this.form)
+                    //     .then(res => {
+                    //         this.set_isLogin(true)
+                    //         this.$message({
+                    //             type: 'success',
+                    //             message: '登录成功'
+                    //         })
+                    //         cookie.set('coin_token', res.data.data.token)
+                    //         getUserInfoAPI()
+                    //             .then(res2 => {
+                    //                 this.set_userInfo(res2.data.data.userInfo)
+                    //                 cookie.set('coin_user', this.userInfo)
+                    //                 this.$router.push('/');
+                    //             })
+                    //     })
                     this.form = {
                         mobile: '',
                         password: '',

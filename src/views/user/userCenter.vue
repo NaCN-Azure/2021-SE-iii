@@ -1,51 +1,52 @@
 <template>
-    <div class="container" style="position: absolute;left: 0;top: 60px;bottom: 0;width: 100%">
-<!--        <div class="left-container">-->
-<!--            <h5 style="font-size: 15px;color: gray">个人中心</h5>-->
-<!--            <el-menu default-active="1"-->
-<!--                     text-color="darkgray">-->
-<!--                <el-menu-item index="1">-->
-<!--                    <i class="el-icon-user-solid"></i>-->
-<!--                    <span>基本信息</span>-->
-<!--                </el-menu-item>-->
-<!--                <el-menu-item index="2">-->
-<!--                    <i class="el-icon-picture"></i>-->
-<!--                    <span>我的图谱</span>-->
-<!--                </el-menu-item>-->
-<!--            </el-menu>-->
-<!--        </div>-->
-        <div class="right-container">
+    <div class="container" style="position: absolute;left: 0;top: 60px;bottom: 0;width: 100%;padding-top:20px;display: flex">
+        <div class="left-container" v-if="isLogin">
             <el-upload
-                    v-if="modify"
                     class="avatar-uploader"
                     action="http://106.15.93.81:9001/ossservice/fileoss"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess">
                 <img v-if="userInfo.avatar!=''" :src="userInfo.avatar" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <span v-else class="noAvatar">暂无头像</span>
+                <div class="avatarChangeNote">更换头像</div>
             </el-upload>
-            <img v-if="!modify" :src="userInfo.avatar" class="avatar">
-            <el-form class="modifyForm" label-width="70px">
-                <el-form-item label="手机号">
-                    <span>{{userInfo.mobile}}</span>
-                </el-form-item>
-                <el-form-item label="用户名">
-                    <el-input v-if="modify" v-model="userInfoParams.nickname" placeholder="请输入用户名" >
-                    </el-input>
-                    <span v-else>{{userInfo.nickname}}</span>
-                </el-form-item>
-                <el-form-item label="个性签名">
-                    <el-input v-if="modify" v-model="userInfoParams.sign" placeholder="请输入个性签名">
-                    </el-input>
-                    <span v-else>{{userInfo.sign}}</span>
-                </el-form-item>
-                <el-form-item v-if="modify">
-                    <el-button type="primary" size="small" @click="saveModify">保存</el-button>
-                </el-form-item>
-                <el-form-item v-else>
-                    <el-button type="primary" size="small" @click="modifyInfo">编辑</el-button>
-                </el-form-item>
-            </el-form>
+            <div class="userBasicInfo-name">{{userInfo.nickname}}</div>
+            <div class="userBasicInfo-sign" v-if="userInfo.sign!=''">{{userInfo.sign}}</div>
+        </div>
+        <div class="right-container" v-if="isLogin">
+            <el-tabs v-model="activePart" @tab-click="handleClick" type="card">
+                <el-tab-pane label="账号信息" name="accountInfo">
+                    <el-form class="modifyForm" label-width="70px">
+                        <el-form-item label="手机号">
+                            <span>{{userInfo.mobile}}</span>
+                        </el-form-item>
+                        <el-form-item label="用户名">
+                            <el-input v-if="modify" v-model="userInfoParams.nickname" placeholder="请输入用户名" >
+                            </el-input>
+                            <span v-else>{{userInfo.nickname}}</span>
+                        </el-form-item>
+                        <el-form-item label="个性签名">
+                            <el-input v-if="modify" v-model="userInfoParams.sign" placeholder="请输入个性签名">
+                            </el-input>
+                            <span v-else>{{userInfo.sign}}</span>
+                        </el-form-item>
+                        <el-form-item v-if="modify" class="modifyButton">
+                            <el-button type="primary" size="small" @click="saveModify">保存</el-button>
+                            <el-button size="small" @click="cancelModify">取消</el-button>
+                        </el-form-item>
+                        <el-form-item v-else>
+                            <el-button type="primary" size="small" @click="modifyInfo">编辑</el-button>
+                            <el-button type="primary" size="small" @click="modifyPWD">修改密码</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+                <el-tab-pane label="我的图谱" name="myDomains">
+
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+        <div v-if="!isLogin">
+            不好意思，请先登录哦~
         </div>
     </div>
 </template>
@@ -66,10 +67,12 @@
                     sign: '',
                     avatar: ''
                 },
+                activePart:'accountInfo'
             }
         },
         computed:{
             ...mapGetters([
+                'isLogin',
                 'userInfo',
                 'modifyUserInfoParams',
             ])
@@ -97,10 +100,17 @@
                         }
                     })
             },
+            cancelModify(){
+                this.modify = false;
+            },
             //上传成功的方法
             handleAvatarSuccess(res) {
                 console.log(this.userInfo)
                 this.userInfo.avatar = res.url
+                this.$message({
+                    type: "success",
+                    message: '修改成功'
+                })
                 console.log(this.userInfo)
             },
         }
@@ -109,40 +119,64 @@
 
 <style scoped>
     .left-container{
+        width: 200px;
         height: 100%;
-        width: 250px;
+        padding-left: 10%;
+        margin-right: 5%;
         text-align: center;
+        display: flex;
+        flex-direction: column;
     }
     .right-container{
-        padding: 20px;
+        width: 60%;
     }
-    .right-container{
+    .userBasicInfo-name{
+        font-weight: bold;
+        font-size: 20px;
+        margin-top: 20px;
+    }
+    .userBasicInfo-sign{
+        color: #8c939d;
+        font-size: 15px;
+        margin-top: 20px;
+    }
+    .avatarChangeNote{
         position: absolute;
-        left: 250px;
-        width: 100%;
-        height: 100%;
+        top: 20px;
+        left: 10%;
+        width: 200px;
+        height: 200px;
+        color: #FFF;
+        font-size: 14px;
+        text-align: center;
+        line-height: 200px;
+        border: 4px solid #EEE;
+        background: rgba(0,0,0,0.5);
+        cursor: pointer;
+        display: none;
     }
-    .el-upload el-upload--text{
-        /*为啥这个不起作用呢*/
-        border: 1px dashed gray;
-        border-radius: 6px;
+    .avatar-uploader:hover .avatarChangeNote{
+        display: block;
+    }
+    .avatar-uploader{
+        width: 200px;
+        height: 200px;
+        border: 2px solid #EEEEEE;
+        border-radius: 5px;
         cursor: pointer;
         overflow: hidden;
     }
-    .avatar-uploader .el-upload:hover {
-        border-color: #409EFF;
-    }
-    .avatar-uploader-icon {
-        font-size: 28px;
+    .noAvatar {
+        font-size: 20px;
         color: #8c939d;
-        width: 178px;
-        height: 178px;
-        line-height: 178px;
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
         text-align: center;
     }
     .avatar {
-        width: 178px;
-        height: 178px;
+        width: 200px;
+        height: 200px;
         display: block;
     }
     .modifyForm .el-form-item{
