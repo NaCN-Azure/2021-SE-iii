@@ -67,7 +67,7 @@ public interface DomainMapper  {
      * @param name
      * @return
      */
-    @Select("select * from domain where name = #{name}")
-    Domain selectDomainByName(@Param("name") String name);
+    @Select("select * from domain where name = #{name} and user_id = #{user_id}")
+    Domain selectDomainByName(@Param("name") String name,@Param("user_id") String user_id);
 
 }

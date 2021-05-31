@@ -29,10 +29,10 @@ public class FileController {
     @Autowired
     private DomainService domainService;
 
-    @PostMapping("/getCsv")
-    public Result getCsvFile(@RequestParam(value="file", required = true) MultipartFile file) throws IOException {
+    @PostMapping("/getCsv/{user_id}")
+    public Result getCsvFile(@RequestParam(value="file", required = true) MultipartFile file,String user_id) throws IOException {
         List<List<String>> content = FileUtil.readCsv(file);
-        Domain csvDomain = Domain.builder().name(file.getOriginalFilename()).build();
+        Domain csvDomain = Domain.builder().name(file.getOriginalFilename()).user_id(user_id).build();
         int domainId = domainService.createDomain(csvDomain);
         return fileService.createGraphByCsv(content, domainId) ? Result.ok().message("导入成功") : Result.error().message("导入失败");
     }
