@@ -6,6 +6,7 @@ import com.heap.commonutils.Result;
 import com.heap.userservice.entity.User;
 import com.heap.userservice.entity.vo.LoginVo;
 import com.heap.userservice.entity.vo.RegisterVO;
+import com.heap.userservice.entity.vo.UserInfoVO;
 import com.heap.userservice.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,19 @@ public class UsersController {
         User user = usersService.getById(memberId);
 
         return Result.ok().data("userInfo", user);
+    }
+
+    //更新用户信息
+    @PostMapping("updateUserInfo")
+    public Result updateUserInfo(UserInfoVO userInfoVO) {
+        String res = usersService.updateInfo(userInfoVO);
+        if(res.equals("duplicateMobile")) {
+            return Result.error().message("该手机号码已经存在");
+        } else if(res.equals("error")) {
+            return Result.error().message("修改失败");
+        }
+
+        return Result.ok();
     }
 
 }
