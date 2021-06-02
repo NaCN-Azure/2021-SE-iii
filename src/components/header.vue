@@ -11,7 +11,7 @@
                 active-text-color="#1e90ff"
         >
             <el-menu-item class="nav-item" index="1">
-                <router-link to="/home">
+                <router-link to="/home" class="nav-link">
                     <i class="el-icon-s-home"></i>
                     <span class="nav-name">首页</span>
                 </router-link>
@@ -132,6 +132,8 @@
     }
     a{
         text-decoration: none;
+    }
+    a.nav-link{
     }
     .right-info{
         height: 100%;

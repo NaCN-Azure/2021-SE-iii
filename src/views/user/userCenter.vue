@@ -20,19 +20,31 @@
                         <el-form-item label="手机号">
                             <span>{{userInfo.mobile}}</span>
                         </el-form-item>
-                        <el-form-item label="用户名">
-                            <el-input v-if="modify" v-model="userInfoParams.nickname" placeholder="请输入用户名" >
+                        <el-form-item v-if="!changePwd" label="用户名">
+                            <el-input v-if="modify" v-model="modifyUserInfoParams.nickname" placeholder="请输入用户名" >
                             </el-input>
                             <span v-else>{{userInfo.nickname}}</span>
                         </el-form-item>
-                        <el-form-item label="个性签名">
-                            <el-input v-if="modify" v-model="userInfoParams.sign" placeholder="请输入个性签名">
+                        <el-form-item v-if="!changePwd" label="个性签名">
+                            <el-input v-if="modify" v-model="modifyUserInfoParams.sign" placeholder="请输入个性签名">
                             </el-input>
                             <span v-else>{{userInfo.sign}}</span>
+                        </el-form-item>
+                        <el-form-item v-if="changePwd" label="原密码">
+                            <el-input v-model="changePwdParams.oriPWD" placeholder="请输入原密码">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item v-if="changePwd" label="新密码">
+                            <el-input v-model="changePwdParams.newPWD" placeholder="请输入新密码">
+                            </el-input>
                         </el-form-item>
                         <el-form-item v-if="modify" class="modifyButton">
                             <el-button type="primary" size="small" @click="saveModify">保存</el-button>
                             <el-button size="small" @click="cancelModify">取消</el-button>
+                        </el-form-item>
+                        <el-form-item v-if="changePwd" class="modifyButton">
+                            <el-button type="primary" size="small" @click="saveModifyPWD">保存</el-button>
+                            <el-button size="small" @click="cancelModifyPWD">取消</el-button>
                         </el-form-item>
                         <el-form-item v-else>
                             <el-button type="primary" size="small" @click="modifyInfo">编辑</el-button>
@@ -53,21 +65,19 @@
 
 <script>
     import {mapGetters} from "vuex";
-    import {updateUserInfoAPI} from "../../api/users";
+    import {updateUserInfoAPI, updateUserPwdAPI} from "../../api/users";
 
     export default {
         name: "userCenter",
         data(){
             return{
                 modify: false,
-                userInfoParams: {
-                    id: '',
-                    nickname: '',
-                    mobile: '',
-                    sign: '',
-                    avatar: ''
-                },
-                activePart:'accountInfo'
+                activePart:'accountInfo',
+                changePwd: false,
+                changePwdParams:{
+                    oriPWD:'',
+                    newPWD:'',
+                }
             }
         },
         computed:{
@@ -81,10 +91,11 @@
             modifyInfo(){
                 this.modify = true
             },
+            modifyPWD(){
+                this.changePwd = true
+            },
             saveModify(){
-                this.userInfoParams.id = this.userInfo.id
-                this.userInfoParams.avatar = this.userInfo.avatar
-                updateUserInfoAPI(this.userInfoParams)
+                updateUserInfoAPI(this.modifyUserInfoParams)
                     .then(res => {
                         console.log(res)
                         if(res.data.code == 200) {
@@ -95,13 +106,33 @@
                         } else {
                             this.$message({
                                 type: 'error',
-                                message: '该手机号码已经存在'
+                                message: '修改失败'
                             })
                         }
                     })
             },
             cancelModify(){
                 this.modify = false;
+            },
+            saveModifyPWD(){
+                updateUserPwdAPI(this.changePwdParams)
+                    .then(res => {
+                        console.log(res)
+                        if(res.data.code == 200) {
+                            this.$message({
+                                type: 'success',
+                                message: '修改成功'
+                            })
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: res.data.message,
+                            })
+                        }
+                    })
+            },
+            cancelModifyPWD(){
+                this.changePwd = false;
             },
             //上传成功的方法
             handleAvatarSuccess(res) {

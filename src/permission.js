@@ -11,7 +11,7 @@ router.beforeEach(async(to, from, next) => {
     const hasToken = getToken()
     if (hasToken) {
         console.log(hasToken)
-        // store.commit('set_isLogin',true)
+        store.commit('set_isLogin',true)
         // store.commit('set_userId', hasToken)
         await store.dispatch('getUserInfo')
       if (to.path === '/login') {

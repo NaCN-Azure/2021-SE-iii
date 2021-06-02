@@ -25,6 +25,9 @@ const user = {
             avatar:'',
             sign: '别迷恋哥，哥只是个传说'
         },
+        modifyUserInfoParams:{
+
+        }
 
     },
     mutations: {
@@ -48,6 +51,9 @@ const user = {
         set_userInfo: function (state, data) {
             state.userInfo = data;
         },
+        set_modifyUserInfoParams: function (state, data) {
+            state.modifyUserInfoParams = data;
+        }
     },
     actions: {
         login: async ({commit, dispatch}, loginData) => {
@@ -61,16 +67,15 @@ const user = {
                     type: 'success',
                     message: '登录成功'
                 })
-                // cookie.set('coin_token', res.data.data.token)
+                cookie.set('coin_token', res.data.data.token)
                 dispatch('getUserInfo')
                 router.push('/')
+            }else{
+                Message({
+                    type:'error',
+                    message:res.data.message
+                })
             }
-            // }else{
-            //     Message({
-            //         type:'error',
-            //         message:'密码有误'
-            //     })
-            // }
         },
         getUserInfo: async ({state, commit}) => {
             return new Promise((resolve, reject) => {
@@ -81,6 +86,7 @@ const user = {
                         reject('登录已过期，请重新登录')
                     }
                     commit('set_userInfo', data)
+                    commit('set_modifyUserInfoParams',data)
                     commit('set_userId', data.id)
                     console.log("userid",state.userId)
                     cookie.set('coin_user', state.userInfo)
