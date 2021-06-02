@@ -33,7 +33,9 @@
                     </el-form-item>
                     <span class="promptMsg" id="pwdMsg">密码最少6位，至少包括一个字母、一个数字、一个特殊字符</span>
                 </div>
-                <el-button type="primary" @click="handleRegister" style="margin-top:5px;margin-bottom:10%;width: 100%">注册</el-button>
+                <el-button type="primary" @click="handleRegister" style="margin-top:5px;margin-bottom:10%;width: 100%"
+                           :loading="registerLoading"
+                >注册</el-button>
             </el-form>
         </div>
     </div>
@@ -51,7 +53,8 @@
                     mobile:'',
                     nickname:'',
                     password:'',
-                }
+                },
+                registerLoading:false,
             }
         },
         methods:{
@@ -60,6 +63,7 @@
             ]),
             handleRegister(){
                 if(this.checkMobile()&&this.checkName()&&this.checkPwd()) {
+                    this.registerLoading = true;
                     this.register(this.form);
                     // registerAPI(this.form).then(res => {
                     //     this.$message({
@@ -73,6 +77,12 @@
                     //         password: ''
                     //     }
                     // })
+                    this.registerLoading = false;
+                    this.form = {
+                                mobile: '',
+                                nickname: '',
+                                password: ''
+                            }
                 }else{
                     this.checkMobile();
                     this.checkName();

@@ -1,8 +1,9 @@
 import {loginAPI, getUserInfoAPI} from "../../api/users";
-import router from "../../router";
+import router, {resetRouter} from "../../router";
+import { getToken, setToken, removeToken } from '@/utils/auth'
 import {registerAPI} from "../../api/users";
 import {Message} from "element-ui";
-import cookie from 'js-cookie';
+import cookie from 'js-cookie'
 
 
 const user = {
@@ -27,6 +28,17 @@ const user = {
 
     },
     mutations: {
+        reset_state:function(state){
+            state.token = ''
+            state.isLogin = false
+            state.userId = ''
+            state.userInfo = {
+
+            }
+        },
+        set_token: function(state, token){
+            state.token = token
+        },
         set_isLogin: function (state, data) {
             state.isLogin = data;
         },
@@ -40,28 +52,38 @@ const user = {
     actions: {
         login: async ({commit, dispatch}, loginData) => {
             const res = await loginAPI(loginData);
+            console.log(res);
             if (res.data.code == 200) {
+                setToken(res.data.data.id)
+                commit('set_token',res.data.data.token)
                 commit('set_isLogin', true)
                 Message({
-                    type:'success',
-                    message:'登录成功'
+                    type: 'success',
+                    message: '登录成功'
                 })
-                cookie.set('coin_token', res.data.data.token)
+                // cookie.set('coin_token', res.data.data.token)
                 dispatch('getUserInfo')
-                router.push('/home')
+                router.push('/')
             }
+            // }else{
+            //     Message({
+            //         type:'error',
+            //         message:'密码有误'
+            //     })
+            // }
         },
         getUserInfo: async ({state, commit}) => {
             return new Promise((resolve, reject) => {
-                getUserInfoAPI(state.userId).then(response => {
+                getUserInfoAPI().then(response => {
                     const data = response.data.data.userInfo
-                    // console.log("userinfo",data);
+                    console.log("userinfo",data);
                     if (!data) {
                         reject('登录已过期，请重新登录')
                     }
                     commit('set_userInfo', data)
                     commit('set_userId', data.id)
-                    cookie.set('coin_user', this.userInfo)
+                    console.log("userid",state.userId)
+                    cookie.set('coin_user', state.userInfo)
                     resolve(data)
                 }).catch(error => {
                     reject(error)
@@ -70,6 +92,7 @@ const user = {
         },
         register: async ({state, commit, dispatch}, registerData) => {
             const res = await registerAPI(registerData);
+            console.log(res);
             if(res.data.code == 200){
                 Message({
                     message: '注册成功',
@@ -82,8 +105,18 @@ const user = {
                 }
                 // console.log('logindata', loginData);
                 dispatch('login',loginData);
+            }else{
+                Message({
+                    message:'注册失败',
+                    type:'error'
+                })
             }
-        }
+        },
+        logout: async({ commit }) => {
+            removeToken()
+            resetRouter()
+            commit('reset_state')
+        },
     }
 }
 

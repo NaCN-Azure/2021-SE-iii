@@ -24,7 +24,9 @@
                     </el-form-item>
                     <span class="promptMsg" id="pwdMsg">请输入密码</span>
                 </div>
-                <el-button type="primary" class="login-btn" @click="handleLogin" style="width: 100%; margin-bottom: 10px">登录</el-button>
+                <el-button type="primary" class="login-btn" @click="handleLogin" style="width: 100%; margin-bottom: 10px"
+                           :loading="loginLoading"
+                >登录</el-button>
                 <div class="login-choice">
                     <router-link to="/register">没有账号？立即注册</router-link>
 <!--                    <a href="Register">没有账号？立即注册</a>-->
@@ -40,6 +42,7 @@
     import {loginAPI, getUserInfoAPI} from '../api/users';
     import cookie from 'js-cookie';
 
+
     export default {
         name: "login",
         data(){
@@ -48,6 +51,7 @@
                     mobile:'',
                     password:'',
                 },
+                loginLoading: false,
             }
         },
         computed:{
@@ -55,6 +59,14 @@
                 'userInfo',
                 'isLogin'
             ])
+        },
+        watch: {
+            $route: {
+                handler: function(route) {
+                    this.redirect = route.query && route.query.redirect
+                },
+                immediate: true
+            },
         },
         methods: {
             ...mapMutations([
@@ -64,8 +76,9 @@
             ...mapActions([
                 'login'
             ]),
-            handleLogin(){
-                if(this.checkUser()&&this.checkPwd()){
+            handleLogin() {
+                if (this.checkUser() && this.checkPwd()) {
+                    this.loginLoading = true;
                     this.login(this.form);
                     // loginAPI(this.form)
                     //     .then(res => {
@@ -82,11 +95,12 @@
                     //                 this.$router.push('/');
                     //             })
                     //     })
+                    this.loginLoading = false;
                     this.form = {
                         mobile: '',
                         password: '',
                     }
-                }else{
+                } else {
                     this.checkUser();
                     this.checkPwd();
                 }
