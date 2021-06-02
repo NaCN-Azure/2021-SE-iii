@@ -45,3 +45,10 @@ export function updateUserPwdAPI(oldPwd, newPwd) {
         method: 'post',
     })
 }
+
+export function resetPwdAPI(mobile,password) {
+    return axios({
+        url: `${api.userPre}/resetPwd/${mobile}/${password}`,
+        method: 'post',
+    })
+}
