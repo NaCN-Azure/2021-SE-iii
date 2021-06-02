@@ -31,7 +31,7 @@
                             <span v-else>{{userInfo.sign}}</span>
                         </el-form-item>
                         <el-form-item v-if="changePwd" label="原密码">
-                            <el-input v-model="changePwdParams.oriPWD" placeholder="请输入原密码">
+                            <el-input v-model="changePwdParams.oldPWD" placeholder="请输入原密码">
                             </el-input>
                         </el-form-item>
                         <el-form-item v-if="changePwd" label="新密码">
@@ -75,7 +75,7 @@
                 activePart:'accountInfo',
                 changePwd: false,
                 changePwdParams:{
-                    oriPWD:'',
+                    oldPWD:'',
                     newPWD:'',
                 }
             }
@@ -115,7 +115,7 @@
                 this.modify = false;
             },
             saveModifyPWD(){
-                updateUserPwdAPI(this.changePwdParams)
+                updateUserPwdAPI(this.changePwdParams.oldPWD, this.changePwdParams.newPWD)
                     .then(res => {
                         console.log(res)
                         if(res.data.code == 200) {

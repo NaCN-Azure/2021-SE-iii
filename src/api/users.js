@@ -39,10 +39,9 @@ export function updateUserInfoAPI(userInfo) {
 }
 
 //修改用户密码
-export function updateUserPwdAPI(modifyPwdForm) {
+export function updateUserPwdAPI(oldPwd, newPwd) {
     return axios({
-        url: `${api.userPre}/updateUserPwd`,
+        url: `${api.userPre}/updateUserPwd/${oldPwd}/${newPwd}`,
         method: 'post',
-        data: modifyPwdForm
     })
 }
