@@ -16,7 +16,7 @@ import com.heap.userservice.entity.vo.UserInfoVO;
  */
 public interface UsersService extends IService<User> {
 
-    String login(LoginVo loginVo);
+    String[] login(LoginVo loginVo);
 
     void register(RegisterVO registerVO);
 

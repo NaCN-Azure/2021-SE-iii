@@ -35,9 +35,9 @@ public class UsersController {
         //member对象封装手机号和密码
 
         //返回token值，使用jwt生成
-        String token = usersService.login(loginVo);
+        String[] res = usersService.login(loginVo);
 
-        return Result.ok().data("token", token);
+        return Result.ok().data("token", res[0]).data("id", res[1]);
     }
 
     //注册

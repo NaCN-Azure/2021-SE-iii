@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements UsersService {
 
     @Override
-    public String login(LoginVo loginVo) {
+    public String[] login(LoginVo loginVo) {
         //获取登录手机号和密码
         String mobile = loginVo.getMobile();
         String password = loginVo.getPassword();
@@ -61,8 +61,12 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
 
         //生成token字符串，使用jwt工具类
         String token = JwtUtils.getJwtToken(mobileMember.getId(), mobileMember.getNickname());
+        String id = mobileMember.getId();
+        String[] res = new String[2];
+        res[0] = token;
+        res[1] = id;
 
-        return token;
+        return res;
     }
 
     @Override
