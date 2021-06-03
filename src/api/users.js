@@ -39,16 +39,16 @@ export function updateUserInfoAPI(userInfo) {
 }
 
 //修改用户密码
-export function updateUserPwdAPI(oldPwd, newPwd) {
+export function updateUserPwdAPI(id, oldPwd, newPwd) {
     return axios({
-        url: `${api.userPre}/updateUserPwd/${oldPwd}/${newPwd}`,
+        url: `${api.userPre}/updateUserPwd/${id}/${oldPwd}/${newPwd}`,
         method: 'post',
     })
 }
 
-export function resetPwdAPI(id,mobile,password) {
+export function resetPwdAPI(mobile,password) {
     return axios({
-        url: `${api.userPre}/resetPwd/${id}/${mobile}/${password}`,
+        url: `${api.userPre}/resetPwd/${mobile}/${password}`,
         method: 'post',
     })
 }
