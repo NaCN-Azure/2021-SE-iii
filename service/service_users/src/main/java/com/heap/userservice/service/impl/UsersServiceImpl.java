@@ -140,4 +140,37 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         return flag != 0 ? "success" : "error";
     }
 
+    @Override
+    public void updatePassword(String userId, String oldPwd, String newPwd) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("id", userId);
+        User user = baseMapper.selectOne(wrapper);
+
+        if(MD5.encrypt(oldPwd).equals(user.getPassword())) {
+            //原密码正确
+            user.setPassword(MD5.encrypt(newPwd));
+            baseMapper.updateById(user);
+        }
+        else {
+            throw new COINException(201, "原密码错误");
+        }
+
+    }
+
+    @Override
+    public void resetPassword(String mobile, String password) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("mobile", mobile);
+        User user = baseMapper.selectOne(wrapper);
+
+        if(user != null) {
+            user.setPassword(MD5.encrypt(password));
+            baseMapper.updateById(user);
+        }
+        else {
+            throw new COINException(201, "不存在该手机号");
+        }
+    }
+
+
 }

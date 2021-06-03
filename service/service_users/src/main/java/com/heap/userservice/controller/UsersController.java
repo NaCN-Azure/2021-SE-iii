@@ -3,6 +3,7 @@ package com.heap.userservice.controller;
 
 import com.heap.commonutils.JwtUtils;
 import com.heap.commonutils.Result;
+import com.heap.servicebase.exceptionhandler.COINException;
 import com.heap.userservice.entity.User;
 import com.heap.userservice.entity.vo.LoginVo;
 import com.heap.userservice.entity.vo.RegisterVO;
@@ -51,9 +52,9 @@ public class UsersController {
     @GetMapping("getMemberInfo")
     public Result getMemberInfo(HttpServletRequest request) {
         //调用jwt工具类的方法，根据request对象获取头信息，返回用户id
-        String memberId = JwtUtils.getMemberIdByJwtToken(request);
+        String userId = JwtUtils.getMemberIdByJwtToken(request);
         //查询数据库，根据用户id获取用户信息
-        User user = usersService.getById(memberId);
+        User user = usersService.getById(userId);
 
         return Result.ok().data("userInfo", user);
     }
@@ -63,11 +64,26 @@ public class UsersController {
     public Result updateUserInfo(UserInfoVO userInfoVO) {
         String res = usersService.updateInfo(userInfoVO);
         if(res.equals("duplicateMobile")) {
-            return Result.error().message("该手机号码已经存在");
+            throw new COINException(201, "该手机号已存在");
         } else if(res.equals("error")) {
-            return Result.error().message("修改失败");
+            throw new COINException(201, "修改失败");
         }
 
+        return Result.ok();
+    }
+
+    //修改用户密码
+    @PostMapping("updateUserPwd/{oldPwd}/{newPwd}")
+    public Result updateUserPwd(@PathVariable String oldPwd, @PathVariable String newPwd, HttpServletRequest request) {
+        String userId = JwtUtils.getMemberIdByJwtToken(request);
+        usersService.updatePassword(userId, oldPwd, newPwd);
+        return Result.ok();
+    }
+
+    //重置用户密码
+    @PostMapping("resetPwd/{mobile}/{password}")
+    public Result resetPwd(@PathVariable String mobile, @PathVariable String password) {
+        usersService.resetPassword(mobile, password);
         return Result.ok();
     }
 
