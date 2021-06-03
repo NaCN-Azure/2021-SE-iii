@@ -26,6 +26,7 @@ const getters = {
   userId: state => state.user.userId,
   userInfo: state => state.user.userInfo,
   modifyUserInfoParams: state => state.user.modifyUserInfoParams,
+  resetPwdDialogVisible: state => state.user.resetPwdDialogVisible,
 }
 
   export default getters

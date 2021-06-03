@@ -27,7 +27,8 @@ const user = {
         },
         modifyUserInfoParams:{
 
-        }
+        },
+        resetPwdDialogVisible: false,
 
     },
     mutations: {
@@ -53,6 +54,9 @@ const user = {
         },
         set_modifyUserInfoParams: function (state, data) {
             state.modifyUserInfoParams = data;
+        },
+        set_resetPwdDialogVisible: function (state, date) {
+            state.resetPwdDialogVisible = date;
         }
     },
     actions: {
@@ -88,7 +92,6 @@ const user = {
                     commit('set_userInfo', data)
                     commit('set_modifyUserInfoParams',data)
                     commit('set_userId', data.id)
-                    console.log("userid",state.userId)
                     cookie.set('coin_user', state.userInfo)
                     resolve(data)
                 }).catch(error => {

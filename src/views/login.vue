@@ -30,21 +30,22 @@
                 <div class="login-choice">
                     <router-link to="/register">没有账号？立即注册</router-link>
 <!--                    <a href="Register">没有账号？立即注册</a>-->
-                    <a href="forgetPWD">忘记密码</a>
+                    <span @click="forgetPwd">忘记密码</span>
                 </div>
             </el-form>
         </div>
+        <reset-pwd-dialog></reset-pwd-dialog>
     </div>
 </template>
 
 <script>
     import {mapActions, mapGetters, mapMutations} from "vuex";
-    import {loginAPI, getUserInfoAPI} from '../api/users';
-    import cookie from 'js-cookie';
+    import ResetPwdDialog from "./user/resetPwdDialog";
 
 
     export default {
         name: "login",
+        components: {ResetPwdDialog},
         data(){
             return{
                 form:{
@@ -52,12 +53,17 @@
                     password:'',
                 },
                 loginLoading: false,
+                resetPwdForm:{
+                    mobile:'',
+                    password:'',
+                }
             }
         },
         computed:{
             ...mapGetters([
                 'userInfo',
-                'isLogin'
+                'isLogin',
+                'resetPwdDialogVisible'
             ])
         },
         watch: {
@@ -70,8 +76,7 @@
         },
         methods: {
             ...mapMutations([
-                'set_userInfo',
-                'set_isLogin',
+                'set_resetPwdDialogVisible'
             ]),
             ...mapActions([
                 'login'
@@ -80,21 +85,6 @@
                 if (this.checkUser() && this.checkPwd()) {
                     this.loginLoading = true;
                     this.login(this.form);
-                    // loginAPI(this.form)
-                    //     .then(res => {
-                    //         this.set_isLogin(true)
-                    //         this.$message({
-                    //             type: 'success',
-                    //             message: '登录成功'
-                    //         })
-                    //         cookie.set('coin_token', res.data.data.token)
-                    //         getUserInfoAPI()
-                    //             .then(res2 => {
-                    //                 this.set_userInfo(res2.data.data.userInfo)
-                    //                 cookie.set('coin_user', this.userInfo)
-                    //                 this.$router.push('/');
-                    //             })
-                    //     })
                     this.loginLoading = false;
                     this.form = {
                         mobile: '',
@@ -128,7 +118,11 @@
                     document.getElementById("pwdMsg").style.display = "none";
                     return true;
                 }
-            }
+            },
+            forgetPwd(){
+                console.log("reset")
+                this.set_resetPwdDialogVisible(true)
+            },
         }
     }
 </script>
@@ -211,6 +205,15 @@
         color: gray;
     }
     .login-choice a:hover{
+        color: #65acff;
+    }
+    .login-choice span{
+        font-size: 13px;
+        text-decoration: none;
+        color: gray;
+        cursor: pointer;
+    }
+    .login-choice span:hover{
         color: #65acff;
     }
     .promptMsg{

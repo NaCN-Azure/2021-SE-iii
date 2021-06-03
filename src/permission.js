@@ -3,25 +3,21 @@ import store from './store'
 import { getToken } from '@/utils/auth'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-const whiteList = ['/login','/'] // no redirect whitelist
+const whiteList = ['/login','/home'] // no redirect whitelist， 首页可以不用登录直接访问
 router.beforeEach(async(to, from, next) => {
     // start progress bar
     NProgress.start()
     // determine whether the user has logged in
     const hasToken = getToken()
     if (hasToken) {
-        console.log(hasToken)
+        // console.log(hasToken)
         store.commit('set_isLogin',true)
-        // store.commit('set_userId', hasToken)
+        // 有存入cookie的登录状态，直接getUserInfo
         await store.dispatch('getUserInfo')
       if (to.path === '/login') {
         // if is logged in, redirect to the home page
         next({path: '/'})
         NProgress.done()
-      }
-      else if(to.path === '/'){
-          // next()
-          NProgress.done()
       }
       else {
         next()
