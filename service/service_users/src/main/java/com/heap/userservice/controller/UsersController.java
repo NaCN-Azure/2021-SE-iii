@@ -73,10 +73,9 @@ public class UsersController {
     }
 
     //修改用户密码
-    @PostMapping("updateUserPwd/{oldPwd}/{newPwd}")
-    public Result updateUserPwd(@PathVariable String oldPwd, @PathVariable String newPwd, HttpServletRequest request) {
-        String userId = JwtUtils.getMemberIdByJwtToken(request);
-        usersService.updatePassword(userId, oldPwd, newPwd);
+    @PostMapping("updateUserPwd/{id}/{oldPwd}/{newPwd}")
+    public Result updateUserPwd(@PathVariable String id, @PathVariable String oldPwd, @PathVariable String newPwd) {
+        usersService.updatePassword(id, oldPwd, newPwd);
         return Result.ok();
     }
 
