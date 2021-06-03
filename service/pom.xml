@@ -15,7 +15,6 @@
         <module>service_coin</module>
         <module>service_oss</module>
         <module>service_users</module>
-        <module>service_acl</module>
     </modules>
 
     <dependencies>
