@@ -129,8 +129,8 @@
 
 <style scoped>
     .login-container{
-        position: fixed;
-        margin: auto;
+        /*absolute而不是fixed，否则对话框弹出整个页面会变灰*/
+        position: absolute;
         top: 0;
         left: 0;
         bottom: 0;

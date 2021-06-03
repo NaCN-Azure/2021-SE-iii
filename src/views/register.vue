@@ -129,8 +129,8 @@
 
 <style scoped>
     .register-container{
-        position: fixed;
-        margin: auto;
+        position: absolute;
+        /*margin: auto;*/
         top: 0;
         left: 0;
         bottom: 0;
