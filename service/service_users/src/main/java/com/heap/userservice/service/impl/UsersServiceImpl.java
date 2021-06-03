@@ -163,6 +163,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         wrapper.eq("mobile", mobile);
         User user = baseMapper.selectOne(wrapper);
 
+        //存在该用户
         if(user != null) {
             user.setPassword(MD5.encrypt(password));
             baseMapper.updateById(user);
