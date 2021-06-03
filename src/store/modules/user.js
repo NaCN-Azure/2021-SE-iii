@@ -88,6 +88,7 @@ const user = {
                     console.log("userinfo",data);
                     if (!data) {
                         reject('登录已过期，请重新登录')
+                        router.push('/login')
                     }
                     commit('set_userInfo', data)
                     commit('set_modifyUserInfoParams',data)

@@ -31,11 +31,11 @@
                             <span v-else>{{userInfo.sign}}</span>
                         </el-form-item>
                         <el-form-item v-if="changePwd" label="原密码">
-                            <el-input v-model="changePwdParams.oldPWD" placeholder="请输入原密码">
+                            <el-input v-model="changePwdParams.oldPWD" type="password" placeholder="请输入原密码">
                             </el-input>
                         </el-form-item>
                         <el-form-item v-if="changePwd" label="新密码">
-                            <el-input v-model="changePwdParams.newPWD" placeholder="请输入新密码">
+                            <el-input v-model="changePwdParams.newPWD" type="password" placeholder="请输入新密码">
                             </el-input>
                         </el-form-item>
                         <el-form-item v-if="modify" class="modifyButton">
@@ -115,7 +115,7 @@
                 this.modify = false;
             },
             saveModifyPWD(){
-                updateUserPwdAPI(this.changePwdParams.oldPWD, this.changePwdParams.newPWD)
+                updateUserPwdAPI(this.userInfo.id,this.changePwdParams.oldPWD, this.changePwdParams.newPWD)
                     .then(res => {
                         console.log(res)
                         if(res.data.code == 200) {

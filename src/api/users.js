@@ -46,9 +46,9 @@ export function updateUserPwdAPI(oldPwd, newPwd) {
     })
 }
 
-export function resetPwdAPI(mobile,password) {
+export function resetPwdAPI(id,mobile,password) {
     return axios({
-        url: `${api.userPre}/resetPwd/${mobile}/${password}`,
+        url: `${api.userPre}/resetPwd/${id}/${mobile}/${password}`,
         method: 'post',
     })
 }
