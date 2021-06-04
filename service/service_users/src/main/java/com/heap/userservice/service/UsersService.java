@@ -22,6 +22,8 @@ public interface UsersService extends IService<User> {
 
     String updateInfo(UserInfoVO userInfoVO);
 
+    void updateAvatar(UserInfoVO userInfoVO);
+
     void updatePassword(String userId, String oldPwd, String newPwd);
 
     void resetPassword(String mobile, String password);

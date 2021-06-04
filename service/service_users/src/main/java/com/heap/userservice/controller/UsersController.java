@@ -72,6 +72,13 @@ public class UsersController {
         return Result.ok();
     }
 
+    //保存头像
+    @PostMapping("updateAvatar")
+    public Result updateAvatar(UserInfoVO userInfoVO) {
+        usersService.updateAvatar(userInfoVO);
+        return Result.ok();
+    }
+
     //修改用户密码
     @PostMapping("updateUserPwd/{id}/{oldPwd}/{newPwd}")
     public Result updateUserPwd(@PathVariable String id, @PathVariable String oldPwd, @PathVariable String newPwd) {

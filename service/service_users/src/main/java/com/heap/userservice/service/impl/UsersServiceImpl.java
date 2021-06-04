@@ -113,7 +113,6 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         String mobile = userInfoVO.getMobile();
         String nickname = userInfoVO.getNickname();
         String sign = userInfoVO.getSign();
-        String avatar = userInfoVO.getAvatar();
 
         //先查找到需要修改信息的用户
         QueryWrapper<User> wrapper = new QueryWrapper<>();
@@ -133,11 +132,23 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
 
         user.setNickname(nickname);
         user.setSign(sign);
-        user.setAvatar(avatar);
 
         int flag = baseMapper.updateById(user);
 
         return flag != 0 ? "success" : "error";
+    }
+
+    @Override
+    public void updateAvatar(UserInfoVO userInfoVO) {
+        String avatar = userInfoVO.getAvatar();
+        String id = userInfoVO.getId();
+
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("id", id);
+        User user = baseMapper.selectOne(wrapper);
+
+        user.setAvatar(avatar);
+        baseMapper.updateById(user);
     }
 
     @Override
