@@ -108,9 +108,8 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
     }
 
     @Override
-    public String updateInfo(UserInfoVO userInfoVO) {
+    public void updateInfo(UserInfoVO userInfoVO) {
         String id = userInfoVO.getId();
-        String mobile = userInfoVO.getMobile();
         String nickname = userInfoVO.getNickname();
         String sign = userInfoVO.getSign();
 
@@ -119,23 +118,10 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         wrapper.eq("id", id);
         User user = baseMapper.selectOne(wrapper);
 
-        //检查是否修改了手机号码
-        if(!mobile.equals(user.getMobile())) {
-            //检查新手机号码是否重复
-            wrapper = new QueryWrapper<>();
-            wrapper.eq("mobile", mobile);
-            Integer count = baseMapper.selectCount(wrapper);
-            if(count > 0) {
-                return "duplicateMobile";
-            }
-        }
-
         user.setNickname(nickname);
         user.setSign(sign);
 
-        int flag = baseMapper.updateById(user);
-
-        return flag != 0 ? "success" : "error";
+        baseMapper.updateById(user);
     }
 
     @Override

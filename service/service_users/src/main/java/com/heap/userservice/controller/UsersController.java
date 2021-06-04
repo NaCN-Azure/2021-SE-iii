@@ -60,14 +60,14 @@ public class UsersController {
     }
 
     //更新用户信息
-    @PostMapping("updateUserInfo")
-    public Result updateUserInfo(UserInfoVO userInfoVO) {
-        String res = usersService.updateInfo(userInfoVO);
-        if(res.equals("duplicateMobile")) {
-            throw new COINException(201, "该手机号已存在");
-        } else if(res.equals("error")) {
-            throw new COINException(201, "修改失败");
-        }
+    @PostMapping("updateUserInfo/{id}/{nickname}/{sign}")
+    public Result updateUserInfo(@PathVariable String id, @PathVariable String nickname, @PathVariable String sign) {
+        UserInfoVO userInfoVO = new UserInfoVO();
+        userInfoVO.setId(id);
+        userInfoVO.setNickname(nickname);
+        userInfoVO.setSign(sign);
+
+        usersService.updateInfo(userInfoVO);
 
         return Result.ok();
     }

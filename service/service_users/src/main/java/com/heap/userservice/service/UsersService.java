@@ -20,7 +20,7 @@ public interface UsersService extends IService<User> {
 
     void register(RegisterVO registerVO);
 
-    String updateInfo(UserInfoVO userInfoVO);
+    void updateInfo(UserInfoVO userInfoVO);
 
     void updateAvatar(String id, String avatar);
 
