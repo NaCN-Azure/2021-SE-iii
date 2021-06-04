@@ -139,14 +139,10 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
     }
 
     @Override
-    public void updateAvatar(UserInfoVO userInfoVO) {
-        String avatar = userInfoVO.getAvatar();
-        String id = userInfoVO.getId();
-
+    public void updateAvatar(String id, String avatar) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("id", id);
         User user = baseMapper.selectOne(wrapper);
-
         user.setAvatar(avatar);
         baseMapper.updateById(user);
     }

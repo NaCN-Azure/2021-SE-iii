@@ -73,9 +73,9 @@ public class UsersController {
     }
 
     //保存头像
-    @PostMapping("updateAvatar")
-    public Result updateAvatar(UserInfoVO userInfoVO) {
-        usersService.updateAvatar(userInfoVO);
+    @PostMapping("updateAvatar/{id}/{avatar}")
+    public Result updateAvatar(@PathVariable String id, @PathVariable String avatar) {
+        usersService.updateAvatar(id, avatar);
         return Result.ok();
     }
 

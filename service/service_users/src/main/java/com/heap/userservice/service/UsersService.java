@@ -22,7 +22,7 @@ public interface UsersService extends IService<User> {
 
     String updateInfo(UserInfoVO userInfoVO);
 
-    void updateAvatar(UserInfoVO userInfoVO);
+    void updateAvatar(String id, String avatar);
 
     void updatePassword(String userId, String oldPwd, String newPwd);
 
