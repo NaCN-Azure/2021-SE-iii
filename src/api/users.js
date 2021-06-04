@@ -30,11 +30,10 @@ export function registerAPI(formItem) {
 }
 
 //更新用户信息
-export function updateUserInfoAPI(userInfo) {
+export function updateUserInfoAPI(id, nickname, sign) {
     return axios({
-        url: `${api.userPre}/updateUserInfo`,
-        method: 'post',
-        data: userInfo
+        url: `${api.userPre}/updateUserInfo/${id}/${nickname}/${sign}`,
+        method: 'post'
     })
 }
 

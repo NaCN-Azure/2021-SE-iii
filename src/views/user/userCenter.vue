@@ -95,7 +95,7 @@
                 this.changePwd = true
             },
             saveModify(){
-                updateUserInfoAPI(this.modifyUserInfoParams)
+                updateUserInfoAPI(this.modifyUserInfoParams.id, this.modifyUserInfoParams.nickname, this.modifyUserInfoParams.sign)
                     .then(res => {
                         console.log(res)
                         if(res.data.code == 200) {
