@@ -26,8 +26,8 @@ import java.util.ArrayList;
  * 认证过滤，继承UsernamePasswordAuthenticationFilter，对用户名密码进行登录校验
  * </p>
  *
- * @author qy
- * @since 2019-11-08
+ * @author 车一晗
+ * @since 2021-03-12
  */
 public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -40,7 +40,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         this.tokenManager = tokenManager;
         this.redisTemplate = redisTemplate;
         this.setPostOnly(false);
-        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/admin/acl/login","POST"));
+        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/aclservice/admin/login","POST"));
     }
 
     @Override

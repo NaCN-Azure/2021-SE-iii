@@ -16,8 +16,8 @@ import java.util.List;
  * 安全认证用户详情信息
  * </p>
  *
- * @author qy
- * @since 2019-11-08
+ * @author 车一晗
+ * @since 2021-03-12
  */
 @Data
 @Slf4j

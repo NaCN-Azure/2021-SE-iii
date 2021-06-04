@@ -7,8 +7,8 @@ import java.util.Date;
 /**
  * 日期操作工具类
  *
- * @author qy
- * @since 1.0
+ * @author 车一晗
+ * @since 2021-03-12
  */
 public class DateUtil {
 

@@ -28,4 +28,5 @@ public interface UsersService extends IService<User> {
 
     void resetPassword(String mobile, String password);
 
+    void disableUser(String id);
 }

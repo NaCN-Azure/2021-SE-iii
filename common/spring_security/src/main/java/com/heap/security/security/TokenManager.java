@@ -12,8 +12,8 @@ import java.util.Date;
  * token管理
  * </p>
  *
- * @author qy
- * @since 2019-11-08
+ * @author 车一晗
+ * @since 2021-03-12
  */
 @Component
 public class TokenManager {

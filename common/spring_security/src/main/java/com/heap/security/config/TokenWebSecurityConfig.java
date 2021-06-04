@@ -22,8 +22,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * Security核心配置类
  * </p>
  *
- * @author qy
- * @since 2019-11-18
+ * @author 车一晗
+ * @since 2021-03-12
  */
 @Configuration
 @EnableWebSecurity

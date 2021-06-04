@@ -114,9 +114,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         String sign = userInfoVO.getSign();
 
         //先查找到需要修改信息的用户
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("id", id);
-        User user = baseMapper.selectOne(wrapper);
+        User user = baseMapper.selectById(id);
 
         user.setNickname(nickname);
         user.setSign(sign);
@@ -126,18 +124,14 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
 
     @Override
     public void updateAvatar(String id, String avatar) {
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("id", id);
-        User user = baseMapper.selectOne(wrapper);
+        User user = baseMapper.selectById(id);
         user.setAvatar(avatar);
         baseMapper.updateById(user);
     }
 
     @Override
     public void updatePassword(String userId, String oldPwd, String newPwd) {
-        QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq("id", userId);
-        User user = baseMapper.selectOne(wrapper);
+        User user = baseMapper.selectById(userId);
 
         if(MD5.encrypt(oldPwd).equals(user.getPassword())) {
             //原密码正确
@@ -164,6 +158,15 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         else {
             throw new COINException(201, "不存在该手机号");
         }
+    }
+
+    @Override
+    public void disableUser(String id) {
+        User user = baseMapper.selectById(id);
+        Boolean isDisabled = user.getIsDisabled();
+        isDisabled = !isDisabled;
+        user.setIsDisabled(isDisabled);
+        baseMapper.updateById(user);
     }
 
 

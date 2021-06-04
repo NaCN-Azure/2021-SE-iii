@@ -11,8 +11,8 @@ import java.io.Serializable;
  * 用户实体类
  * </p>
  *
- * @author qy
- * @since 2019-11-08
+ * @author 车一晗
+ * @since 2021-03-12
  */
 @Data
 @ApiModel(description = "用户实体类")

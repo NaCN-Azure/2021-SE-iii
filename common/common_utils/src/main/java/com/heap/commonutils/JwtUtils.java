@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
- * @author Condor
- * @since 2021/02/06
+ * @author 车一晗
+ * @since 2021-03-12
  */
 public class JwtUtils {
 
