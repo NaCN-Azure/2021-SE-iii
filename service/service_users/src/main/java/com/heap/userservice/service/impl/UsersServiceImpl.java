@@ -124,7 +124,9 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
     }
 
     @Override
-    public void updateAvatar(String id, String avatar) {
+    public void updateAvatar(UserInfoVO userInfoVO) {
+        String id = userInfoVO.getId();
+        String avatar = userInfoVO.getAvatar();
         User user = baseMapper.selectById(id);
         user.setAvatar(avatar);
         baseMapper.updateById(user);
