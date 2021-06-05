@@ -1,7 +1,7 @@
 package com.heap.coinservice.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.heap.coinservice.entity.Domain;
-import com.heap.coinservice.entity.Entity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2021-03-07
  */
 @Service
-public interface DomainService {
+public interface DomainService extends IService<Domain> {
 
      /**
       *

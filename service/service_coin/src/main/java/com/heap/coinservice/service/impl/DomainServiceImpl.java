@@ -1,5 +1,6 @@
 package com.heap.coinservice.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
@@ -9,12 +10,10 @@ import com.heap.coinservice.mapper.RelationshipMapper;
 import com.heap.coinservice.service.DomainService;
 import com.heap.coinservice.service.EntityService;
 import com.heap.coinservice.service.RelationshipService;
-import com.heap.commonutils.DefaultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * <p>
@@ -25,7 +24,7 @@ import java.util.Optional;
  * @since 2021-03-07
  */
 @Service
-public class DomainServiceImpl implements DomainService {
+public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> implements DomainService {
 
     @Autowired
     private DomainMapper domainMapper;
@@ -44,7 +43,7 @@ public class DomainServiceImpl implements DomainService {
 
     @Override
     public int createDomain(Domain domain){
-        Domain checkDomain = domainMapper.selectDomainByName(domain.getName(),domain.getUser_id());
+        Domain checkDomain = domainMapper.selectDomainByName(domain.getName(),domain.getUserId());
         if(checkDomain != null){
             return -1;
         }

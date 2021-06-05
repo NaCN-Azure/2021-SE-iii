@@ -1,5 +1,6 @@
 package com.heap.coinservice.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.heap.coinservice.entity.Domain;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface DomainMapper  {
+public interface DomainMapper extends BaseMapper<Domain> {
 
     /**
      * 新增域
