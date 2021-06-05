@@ -4,7 +4,7 @@ import com.heap.commonutils.Result;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/userservice/admin")
 @CrossOrigin
 public class AdminController {
 

@@ -4,6 +4,7 @@ import com.heap.userservice.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.heap.userservice.entity.vo.LoginVo;
 import com.heap.userservice.entity.vo.RegisterVO;
+import com.heap.userservice.entity.vo.UserInfoAdminVO;
 import com.heap.userservice.entity.vo.UserInfoVO;
 
 /**
@@ -29,4 +30,8 @@ public interface UsersService extends IService<User> {
     void resetPassword(String mobile, String password);
 
     void disableUser(String id);
+
+    void updateUserInfoAdmin(UserInfoAdminVO userInfoAdminVO);
+
+    void addUser(User user);
 }

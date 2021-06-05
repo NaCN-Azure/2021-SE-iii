@@ -40,7 +40,7 @@ public class User implements Serializable {
     private String nickname;
 
     @ApiModelProperty(value = "等级")
-    private String level;
+    private Integer level;
 
     @ApiModelProperty(value = "用户头像")
     private String avatar;

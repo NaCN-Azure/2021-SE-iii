@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.heap.commonutils.JwtUtils;
 import com.heap.commonutils.Result;
-import com.heap.servicebase.exceptionhandler.COINException;
 import com.heap.userservice.entity.User;
 import com.heap.userservice.entity.query.UserQuery;
 import com.heap.userservice.entity.vo.LoginVo;
 import com.heap.userservice.entity.vo.RegisterVO;
+import com.heap.userservice.entity.vo.UserInfoAdminVO;
 import com.heap.userservice.entity.vo.UserInfoVO;
 import com.heap.userservice.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +80,13 @@ public class UsersController {
 
         usersService.updateInfo(userInfoVO);
 
+        return Result.ok();
+    }
+
+    //管理员更新用户信息
+    @PostMapping("updateUserInfoAdmin")
+    public Result updateUserInfoAdmin(@RequestBody UserInfoAdminVO userInfoAdminVO) {
+        usersService.updateUserInfoAdmin(userInfoAdminVO);
         return Result.ok();
     }
 
@@ -160,7 +167,7 @@ public class UsersController {
     //添加用户
     @PostMapping("addUser")
     public Result addUser(@RequestBody User user) {
-        usersService.save(user);
+        usersService.addUser(user);
         return Result.ok();
     }
 

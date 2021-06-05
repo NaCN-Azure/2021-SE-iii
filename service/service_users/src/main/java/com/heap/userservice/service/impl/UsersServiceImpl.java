@@ -7,6 +7,7 @@ import com.heap.servicebase.exceptionhandler.COINException;
 import com.heap.userservice.entity.User;
 import com.heap.userservice.entity.vo.LoginVo;
 import com.heap.userservice.entity.vo.RegisterVO;
+import com.heap.userservice.entity.vo.UserInfoAdminVO;
 import com.heap.userservice.entity.vo.UserInfoVO;
 import com.heap.userservice.mapper.UsersMapper;
 import com.heap.userservice.service.UsersService;
@@ -167,6 +168,45 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         isDisabled = !isDisabled;
         user.setIsDisabled(isDisabled);
         baseMapper.updateById(user);
+    }
+
+    @Override
+    public void updateUserInfoAdmin(UserInfoAdminVO userInfoAdminVO) {
+        String id = userInfoAdminVO.getId();
+        User user = baseMapper.selectById(id);
+
+        String mobile = userInfoAdminVO.getMobile();
+
+        //看一下是否已经存在手机号
+        if(!user.getMobile().equals(mobile)) {
+            QueryWrapper<User> wrapper = new QueryWrapper<>();
+            wrapper.eq("mobile", mobile);
+            //这里不需要把数据查出来，只需要知道有没有，所以调用selectCount就行
+            Integer count = baseMapper.selectCount(wrapper);
+            if(count > 0) {
+                throw new COINException(201, "该用户已存在");
+            }
+        }
+
+        String nickname = userInfoAdminVO.getNickname();
+        String avatar = userInfoAdminVO.getAvatar();
+        Integer level = userInfoAdminVO.getLevel();
+        String sign = userInfoAdminVO.getSign();
+
+        user.setMobile(mobile);
+        user.setNickname(nickname);
+        user.setAvatar(avatar);
+        user.setLevel(level);
+        user.setSign(sign);
+
+        baseMapper.updateById(user);
+    }
+
+    @Override
+    public void addUser(User user) {
+        String password = user.getPassword();
+        user.setPassword(MD5.encrypt(password));
+        this.save(user);
     }
 
 
