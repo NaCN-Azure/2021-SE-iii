@@ -99,17 +99,18 @@
         },
         computed: {
             ...mapGetters([
+                'activeIndex',
                 'userInfo',
                 'isLogin'
             ])
         },
         methods: {
             ...mapMutations([
+                'set_activeIndex',
                 'set_userInfo',
                 'set_isLogin',
             ]),
             ...mapActions([
-                'test',
                 'logout'
             ]),
             handleCsvSuccess() {
@@ -122,6 +123,7 @@
             handleCommand(command){
                 if(command=='userCenter'){
                     // 个人中心
+                    this.set_activeIndex('3');
                     this.$router.push('/userCenter');
                 }else{
                     // logout
@@ -139,6 +141,7 @@
                 this.$router.push('/editor');
             },
             addRouterToEditor() {
+                this.set_activeIndex('2');
                 this.$router.push('/editor');
             },
             goLogin(){

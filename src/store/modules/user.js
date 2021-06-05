@@ -1,4 +1,4 @@
-import {loginAPI, getUserInfoAPI} from "../../api/users";
+import {loginAPI, getUserInfoAPI, updateAvatarAPI} from "../../api/users";
 import router, {resetRouter} from "../../router";
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import {registerAPI} from "../../api/users";

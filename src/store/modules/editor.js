@@ -5,6 +5,8 @@ import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../api/rela
 
 const editor = {
     state: {
+        // activeIndex是index和其他区域公共变量，表示导航栏当前位置
+        activeIndex:'2',
         createNodeDialogVisible: false,
         createNodeParams: {
             name: '',
@@ -67,6 +69,9 @@ const editor = {
         value: [],
     },
     mutations:{
+        set_activeIndex: function(state, data){
+            state.activeIndex = data;
+        },
         set_createNodeDialogVisible:function (state,data) {
             state.createNodeDialogVisible = data;
         },

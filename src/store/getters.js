@@ -1,5 +1,6 @@
 const getters = {
   // editor
+  activeIndex: state => state.editor.activeIndex,
   selectedDomain: state => state.editor.selectedDomain,
   createNodeDialogVisible: state => state.editor.createNodeDialogVisible,
   createNodeParams: state => state.editor.createNodeParams,

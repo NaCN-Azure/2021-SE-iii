@@ -18,6 +18,11 @@ router.beforeEach(async(to, from, next) => {
         // if is logged in, redirect to the home page
         next({path: '/'})
         NProgress.done()
+      }else if (to.path === '/userCenter'){
+          // 不这样的话，每次刷新导航按又会跳到默认工作区去
+          store.commit('set_activeIndex','3')
+          next()
+          NProgress.done()
       }
       else {
         next()

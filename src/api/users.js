@@ -51,3 +51,11 @@ export function resetPwdAPI(mobile,password) {
         method: 'post',
     })
 }
+
+export function updateAvatarAPI(avatarUpdater) {
+    return axios({
+        url: `${api.userPre}/updateAvatar`,
+        method:'post',
+        data: avatarUpdater
+    })
+}

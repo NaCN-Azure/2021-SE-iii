@@ -5,7 +5,9 @@
                     class="avatar-uploader"
                     action="http://106.15.93.81:9001/ossservice/fileoss"
                     :show-file-list="false"
-                    :on-success="handleAvatarSuccess">
+                    :on-success="handleAvatarSuccess"
+                    accept=".jpg,.jpeg,.png,.JPG,.JPEG,.PNG"
+            >
                 <img v-if="userInfo.avatar!=''" :src="userInfo.avatar" class="avatar">
                 <span v-else class="noAvatar">暂无头像</span>
                 <div class="avatarChangeNote">更换头像</div>
@@ -46,7 +48,7 @@
                             <el-button type="primary" size="small" @click="saveModifyPWD">保存</el-button>
                             <el-button size="small" @click="cancelModifyPWD">取消</el-button>
                         </el-form-item>
-                        <el-form-item v-else>
+                        <el-form-item v-if="!modify&&!changePwd">
                             <el-button type="primary" size="small" @click="modifyInfo">编辑</el-button>
                             <el-button type="primary" size="small" @click="modifyPWD">修改密码</el-button>
                         </el-form-item>
@@ -57,15 +59,16 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <div v-if="!isLogin">
+        <div v-if="!isLogin" style="font-size: 25px;color: #8c939d;margin-left: 20%;margin-top: 10%;">
             不好意思，请先登录哦~
         </div>
     </div>
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
-    import {updateUserInfoAPI, updateUserPwdAPI} from "../../api/users";
+    import {mapActions, mapGetters} from "vuex";
+    import {updateAvatarAPI, updateUserInfoAPI, updateUserPwdAPI} from "../../api/users";
+    import {Message} from "element-ui";
 
     export default {
         name: "userCenter",
@@ -77,6 +80,10 @@
                 changePwdParams:{
                     oldPWD:'',
                     newPWD:'',
+                },
+                avatarUpdater:{
+                    id:'',
+                    avatar:'',
                 }
             }
         },
@@ -88,6 +95,9 @@
             ])
         },
         methods:{
+            ...mapActions([
+                'getUserInfo',
+            ]),
             modifyInfo(){
                 this.modify = true
             },
@@ -103,6 +113,7 @@
                                 type: 'success',
                                 message: '修改成功'
                             })
+                            this.modify = false
                         } else {
                             this.$message({
                                 type: 'error',
@@ -123,6 +134,7 @@
                                 type: 'success',
                                 message: '修改成功'
                             })
+                            this.changePwd = false;
                         } else {
                             this.$message({
                                 type: 'error',
@@ -136,13 +148,26 @@
             },
             //上传成功的方法
             handleAvatarSuccess(res) {
-                console.log(this.userInfo)
-                this.userInfo.avatar = res.url
-                this.$message({
-                    type: "success",
-                    message: '修改成功'
+                console.log("avatar",res.data.url);
+                this.avatarUpdater = {
+                    id: this.userInfo.id,
+                    avatar: res.data.url
+                }
+                updateAvatarAPI(this.avatarUpdater).then(res =>{
+                    console.log("res",res);
+                    if(res.data.code == 200){
+                        this.getUserInfo();
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        })
+                    }else{
+                        this.$message({
+                            message:'修改失败',
+                            type:'error'
+                        })
+                    }
                 })
-                console.log(this.userInfo)
             },
         }
     }
