@@ -40,29 +40,34 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         //判断手机号是否正确
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("mobile", mobile);
-        User mobileMember = baseMapper.selectOne(wrapper);
-        if(mobileMember == null) {
+        User user = baseMapper.selectOne(wrapper);
+        if(user == null) {
             throw new COINException(201, "该手机号不存在");
+        }
+
+        //判断该用户是否被封禁
+        if(user.getIsDisabled()) {
+            throw new COINException(201, "该用户封禁中");
         }
 
         //判断密码
         //因为存储到数据库的密码是加密的
         //所以需要把输入的密码进行加密，再和数据库中的密码进行比较
         //加密方式：MD5
-        if(!MD5.encrypt(password).equals(mobileMember.getPassword())) {
+        if(!MD5.encrypt(password).equals(user.getPassword())) {
             throw new COINException(201, "密码错误");
         }
 
         //判断用户是否被禁用
-        if(mobileMember.getIsDisabled()) {
+        if(user.getIsDisabled()) {
             throw new COINException(201, "该用户被禁用");
         }
 
         //执行到这里即登录成功
 
         //生成token字符串，使用jwt工具类
-        String token = JwtUtils.getJwtToken(mobileMember.getId(), mobileMember.getNickname());
-        String id = mobileMember.getId();
+        String token = JwtUtils.getJwtToken(user.getId(), user.getNickname());
+        String id = user.getId();
         String[] res = new String[2];
         res[0] = token;
         res[1] = id;
