@@ -1,5 +1,6 @@
 <template>
     <div class="register-container">
+        <el-button icon="el-icon-back" type="primary" plain round size="small" @click="backToLogin" style="margin: 10px 20px">返回</el-button>
         <div class="register-box">
             <div class="register-title">
                 <img src="../assets/register.png">
@@ -61,6 +62,9 @@
             ...mapActions([
                 'register'
             ]),
+            backToLogin(){
+                this.$router.push('/login');
+            },
             handleRegister(){
                 if(this.checkMobile()&&this.checkName()&&this.checkPwd()) {
                     this.registerLoading = true;

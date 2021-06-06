@@ -3,7 +3,7 @@ import store from './store'
 import { getToken } from '@/utils/auth'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-const whiteList = ['/login','/home'] // no redirect whitelist， 首页可以不用登录直接访问
+const whiteList = ['/login','/home','/register'] // no redirect whitelist， 首页可以不用登录直接访问
 router.beforeEach(async(to, from, next) => {
     // start progress bar
     NProgress.start()
