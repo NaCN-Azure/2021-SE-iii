@@ -14,7 +14,8 @@ pipeline {
 	            echo 'Build Stage'
 	            sh "npm install"
 	            sh "npm install d3 --save-dev"
-	            sh "npm update -g"
+	            sh "npm i -g n --force"
+	            sh "n latest"
 	            sh "yarn install"
 	            sh "yarn upgrade"
                 sh "npm run build"
