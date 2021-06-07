@@ -15,6 +15,7 @@ pipeline {
 	            sh "npm install"
 	            sh "npm install d3 --save-dev"
 	            sh "yarn install"
+	            sh "yarn upgrade"
                 sh "npm run build"
 	        }
 	    }
