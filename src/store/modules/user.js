@@ -1,4 +1,4 @@
-import {loginAPI, getUserInfoAPI, updateAvatarAPI} from "../../api/users";
+import {loginAPI, getUserInfoAPI, updateAvatarAPI, closeAccountAPI} from "../../api/users";
 import router, {resetRouter} from "../../router";
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import {registerAPI} from "../../api/users";
@@ -127,6 +127,23 @@ const user = {
             resetRouter()
             commit('reset_state')
         },
+        closeAccount: async ({state,commit}) => {
+            const res = await closeAccountAPI(state.userInfo.id);
+            console.log(res);
+            if(res.data.code == 200){
+                Message({
+                    message:'注销成功',
+                    type:'success',
+                })
+                removeToken();
+                commit('reset_state');
+            }else{
+                Message({
+                    message:'注销失败',
+                    type:'error',
+                })
+            }
+        }
     }
 }
 

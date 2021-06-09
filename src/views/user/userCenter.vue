@@ -51,6 +51,7 @@
                         <el-form-item v-if="!modify&&!changePwd">
                             <el-button type="primary" size="small" @click="modifyInfo">编辑</el-button>
                             <el-button type="primary" size="small" @click="modifyPWD">修改密码</el-button>
+                            <el-button type="primary" size="small" @click="deleteMyself">注销</el-button>
                         </el-form-item>
                     </el-form>
                 </el-tab-pane>
@@ -66,8 +67,8 @@
 </template>
 
 <script>
-    import {mapActions, mapGetters} from "vuex";
-    import {updateAvatarAPI, updateUserInfoAPI, updateUserPwdAPI} from "../../api/users";
+    import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {closeAccountAPI, updateAvatarAPI, updateUserInfoAPI, updateUserPwdAPI} from "../../api/users";
     import {Message} from "element-ui";
 
     export default {
@@ -97,6 +98,7 @@
         methods:{
             ...mapActions([
                 'getUserInfo',
+                'closeAccount'
             ]),
             modifyInfo(){
                 this.modify = true
@@ -169,6 +171,15 @@
                     }
                 })
             },
+            deleteMyself(){
+                this.$confirm('此操作将注销当前账户并清除其所有图谱（不可恢复），是否继续？',{
+                    confirmButtonText:'确认',
+                    cancelButtonText:'取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.closeAccount();
+                })
+            }
         }
     }
 </script>

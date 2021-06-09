@@ -59,3 +59,10 @@ export function updateAvatarAPI(avatarUpdater) {
         data: avatarUpdater
     })
 }
+
+export function closeAccountAPI(id){
+    return axios({
+        url:`${api.userPre}/deleteUser/${id}`,
+        method: 'delete',
+    })
+}
