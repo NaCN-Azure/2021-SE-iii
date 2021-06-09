@@ -49,7 +49,7 @@ public class User implements Serializable {
     private Boolean isDisabled;
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除，0（false）未删除")
-    @TableLogic
+    //@TableLogic
     private Boolean isDeleted;
 
     @ApiModelProperty(value = "用户签名")

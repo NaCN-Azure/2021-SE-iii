@@ -34,4 +34,6 @@ public interface UsersService extends IService<User> {
     void updateUserInfoAdmin(UserInfoAdminVO userInfoAdminVO);
 
     void addUser(User user);
+
+    void deleteUser(String id);
 }

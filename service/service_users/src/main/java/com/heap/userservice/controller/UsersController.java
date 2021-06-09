@@ -160,8 +160,8 @@ public class UsersController {
     //删除用户
     @DeleteMapping("deleteUser/{id}")
     public Result deleteUser(@PathVariable String id) {
-        boolean flag = usersService.removeById(id);
-        return flag ? Result.ok() : Result.error();
+        usersService.deleteUser(id);
+        return Result.ok();
     }
 
     //添加用户

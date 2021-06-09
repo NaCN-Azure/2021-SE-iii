@@ -216,5 +216,10 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         this.save(user);
     }
 
+    @Override
+    public void deleteUser(String id) {
+        baseMapper.deleteById(id);
+    }
+
 
 }
