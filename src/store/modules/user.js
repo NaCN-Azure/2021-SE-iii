@@ -117,7 +117,7 @@ const user = {
                 dispatch('login',loginData);
             }else{
                 Message({
-                    message:'注册失败',
+                    message:res.data.message,
                     type:'error'
                 })
             }
