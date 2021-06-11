@@ -6,6 +6,7 @@ import com.heap.coinservice.service.DomainService;
 import com.heap.coinservice.service.FileService;
 import com.heap.coinservice.utils.FileUtil;
 import com.heap.commonutils.Result;
+import com.heap.servicebase.exceptionhandler.COINException;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,28 +30,33 @@ public class FileController {
     @Autowired
     private DomainService domainService;
 
-    @PostMapping("/getCsv/{user_id}")
-    public Result getCsvFile(@RequestParam(value="file", required = true) MultipartFile file,String user_id) throws IOException {
+    @PostMapping("/getCsv/{userId}")
+    public Result getCsvFile(@RequestParam(value="file") MultipartFile file, @PathVariable String userId) throws IOException {
         List<List<String>> content = FileUtil.readCsv(file);
-        Domain csvDomain = Domain.builder().name(file.getOriginalFilename()).userId(user_id).build();
+        Domain csvDomain = Domain.builder().name(file.getOriginalFilename()).userId(userId).build();
         int domainId = domainService.createDomain(csvDomain);
-        return fileService.createGraphByCsv(content, domainId) ? Result.ok().message("导入成功") : Result.error().message("导入失败");
+        boolean flag = fileService.createGraphByCsv(content, domainId);
+        if(!flag) {
+            throw new COINException(201, "导入失败");
+        }
+        return Result.ok().message("导入成功");
     }
 
     @PostMapping("/getJsonCompany")
-    public Result getJsonCompany (@RequestParam(value="file", required = true) MultipartFile file) throws IOException{
+    public Result getJsonCompany (@RequestParam(value="file") MultipartFile file) throws IOException{
         JSONArray jsonArray = FileUtil.readJsonCompany(file);
         Domain jsonDomain = Domain.builder().name(file.getOriginalFilename()).build();
         int domainId = domainService.createDomain(jsonDomain);
-        return fileService.createJsonCompany(jsonArray,domainId)?
-                Result.ok().message("导入成功") : Result.error().message("导入失败");
-
+        boolean flag = fileService.createJsonCompany(jsonArray, domainId);
+        if(!flag) {
+            throw new COINException(201, "导入失败");
+        }
+        return Result.ok().message("导入成功");
     }
 
-    @GetMapping(value="/exportXml/{domainId}", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "/exportXml/{domainId}", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Result exportGraphXML(@PathVariable int domainId, final HttpServletRequest request, final HttpServletResponse response)
-            throws FileNotFoundException, SAXException, TransformerConfigurationException {
+    public Result exportGraphXML(@PathVariable int domainId, final HttpServletRequest request, final HttpServletResponse response) throws FileNotFoundException, SAXException, TransformerConfigurationException {
         return fileService.exportGraphXml(domainId) ? Result.ok().message("输出成功") : Result.error().message("输出失败");
     }
 

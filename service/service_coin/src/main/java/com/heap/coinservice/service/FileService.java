@@ -33,7 +33,7 @@ public interface FileService {
      * @param domainId
      * @return
      */
-    boolean createJsonCompany(JSONArray jsonArray,int domainId);
+    boolean createJsonCompany(JSONArray jsonArray, int domainId);
 
     /**
      * 导出图谱为csv文件
