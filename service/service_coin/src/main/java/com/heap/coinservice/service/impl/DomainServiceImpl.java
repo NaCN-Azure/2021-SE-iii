@@ -43,7 +43,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
     @Override
     public int createDomain(Domain domain){
-        Domain checkDomain = domainMapper.selectDomainByName(domain.getName(),domain.getUserId());
+        Domain checkDomain = domainMapper.selectDomainByName(domain.getName(),domain.getUser_id());
         if(checkDomain != null){
             return -1;
         }

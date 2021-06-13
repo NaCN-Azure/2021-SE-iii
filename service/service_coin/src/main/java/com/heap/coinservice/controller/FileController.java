@@ -33,7 +33,7 @@ public class FileController {
     @PostMapping("/getCsv/{userId}")
     public Result getCsvFile(@RequestParam(value="file") MultipartFile file, @PathVariable String userId) throws IOException {
         List<List<String>> content = FileUtil.readCsv(file);
-        Domain csvDomain = Domain.builder().name(file.getOriginalFilename()).userId(userId).build();
+        Domain csvDomain = Domain.builder().name(file.getOriginalFilename()).user_id(userId).build();
         int domainId = domainService.createDomain(csvDomain);
         boolean flag = fileService.createGraphByCsv(content, domainId);
         if(!flag) {

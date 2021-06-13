@@ -24,7 +24,7 @@ public class Domain implements Serializable {
     private String name;
 
     @ApiModelProperty(value = "所属用户id")
-    private String userId;
+    private String user_id;
 
     @ApiModelProperty(value = "逻辑删除 1（true）已删除，0（false）未删除")
     @TableLogic
