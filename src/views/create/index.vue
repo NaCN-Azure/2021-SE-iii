@@ -17,19 +17,15 @@
         <div class="createPane">
         <el-tabs v-model="createType"
                  type="border-card"
-                 class="createTab"
-                 @tab-click="handleClick">
+                 class="createTab">
             <el-tab-pane label="上传csv文件" name="importCSV">
                 csv文件格式：节点-节点-关系 三元组
                 <el-upload
                         drag
-                        action="http://106.15.93.81:8002/coinservice/file/getCsv"
+                        :action="uploadUrl"
                         class="uploading"
-                        on-success="handleCsvSuccess"
-                        data="uploadParam"
+                        :on-success="handleCsvSuccess"
                         accept=".csv"
-                        :auto-upload=false
-                        ref="upload"
                 >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -40,9 +36,10 @@
                 <el-upload
                         drag
                         class="uploading"
-                        on-success="jsonsuccess"
+                        :on-success="handleJsonSuccess"
                         accept=".json"
-                        auto-upload="false"
+                        :auto-upload="false"
+                        :action="uploadUrl"
                 >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -54,9 +51,9 @@
                         drag
                         :action="uploadUrl"
                         class="uploading"
-                        on-success="xmlsuccess"
+                        :on-success="handleXmlSuccess"
                         accept=".xml"
-                        auto-upload="false"
+                        :auto-upload="false"
                 >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -95,6 +92,7 @@
                 createType: 'importCSV',
                 extractedText: '',
                 uploadParam: {},
+                // uploadURL:"http://106.15.93.81:8002/coinservice/file/getCsv/"+this.userInfo.id,
             }
         },
         computed: {
@@ -102,7 +100,10 @@
                 'activeIndex',
                 'userInfo',
                 'isLogin'
-            ])
+            ]),
+            uploadUrl(){
+                return "http://106.15.93.81:8002/coinservice/file/getCsv/"+this.userInfo.id
+            }
         },
         methods: {
             ...mapMutations([
@@ -113,12 +114,18 @@
             ...mapActions([
                 'logout'
             ]),
-            handleCsvSuccess() {
-                this.$refs.upload.clearFiles();
+            handleCsvSuccess(res) {
+                console.log(res);
                 this.$message({
                     message: '导入中',
                     type: 'success'
                 })
+            },
+            handleJsonSuccess(res) {
+                console.log(res);
+            },
+            handleXmlSuccess(res) {
+                console.log(res);
             },
             handleCommand(command){
                 if(command=='userCenter'){

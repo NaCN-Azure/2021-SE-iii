@@ -5,6 +5,7 @@
             title="新建图谱"
             class="dialog"
             :before-close="cancelAddDomain"
+            width="30%"
     >
         <el-tabs type="border-card" v-model="addDomainType">
             <el-tab-pane label="创建空白图谱" name="empty">
@@ -12,7 +13,7 @@
                     <el-form-item label="图谱名称">
                         <el-input
                                 placeholder="请填写图谱名称"
-                                v-model="addDomainParams.name"
+                                v-model="addDomainName"
                         ></el-input>
                     </el-form-item>
                 </el-form>
@@ -48,18 +49,14 @@
         data(){
             return {
                 addDomainType:'empty',
-                addDomainParams: {
-                    id:1,
-                    name:'',
-                    user_id: this.userInfo.id,
-                },
+                addDomainName:'',
             }
         },
         computed:{
             ...mapGetters([
                 'addDomainDialogVisible',
                 'userInfo',
-            ])
+            ]),
         },
         methods:{
             ...mapMutations([
@@ -69,22 +66,27 @@
                 'getAllDomains',
                 'addDomain',
             ]),
-            clearAddDomainParams(){
-                this.addDomainParams = {
-                    id:1,
-                    name:'',
-                    user_id: this.userInfo.id,
-                }
-            },
+            // clearAddDomainParams(){
+            //     this.addDomainParams = {
+            //         id:1,
+            //         name:'',
+            //         user_id: this.userInfo.id,
+            //     }
+            // },
             cancelAddDomain(){
                 this.set_addDomainDialogVisible(false);
-                this.clearAddDomainParams();
+                this.addDomainName = '';
             },
             submitAddDomain(){
                 if(this.addDomainType=='empty'){
                     // 创建空白图谱
-                    this.addDomain(this.addDomainParams);
-                    this.clearAddDomainParams();
+                    const addDomainParams = {
+                        id:1,
+                        name: this.addDomainName,
+                        user_id: this.userInfo.id,
+                    }
+                    this.addDomain(addDomainParams);
+                    this.addDomainName = '';
                 }else{
                     // 导入文件创建图谱
                     this.set_addDomainDialogVisible(false);

@@ -211,14 +211,16 @@ const editor = {
         },
         // 添加图谱提交
         addDomain: async ({ state, commit, dispatch}, data) => {
+            console.log("adddomaindata",data);
             const res = await createDomainAPI(data);
+            console.log("adddomain",res);
             if(res.data.code == 200){
                 Message({
                     message:'添加成功',
                     type: 'success'
                 })
                 commit('set_addDomainDialogVisible', false);
-                dispatch('getAllDomains');
+                dispatch('getAllDomains',data.user_id);
             }else{
                 Message({
                     message:'添加失败',
