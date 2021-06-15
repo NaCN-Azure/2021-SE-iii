@@ -56,7 +56,7 @@ class Question():
         # 训练分类器
         self.classify_model=Question_classify()
         # 读取问题模板
-        with(open("./data/question/question_classification.txt","r",encoding="utf-8-sig")) as f:
+        with(open("service/robot/ques/data/question/question_classification.txt","r",encoding="utf-8-sig")) as f:
             question_mode_list=f.readlines()
         self.question_mode_dict={}
         for one_mode in question_mode_list:
@@ -83,7 +83,7 @@ class Question():
     # 分词和词性标注
     def question_posseg(self):
         # 添加自定义词典
-        jieba.load_userdict("./data/extract.txt")
+        jieba.load_userdict("service/robot/ques/data/extract.txt")
         # 去除无用标点符号
         clean_question = re.sub("[\s+\.\!\/_,$%^*(+\"\')]+|[+——()?【】“”！，。？、~@#￥%……&*（）]+","",self.raw_question)
         self.clean_question=clean_question
