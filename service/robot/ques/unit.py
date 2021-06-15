@@ -167,7 +167,7 @@ class Question():
 
     def get_question_template(self):
         # 抽象问题
-        for item in ['nne']:
+        for item in ['nr','ns','n']:
             while (item in self.question_flag):
                 ix=self.question_flag.index(item) # 查找相应词性的位置
                 self.question_word[ix]=item # 词替换为词性
@@ -198,7 +198,9 @@ class QuestionTemplate():
     def __init__(self):
         self.q_template_dict={
             0:self.get_entity_near,
-            1:self.get_entity_description
+            1:self.get_entity_description,
+            2:self.get_relationship,
+            3:self.get_another
         }
         self.graph = Query()
     def get_question_answer(self,question,template):
@@ -231,13 +233,36 @@ class QuestionTemplate():
                 break
         entity_name = self.question_word[tag_index]
         return entity_name
+
+    def get_entity_name_last(self):
+        tag_index = 0
+        for i in range(len(self.question_flag)):
+            if(self.question_flag[-(i+1)].startswith('n')):
+                tag_index = i
+                break
+        entity_name = self.question_word[-(1+tag_index)]
+        return entity_name
+
     # 0:节点
     def get_entity_near(self):
-        entity_name = self.get_entity_name()
-        return entity_name
+        answer =  self.get_entity_name()
+        list = []
+        list.append(answer)
+        return list
     # 1:描述节点
     def get_entity_description(self):
-        return self.get_entity_name()
+        return self.get_entity_near()
+
+    def get_relationship(self):
+        start = self.get_entity_name()
+        end = self.get_entity_name_last()
+        list=[]
+        list.append(start)
+        list.append(end)
+        return list
+
+    def get_another(self):
+        return self.get_relationship()
 
 def ques(ask_question):
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer,encoding='utf-8')
@@ -248,7 +273,9 @@ def ques(ask_question):
     # enablePrint()
     result=que.question_process(ask_question)
     print(result["AnswerType"])
-    print(result["AnswerMember"])
+    list = result["AnswerMember"]
+    for item in list:
+        print(item)
 
 if __name__ =='__main__':
     ques(sys.argv[1])

@@ -49,7 +49,6 @@ public class QuestionServiceImpl implements QuestionService {
             }
             in.close();
             int result = process.waitFor();
-            System.out.println("执行结果："+result);
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,28 +67,53 @@ public class QuestionServiceImpl implements QuestionService {
                 case 1:
                     finalAnswer = getNodeDescription(domainId,commands.get(1));
                     break;
+                case 2:
+                    finalAnswer = getRelationWithTwoNodes(domainId,commands.get(1),commands.get(2));
+                    break;
+                case 3:
+                    finalAnswer = getTargetNodes(domainId,commands.get(1),commands.get(2));
+                    break;
                 default:
-                    finalAnswer = "爷不知道";
+                    finalAnswer = "我不知道哎~或许你可以换个问法。";
             }
             return finalAnswer;
         }
         catch (Exception e){
-            return "爷不知道";
+            return "我不知道哎~或许你可以换个问法。";
         }
     }
 
     private String getNodesNear(int domainId,String nodeName){
-        List<Relationship> relationships = questionMapper.getNodesNear(domainId,nodeName);
+        List<String> results = questionMapper.getNodesNear(domainId,nodeName);
         String finalAnswer ="";
-        for(Relationship r:relationships){
-            finalAnswer=finalAnswer+r.getEndEntity().getName()+",";
+        for(String r:results){
+            finalAnswer=finalAnswer+r+",";
         }
         finalAnswer = finalAnswer.substring(0,finalAnswer.length()-1)+"。";
         return finalAnswer;
     }
 
     private String getNodeDescription(int domainId,String nodeName){
-        return questionMapper.getNodeDesciption(nodeName,domainId);
+        String finalAnswer ="我得到的信息如下：\n";
+        Entity entity= questionMapper.getNodeDesciption(nodeName,domainId);
+        finalAnswer = finalAnswer + "节点名称："+entity.getName()+"\n";
+        finalAnswer = finalAnswer + "节点类型："+entity.getType()+"\n";
+        finalAnswer = finalAnswer + "节点描述："+entity.getDescription()+"\n";
+        return finalAnswer;
+    }
+
+    private String getRelationWithTwoNodes(int domainId,String name1,String name2){
+        return questionMapper.getLinkWithTwoNodes(domainId,name1,name2);
+    }
+
+    private String getTargetNodes(int domainId,String entityName,String linkName){
+        List<String> names = questionMapper.getTargetNodes(domainId,entityName,linkName);
+        String finalAnswer ="";
+        for(String name:names){
+            finalAnswer=finalAnswer+name+",";
+        }
+        finalAnswer = finalAnswer.substring(0,finalAnswer.length()-1)+"。";
+        return finalAnswer;
     }
 
 }

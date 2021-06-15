@@ -7,7 +7,7 @@ import java.io.*;
 public class PythonTest {
     public static void main(String[] args) {
         try{
-            String question = "皮卡丘的简介";
+            String question = "关东地区的宝可梦有哪些";
             String exe = "python";
             String command = "service/robot/ques/unit.py";
             String[] cmdArr = new String[]{exe,command,question};
