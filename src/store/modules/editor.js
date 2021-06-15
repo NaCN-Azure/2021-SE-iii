@@ -15,6 +15,7 @@ const editor = {
             type: '',
             description: '',
             r: 40,
+            fontSize: 20,
         },
         editNodeDialogVisible: false,
         editNodeParams:{
@@ -28,7 +29,7 @@ const editor = {
             x:0.0,
             y:0.0,
             r: '',
-            fontSize: 20,
+            fontSize: '',
         },
         addDomainDialogVisible: false,
         createLinkDialogVisible: false,

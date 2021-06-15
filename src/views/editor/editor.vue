@@ -117,9 +117,11 @@
             <div class="graphInfo">
                 <!-- 显示当前图谱名称，可以在这里对图谱名称进行修改 TODO-->
                 <div class="graphInfo-item" v-show="selectedDomain.name!=''">
-                    当前图谱：<el-input v-model="selectedDomain.name" size="small" style="width: 100px"></el-input>
+                    当前图谱：
+                    <span v-if="!editDomainName">{{selectedDomain.name}}</span>
+                    <el-input v-if="editDomainName" v-model="selectedDomain.name" size="small" style="width: 100px"></el-input>
                 </div>
-                <div class="graphInfo-item" v-show="selectedNode.name!=''" style="width: 100px">
+                <div class="graphInfo-item" v-show="selectedNode.name!=''" style="width: 150px">
                     <span class="">选中节点：</span>
                     <span>{{selectedNode.name}}</span>
                 </div>
@@ -223,7 +225,7 @@
                     nodeType:'',
                     description:'',
                     r: '',
-                    fontSize: 20,  //字体大小
+                    fontSize: '',  //字体大小
                 },
                 selectedLink:{
                     id:'',
@@ -256,6 +258,8 @@
 
                 isCollapse: true,
                 typeValue: [],
+
+                editDomainName: false,
             }
         },
 
@@ -380,8 +384,8 @@
 
                 //节点内容初始化
                 //分两步走，首先将没有标记的节点渲染，再将标记的节点渲染
-                this.nodeText = this.drawNodeText(g, nodesData, _this, 'black', 20, false)
-                this.nodeTextWithColor = this.drawNodeText(g, colorNodes, _this, nodeTextColor, 20, true)
+                this.nodeText = this.drawNodeText(g, nodesData, _this, 'black', false)
+                this.nodeTextWithColor = this.drawNodeText(g, colorNodes, _this, nodeTextColor, true)
 
                 this.simulation.on("tick", () => {
                     this.links.attr("d", function(d) {
@@ -736,7 +740,7 @@
                     })
             },
 
-            drawNodeText(g, nodesData, that, textColor, fontSize, bold) {
+            drawNodeText(g, nodesData, that, textColor, bold) {
                 const nodeText =  g.append("g")
                                     .selectAll("text")
                                     .data(nodesData)
@@ -752,12 +756,14 @@
                                     .attr("dx", function (d) {
                                         //现在后端没有fontSize，前端就先给出来，到迭代三再加入
                                         // d.fontSize = 20
-                                        return (d.r/2 + fontSize)/2*(-1)
+                                        return (d.r/2 + d.fontSize)/2*(-1)
                                     })
                                     .attr("dy", function (d) {
-                                        return d.r + fontSize - 5
+                                        return d.r + d.fontSize - 5
                                     })
-                                    .style("font-size", fontSize)
+                                    .style("font-size", function (d) {
+                                        return d.fontSize
+                                    })
                                     .attr("class", "node-name")
                                     .attr("fill", textColor)
                                     .on("contextmenu", function (d, i) {
@@ -797,7 +803,7 @@
                         r: 40,
                         x: 200,
                         y: 100,
-                        fontSize: 20,
+                        fontSize: 18,
                     })
                     this.set_createNodeDialogVisible(true);
                 }
