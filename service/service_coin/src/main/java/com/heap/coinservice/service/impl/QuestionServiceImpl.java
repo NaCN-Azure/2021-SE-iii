@@ -73,6 +73,9 @@ public class QuestionServiceImpl implements QuestionService {
                 case 3:
                     finalAnswer = getTargetNodes(domainId,commands.get(1),commands.get(2));
                     break;
+                case 4:
+                    finalAnswer = getTypesNodes(domainId,commands.get(1));
+                    break;
                 default:
                     finalAnswer = "我不知道哎~或许你可以换个问法。";
             }
@@ -111,6 +114,16 @@ public class QuestionServiceImpl implements QuestionService {
         String finalAnswer ="";
         for(String name:names){
             finalAnswer=finalAnswer+name+",";
+        }
+        finalAnswer = finalAnswer.substring(0,finalAnswer.length()-1)+"。";
+        return finalAnswer;
+    }
+
+    private String getTypesNodes(int domainId,String type){
+        List<String> results = questionMapper.getTypeNodes(type,domainId);
+        String finalAnswer ="";
+        for(String r:results){
+            finalAnswer=finalAnswer+r+",";
         }
         finalAnswer = finalAnswer.substring(0,finalAnswer.length()-1)+"。";
         return finalAnswer;

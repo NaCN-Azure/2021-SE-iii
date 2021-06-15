@@ -35,4 +35,7 @@ public interface QuestionMapper extends Neo4jRepository<Entity,Long> {
     @Query("MATCH (n{domainId:{0}})-[r]-(m{domainId:{0}}) where n.name={1} and r.name = {2} RETURN m.name")
     List<String> getTargetNodes(@Param("domainId") int domainId,@Param("nodeName") String nodeName,@Param("linkName") String linkName);
 
+    @Query("MATCH (n) where n.type = {0} and n.domainId = {1} return n.name")
+    List<String> getTypeNodes(@Param("type") String type, @Param("domainId") int domainId);
+
 }

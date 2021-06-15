@@ -48,14 +48,14 @@ public class FileServiceImpl implements FileService {
                 Entity startNode, endNode;
                 Entity check = entityService.findByName(points.get(0), domainId,true);
                 if(check == null) {
-                    startNode = entityService.createNode(points.get(0),DefaultUtil.DEFAULT_SHAPE, DefaultUtil.DEFAULT_TYPE, domainId, DefaultUtil.DEFAULT_DESCRIPTION, DefaultUtil.DEFAULT_R, DefaultUtil.DEFAULT_FONT);
+                    startNode = entityService.createNode(points.get(0),DefaultUtil.DEFAULT_SHAPE, points.get(3), domainId, DefaultUtil.DEFAULT_DESCRIPTION, DefaultUtil.DEFAULT_R, DefaultUtil.DEFAULT_FONT);
                 }
                 else {
                     startNode = check;
                 }
                 check = entityService.findByName(points.get(1), domainId,true);
                 if(check == null) {
-                    endNode = entityService.createNode(points.get(1), DefaultUtil.DEFAULT_SHAPE, DefaultUtil.DEFAULT_TYPE, domainId, DefaultUtil.DEFAULT_DESCRIPTION, DefaultUtil.DEFAULT_R, DefaultUtil.DEFAULT_FONT);
+                    endNode = entityService.createNode(points.get(1), DefaultUtil.DEFAULT_SHAPE, points.get(4), domainId, DefaultUtil.DEFAULT_DESCRIPTION, DefaultUtil.DEFAULT_R, DefaultUtil.DEFAULT_FONT);
                 }
                 else {
                     endNode = check;

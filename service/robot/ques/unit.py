@@ -200,7 +200,8 @@ class QuestionTemplate():
             0:self.get_entity_near,
             1:self.get_entity_description,
             2:self.get_relationship,
-            3:self.get_another
+            3:self.get_another,
+            4:self.get_type_node
         }
         self.graph = Query()
     def get_question_answer(self,question,template):
@@ -263,6 +264,9 @@ class QuestionTemplate():
 
     def get_another(self):
         return self.get_relationship()
+
+    def get_type_node(self):
+        return self.get_entity_near()
 
 def ques(ask_question):
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer,encoding='utf-8')
