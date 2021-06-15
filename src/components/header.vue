@@ -11,7 +11,7 @@
                 active-text-color="#1e90ff"
         >
             <el-menu-item class="nav-item" index="1">
-                <router-link to="/home">
+                <router-link to="/home" class="nav-link">
                     <i class="el-icon-s-home"></i>
                     <span class="nav-name">首页</span>
                 </router-link>
@@ -22,16 +22,22 @@
                     <span class="nav-name">工作区</span>
                 </router-link>
             </el-menu-item>
+            <el-menu-item class="nav-item" index="3">
+                <router-link to="/userCenter">
+                    <i class="el-icon-user"></i>
+                    <span class="nav-name">个人中心</span>
+                </router-link>
+            </el-menu-item>
         </el-menu>
 <!--        用户信息-->
         <div class="right-info">
-            <el-dropdown v-if="isLogin">
-                <div>
+            <el-dropdown @command="handleCommand" v-if="isLogin">
+                <div class="user">
                     <el-avatar :src=userInfo.avatar alt="user" :size="45" v-if="isLogin"></el-avatar>
                     <span class="username">{{userInfo.nickname}}</span>
                 </div>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="personalInfo">个人中心</el-dropdown-item>
+                    <el-dropdown-item command="userCenter">个人中心</el-dropdown-item>
                     <el-dropdown-item command="logout">退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -41,7 +47,8 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
+    import {mapActions, mapGetters, mapMutations} from "vuex";
+    import cookie from "js-cookie";
 
     export default {
         name: "header.vue",
@@ -50,14 +57,43 @@
         },
         data(){
             return{
-                activeIndex:'2'
             }
         },
         computed:{
             ...mapGetters([
+                'activeIndex',
                 'userInfo',
-                'isLogin'
+                'isLogin',
             ])
+        },
+        methods:{
+            ...mapMutations([
+                'set_activeIndex',
+                'set_userInfo',
+                'set_isLogin'
+            ]),
+            ...mapActions([
+                'logout',
+            ]),
+            goLogin(){
+                this.$router.push('/login');
+            },
+            handleCommand(command){
+                if(command=='userCenter'){
+                    // 个人中心
+                    this.set_activeIndex('3');
+                    console.log(this.activeIndex);
+                    this.$router.push('/userCenter');
+                }else{
+                    // logout
+                    // cookie.set('coin_token', '')
+                    // cookie.set('coin_user', '')
+                    // this.set_userInfo('')
+                    // this.set_isLogin(false)
+                    // this.$router.push('/home')
+                    this.logout();
+                }
+            },
         }
     }
 </script>
@@ -100,7 +136,10 @@
     a{
         text-decoration: none;
     }
+    a.nav-link{
+    }
     .right-info{
+        height: 100%;
         margin-right: 30px;
     }
     .user{

@@ -35,9 +35,9 @@
                 <el-input v-model="createNodeParams.r" style="width: 330px"></el-input>
             </el-form-item> -->
             <el-form-item label="所属图谱">
-                <el-select 
-                    v-model="createNodeParams.domainId" 
-                    disabled 
+                <el-select
+                    v-model="createNodeParams.domainId"
+                    disabled
                     placeholder="">
                     <el-option
                         v-for="item in domainList"
@@ -84,7 +84,7 @@
                 this.set_createNodeDialogVisible(false);
             },
             submitCreateNode(){
-                console.log(this.createNodeParams)
+                console.log("creating node",this.createNodeParams)
                 createNodeAPI(this.createNodeParams)
                     .then(res => {
                         if(res.data.code == 200){

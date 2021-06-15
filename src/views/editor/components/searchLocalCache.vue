@@ -4,13 +4,14 @@
             <el-col :span="8" class="center">
                 <el-input
                         v-model="search"
+                        size="small"
                         @focus="focus"
                         @blur="blur"
                         @keyup.enter.native="searchHandler"
                         placeholder="搜索感兴趣的内容..."
-                        style="width: 350px;"
+                        style="width: 300px;"
                 >
-                    <el-button slot="append" icon="el-icon-search" style="color:white;" id="search" @click="searchHandler"></el-button>
+                    <el-button slot="append" size="small" icon="el-icon-search" style="color:white;" id="searchBtn" @click="searchHandler"></el-button>
                 </el-input>
                 <!---设置z-index优先级,防止被走马灯效果遮挡-->
                 <el-card
@@ -166,8 +167,8 @@
 
 <style scoped>
     .center {
-        margin-top: 15px;
-        margin-left: 20px;
+        /*margin-top: 15px;*/
+        /*margin-left: 20px;*/
     }
     .whole{
         display: block;
@@ -175,11 +176,11 @@
     }
     .search{
         /*border: solid 1px black;*/
-        height: 70px;
+        height: 50px;
         width: 300px;
         padding-right: 20px;
     }
-    #search {
+    #searchBtn {
         background-color: rgb(64,158,255);
         border-radius: 0%;
     }

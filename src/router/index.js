@@ -4,6 +4,13 @@ import Create from '../views/create/index'
 import Editor from '../views/editor/editor'
 import Login from '../views/login'
 import Register from '../views/register'
+import UserCenter from '../views/user/userCenter'
+
+// 解决ElementUI导航栏中的vue-router在3.0版本以上重复点菜单报错问题
+// const originalPush = VueRouter.prototype.push
+// VueRouter.prototype.push = function push(location) {
+//   return originalPush.call(this, location).catch(err => err)
+// }
 
 Vue.use(VueRouter)
 const routes = [
@@ -14,7 +21,7 @@ const routes = [
   {
     path: '/home',
     name: '首页',
-    component: Create
+    component: Create,
   },
   {
     path: '/login',
@@ -37,35 +44,13 @@ const routes = [
         name:'editor',
         component: Editor
       },
+      {
+        path: '/userCenter',
+        name: 'userCenter',
+        component: UserCenter
+      }
     ]
   },
-  // {
-  //   path: '/',
-  //   redirect: '/NJUSE'
-  // },
-  // {
-  //   path: '/NJUSE',
-  //   name: 'layout',
-  //   redirect: '/hotel/hotelList',
-  //   component: ()=> import('@/views/layout'),
-  //   children: [
-  //     {
-  //       path: '/admin/manageUser',
-  //       name: 'manageUser',
-  //       component: () => import('@/views/admin/manageUser')
-  //     },
-  //     {
-  //       path: '/admin/manageAllHotel',
-  //       name: 'manageAllHotel',
-  //       component: ()=>import('@/views/admin/manageAllHotel')
-  //     },
-  //     {
-  //       path: '/marketer/marketing',
-  //       name: 'marketing',
-  //       component: () => import('@/views/marketer/marketing')
-  //     },
-  //   ]
-  // },
 ]
 const createRouter = () => new VueRouter({
   // mode: 'history', // require service support

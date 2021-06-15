@@ -47,40 +47,55 @@
         <div class="edit-pane">
             <!--编辑面板头部，包括一些操作和节点信息的显示-->
             <div class="edit-tools">
-                <!-- 显示当前图谱名称，可以在这里对图谱名称进行修改 TODO-->
-                <div class="edit-tool" v-show="selectedDomain.name!=''" style="display: flex">
-                    当前图谱：<el-input v-model="selectedDomain.name" size="small" style="width: 100px"></el-input>
-                </div>
-<!--                 不知道是要搜索什么 -->
-<!--                <div class="edit-tool" v-show="selectedDomain.name!=''">-->
-<!--                    <el-input-->
-<!--                            placeholder="请输入关键词"-->
-<!--                            @keyup.native.enter="searchInCurrentDomain"-->
-<!--                            clearable="true"-->
-<!--                            size="small"-->
-<!--                    ></el-input>-->
-<!--                </div>-->
-                <div class="edit-tool" v-show="selectedDomain.name!=''">
-                    <span class="">选中节点：</span>
-                    <span>{{selectedNode.name}}</span>
-                </div>
-                <div class="multi-mode">
-                    <el-radio-group v-model="isCollapse" @change="buttonChange" size="small">
-                        <el-radio-button :label="true" class="mode-button" id="mode-button-first"  size="small">力导模式</el-radio-button>
-                        <el-radio-button :label="false" class="mode-button" id="mode-button-second"  size="small">排版模式</el-radio-button>
-                    </el-radio-group>
-                </div>
-                <div v-show="selectedDomain.name!=''" style="margin-left: 650px;position: absolute">
-                    <span class="">节点个数：</span>
-                    <el-input v-model="nodesData.length" size="small" style="width: 50px"></el-input>
-                    <span class="" style="margin-left: 20px">关系个数：</span>
-                    <el-input v-model="linksData.length" size="small" style="width: 50px"></el-input>
-                </div>
                 <!-- 固定的工具 -->
+                <div class="multi-mode">
+                    <el-switch
+                            v-model="isCollapse"
+                            @change="buttonChange"
+                            active-color="#ECD665"
+                            inactive-color="#96DE67"
+                            active-text="力导模式"
+                            inactive-text="排版模式"
+                    >
+                    </el-switch>
+<!--                    <el-radio-group v-model="isCollapse" @change="buttonChange" size="small">-->
+<!--                        <el-radio-button :label="true" class="mode-button" id="mode-button-first"  size="small">力导模式</el-radio-button>-->
+<!--                        <el-radio-button :label="false" class="mode-button" id="mode-button-second"  size="small">排版模式</el-radio-button>-->
+<!--                    </el-radio-group>-->
+                </div>
+                <div class="left-side-bar">
+                    <el-button @click="cancelZoom" size="mini" type="primary" title="全屏" plain icon="el-icon-full-screen" style="margin-left: 10px;margin-top: 10px" circle></el-button>
+                    <el-button @click="vanishAllRelationships" size="mini" type="primary" title="隐藏关系" plain icon="el-icon-view" style="margin-left: 10px;margin-top: 10px" circle></el-button>
+                    <el-button @click="saveGraph" size="mini" type="primary" title="保存" plain icon="el-icon-document-checked" style="margin-left: 10px;margin-top: 10px" circle></el-button>
+                </div>
+                <div class="select-type-box">
+                    <el-select
+                            v-model="typeValue"
+                            size="small"
+                            multiple
+                            collapse-tags
+                            placeholder="类型筛选...">
+                        <el-option
+                                v-for="item in this.options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="search-box">
+                    <search-local-cache></search-local-cache>
+                </div>
                 <div class="fixed-tools">
-
-                    <el-button class="edit-tool" size="small" type="primary" @click="showCreateNodeDialog">添加节点</el-button>
-                    <el-button class="edit-tool" size="small" type="primary" @click="showCreateLinkDialog">添加关系</el-button>
+                    <el-dropdown>
+                        <el-button size="small" class="edit-tool">
+                            添加<i class="el-icon-arrow-down el-icon--right"></i>
+                        </el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="showCreateNodeDialog">添加节点</el-dropdown-item>
+                            <el-dropdown-item @click.native="showCreateLinkDialog">添加关系</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                     <el-dropdown>
                         <el-button size="small" class="edit-tool">
                             导出<i class="el-icon-arrow-down el-icon--right"></i>
@@ -99,18 +114,27 @@
                     <svg id="kgGraph" width="1300" height="650"></svg>
                 </el-scrollbar>
             </div>
-            <div class="left-side-bar">
-                <el-button @click="cancelZoom" size="mini" type="primary" title="全屏" plain icon="el-icon-full-screen" style="margin-left: 10px;margin-top: 10px" circle></el-button>
-                <el-button @click="vanishAllRelationships" size="mini" type="primary" title="隐藏关系" plain icon="el-icon-view" style="margin-left: 10px;margin-top: 10px" circle></el-button>
-
+            <div class="graphInfo">
+                <!-- 显示当前图谱名称，可以在这里对图谱名称进行修改 TODO-->
+                <div class="graphInfo-item" v-show="selectedDomain.name!=''">
+                    当前图谱：
+                    <span v-if="!editDomainName">{{selectedDomain.name}}</span>
+                    <el-input v-if="editDomainName" v-model="selectedDomain.name" size="small" style="width: 100px"></el-input>
+                </div>
+                <div class="graphInfo-item" v-show="selectedNode.name!=''" style="width: 150px">
+                    <span class="">选中节点：</span>
+                    <span>{{selectedNode.name}}</span>
+                </div>
+                <div v-show="selectedDomain.name!=''" class="graphInfo-item">
+                    <span class="">节点个数：</span>
+                    <span>{{nodesData.length}}</span>
+<!--                    <el-input v-model="nodesData.length" size="small" style="width: 50px"></el-input>-->
+                    <span class="" style="margin-left: 20px">关系个数：</span>
+                    <span>{{linksData.length}}</span>
+<!--                    <el-input v-model="linksData.length" size="small" style="width: 50px"></el-input>-->
+                </div>
             </div>
             <div class="right-side-bar">
-                <el-button
-                        @click="saveGraph"
-                        size="mini"
-                        style="margin-top: 10px;width: 90px"
-                        type="primary" plain
-                >保存布局</el-button>
                 <el-button
                     @click="showNodeList"
                     size="mini"
@@ -118,24 +142,6 @@
                     type="primary" plain
                 >节点与关系</el-button>
                 <node-list-drawer/>
-            </div>
-
-            <div class="center-side-bar">
-                <el-select
-                    v-model="typeValue"
-                    multiple
-                    collapse-tags
-                    style="margin-left: 70px;margin-top: 5px;width: 155px"
-                    placeholder="类型筛选...">
-                <el-option
-                        v-for="item in this.options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-            </el-select>
-            <search-local-cache style="margin-left: 35%;margin-top: -55px;"></search-local-cache>
-
             </div>
 
 
@@ -219,7 +225,7 @@
                     nodeType:'',
                     description:'',
                     r: '',
-                    fontSize: 20,  //字体大小
+                    fontSize: '',  //字体大小
                 },
                 selectedLink:{
                     id:'',
@@ -252,6 +258,8 @@
 
                 isCollapse: true,
                 typeValue: [],
+
+                editDomainName: false,
             }
         },
 
@@ -264,7 +272,7 @@
         },
 
         created(){
-            this.getAllDomains();
+            this.getAllDomains(this.userInfo.id);
         },
 
         computed:{
@@ -279,6 +287,8 @@
                 'mode',
                 'value',
                 'options',
+                'userInfo',
+                'isLogin',
             ])
         },
 
@@ -374,8 +384,8 @@
 
                 //节点内容初始化
                 //分两步走，首先将没有标记的节点渲染，再将标记的节点渲染
-                this.nodeText = this.drawNodeText(g, nodesData, _this, 'black', 20, false)
-                this.nodeTextWithColor = this.drawNodeText(g, colorNodes, _this, nodeTextColor, 20, true)
+                this.nodeText = this.drawNodeText(g, nodesData, _this, 'black', false)
+                this.nodeTextWithColor = this.drawNodeText(g, colorNodes, _this, nodeTextColor, true)
 
                 this.simulation.on("tick", () => {
                     this.links.attr("d", function(d) {
@@ -730,7 +740,7 @@
                     })
             },
 
-            drawNodeText(g, nodesData, that, textColor, fontSize, bold) {
+            drawNodeText(g, nodesData, that, textColor, bold) {
                 const nodeText =  g.append("g")
                                     .selectAll("text")
                                     .data(nodesData)
@@ -746,12 +756,14 @@
                                     .attr("dx", function (d) {
                                         //现在后端没有fontSize，前端就先给出来，到迭代三再加入
                                         // d.fontSize = 20
-                                        return (d.r/2 + fontSize)/2*(-1)
+                                        return (d.r/2 + d.fontSize)/2*(-1)
                                     })
                                     .attr("dy", function (d) {
-                                        return d.r + fontSize - 5
+                                        return d.r + d.fontSize - 5
                                     })
-                                    .style("font-size", fontSize)
+                                    .style("font-size", function (d) {
+                                        return d.fontSize
+                                    })
                                     .attr("class", "node-name")
                                     .attr("fill", textColor)
                                     .on("contextmenu", function (d, i) {
@@ -791,7 +803,7 @@
                         r: 40,
                         x: 200,
                         y: 100,
-                        fontSize: 20,
+                        fontSize: 18,
                     })
                     this.set_createNodeDialogVisible(true);
                 }
@@ -815,7 +827,14 @@
             },
 
             addDomain(){
-                this.set_addDomainDialogVisible(true);
+                if(!this.isLogin){
+                    this.$message({
+                        message:'请先登录哦',
+                        type:'warning',
+                    })
+                }else{
+                    this.set_addDomainDialogVisible(true);
+                }
             },
 
             addLinkFromNode(){
@@ -1393,18 +1412,19 @@
         display: flex;
     }
     .multi-mode{
-        width: 300px;
-        position: absolute;
-        right: 820px;
+        margin-left: 20px;
+    }
+    .select-type-box{
+        margin-left: 150px;
+    }
+    .search-box{
+        margin-left: 10px;
     }
     .fixed-tools{
-        width: 300px;
-        position: absolute;
-        right: 300px;
-        /*很离谱啊这里，为什么浏览器在看不见的地方还多了300px*/
+        margin-left: 20px;
     }
     .edit-tool{
-        margin-left: 20px;
+        margin-left: 10px;
     }
     .graph{
         position: absolute;
@@ -1412,13 +1432,17 @@
         bottom: 0;
         width: 100%;
     }
-    .left-side-bar{
-        display: table-row;
+    .graphInfo{
         position: absolute;
-        left: 0px;
-        /*width: 20px;*/
-        height: 100%;
+        left: 10px;
+        display: flex;
+        font-size: 15px;
+        height: 35px;
+        line-height: 35px;
         vertical-align:center
+    }
+    .graphInfo-item{
+        margin-left: 20px;
     }
     .right-side-bar{
         display: table-row;
@@ -1428,16 +1452,6 @@
         height: 100%;
         vertical-align:center
     }
-    .center-side-bar{
-        margin-left: 15%;
-        display: table-row;
-        position: absolute;
-        width: 40%;
-        height: 7%;
-        /*border: 1px solid black;*/
-        vertical-align:center
-    }
-
     .domain-table >>> .el-table__row > td{
         /* 去除表格线 */
         border: none;

@@ -1,5 +1,6 @@
 const getters = {
   // editor
+  activeIndex: state => state.editor.activeIndex,
   selectedDomain: state => state.editor.selectedDomain,
   createNodeDialogVisible: state => state.editor.createNodeDialogVisible,
   createNodeParams: state => state.editor.createNodeParams,
@@ -25,6 +26,8 @@ const getters = {
   isLogin: state => state.user.isLogin,
   userId: state => state.user.userId,
   userInfo: state => state.user.userInfo,
+  modifyUserInfoParams: state => state.user.modifyUserInfoParams,
+  resetPwdDialogVisible: state => state.user.resetPwdDialogVisible,
 }
 
   export default getters

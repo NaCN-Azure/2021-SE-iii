@@ -5,6 +5,8 @@ import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../api/rela
 
 const editor = {
     state: {
+        // activeIndex是index和其他区域公共变量，表示导航栏当前位置
+        activeIndex:'2',
         createNodeDialogVisible: false,
         createNodeParams: {
             name: '',
@@ -13,6 +15,7 @@ const editor = {
             type: '',
             description: '',
             r: 40,
+            fontSize: 20,
         },
         editNodeDialogVisible: false,
         editNodeParams:{
@@ -26,7 +29,7 @@ const editor = {
             x:0.0,
             y:0.0,
             r: '',
-            fontSize: 20,
+            fontSize: '',
         },
         addDomainDialogVisible: false,
         createLinkDialogVisible: false,
@@ -67,6 +70,9 @@ const editor = {
         value: [],
     },
     mutations:{
+        set_activeIndex: function(state, data){
+            state.activeIndex = data;
+        },
         set_createNodeDialogVisible:function (state,data) {
             state.createNodeDialogVisible = data;
         },
@@ -134,8 +140,8 @@ const editor = {
             }
         },
         // 获取图谱列表
-        getAllDomains: async ({state, commit}) => {
-            const res = await selectAllDomainAPI();
+        getAllDomains: async ({state, commit}, userId) => {
+            const res = await selectAllDomainAPI(userId);
             if(res.data.code == 200){
                 commit('set_domainList',res.data.data.domain);
             }
@@ -206,14 +212,16 @@ const editor = {
         },
         // 添加图谱提交
         addDomain: async ({ state, commit, dispatch}, data) => {
+            console.log("adddomaindata",data);
             const res = await createDomainAPI(data);
+            console.log("adddomain",res);
             if(res.data.code == 200){
                 Message({
                     message:'添加成功',
                     type: 'success'
                 })
                 commit('set_addDomainDialogVisible', false);
-                dispatch('getAllDomains');
+                dispatch('getAllDomains',data.user_id);
             }else{
                 Message({
                     message:'添加失败',
