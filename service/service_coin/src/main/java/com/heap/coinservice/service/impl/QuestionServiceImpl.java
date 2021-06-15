@@ -39,7 +39,7 @@ public class QuestionServiceImpl implements QuestionService {
         List<String> r = new ArrayList<>();
         try{
             String exe = "python";
-            String command = "E:\\程序\\python\\robotTest\\movie_QA_with_KQ\\unit.py";//改路径
+            String command = "service/robot/ques/unit.py";//改路径
             String[] cmdArr = new String[]{exe,command,question};
             Process process = Runtime.getRuntime().exec(cmdArr);
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
