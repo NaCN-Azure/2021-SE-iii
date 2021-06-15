@@ -38,11 +38,9 @@ public class UsersController {
     //登录
     @PostMapping("login")
     public Result loginUser(@RequestBody LoginVo loginVo) {
-        //member对象封装手机号和密码
-
+        //LoginVo对象封装手机号和密码
         //返回token值，使用jwt生成
         String[] res = usersService.login(loginVo);
-
         return Result.ok().data("token", res[0]).data("id", res[1]);
     }
 
@@ -54,13 +52,14 @@ public class UsersController {
     }
 
     //根据token获取用户信息
-    @GetMapping("getMemberInfo")
-    public Result getMemberInfo(HttpServletRequest request) {
+    @GetMapping("getUserInfo")
+    public Result getUserInfo(HttpServletRequest request) {
         //调用jwt工具类的方法，根据request对象获取头信息，返回用户id
         String userId = JwtUtils.getMemberIdByJwtToken(request);
         //查询数据库，根据用户id获取用户信息
         User user = usersService.getById(userId);
-        return Result.ok().data("userInfo", user);
+        UserInfoVO userInfo = usersService.getUserInfo(user);
+        return Result.ok().data("userInfo", userInfo);
     }
 
     //根据id获取用户信息
@@ -175,6 +174,18 @@ public class UsersController {
     @GetMapping("disableUser/{id}")
     public Result disableUser(@PathVariable String id) {
         usersService.disableUser(id);
+        return Result.ok();
+    }
+
+    /** 将用户设置为vip
+     *
+     * @param id 用户id
+     * @param days 充值天数
+     * @return
+     */
+    @GetMapping("setVipUser/{id}/{days}")
+    public Result setVipUser(@PathVariable String id, @PathVariable int days) {
+        usersService.setVipUser(id, days);
         return Result.ok();
     }
 

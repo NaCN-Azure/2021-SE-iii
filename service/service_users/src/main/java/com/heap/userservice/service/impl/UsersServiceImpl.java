@@ -15,6 +15,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  * <p>
  *  服务实现类
@@ -47,7 +52,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
 
         //判断该用户是否被封禁
         if(user.getIsDisabled()) {
-            throw new COINException(201, "该用户封禁中");
+            throw new COINException(201, "该账号已注销");
         }
 
         //判断密码
@@ -107,10 +112,32 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         user.setMobile(mobile);
         user.setNickname(nickname);
         user.setPassword(MD5.encrypt(password));
-        user.setIsDisabled(false);
         user.setAvatar("https://heap-coin.oss-cn-beijing.aliyuncs.com/default.PNG");
         baseMapper.insert(user);
 
+    }
+
+    @Override
+    public UserInfoVO getUserInfo(User user) {
+        //对象的包装，我记得应该有更好的方法，比如clone啥的
+        UserInfoVO userInfo = new UserInfoVO();
+        userInfo.setId(user.getId());
+        userInfo.setNickname(user.getNickname());
+        userInfo.setAvatar(user.getAvatar());
+        userInfo.setSign(user.getSign());
+        userInfo.setLevel(user.getLevel());
+        userInfo.setIsVip(user.getIsVip());
+
+        //如果vip原来是true的话，要判断一下，计算一下当前时间
+        if(user.getIsVip()) {
+            Date vipEndTime = user.getVipEndTime();
+            if(vipEndTime.before(new Date())) {
+                //截止日期已经过了，说明vip到期了
+                userInfo.setIsVip(false);
+            }
+        }
+
+        return userInfo;
     }
 
     @Override
@@ -219,6 +246,40 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
     @Override
     public void deleteUser(String id) {
         baseMapper.deleteById(id);
+    }
+
+    /**
+     *
+     * @param id
+     * @param days 分为30天、90天和365天
+     */
+    @Override
+    public void setVipUser(String id, int days) {
+        User user = baseMapper.selectById(id);
+        Date vipEndTime = user.getVipEndTime();
+        SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        if(vipEndTime == null) {
+            //说明是第一次充值vip，将vipEndTime设置为当前时间
+            String s = sdf.format(new Date());
+            try {
+                vipEndTime = sdf.parse(s);
+            }catch (Exception e) {
+                throw new COINException(201, "时间修改失败");
+            }
+        }
+
+        //得到充值时长
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(vipEndTime);
+        cal.add(Calendar.DATE, days);
+        vipEndTime = cal.getTime();
+
+        //此时vipEndTime就是新的截止日期
+
+        user.setVipEndTime(vipEndTime);
+        user.setIsVip(true);
+        baseMapper.updateById(user);
     }
 
 

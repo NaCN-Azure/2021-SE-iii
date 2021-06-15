@@ -20,5 +20,10 @@ public class UserInfoVO {
     @ApiModelProperty(value = "个性签名")
     private String sign;
 
+    @ApiModelProperty(value = "等级")
+    private Integer level;
+
+    @ApiModelProperty(value = "是否为vip用户")
+    private Boolean isVip;
 
 }

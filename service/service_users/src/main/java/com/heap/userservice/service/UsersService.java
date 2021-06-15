@@ -21,6 +21,8 @@ public interface UsersService extends IService<User> {
 
     void register(RegisterVO registerVO);
 
+    UserInfoVO getUserInfo(User user);
+
     void updateInfo(UserInfoVO userInfoVO);
 
     void updateAvatar(UserInfoVO userInfoVO);
@@ -36,4 +38,6 @@ public interface UsersService extends IService<User> {
     void addUser(User user);
 
     void deleteUser(String id);
+
+    void setVipUser(String id, int days);
 }

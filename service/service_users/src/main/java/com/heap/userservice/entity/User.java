@@ -45,12 +45,14 @@ public class User implements Serializable {
     @ApiModelProperty(value = "用户头像")
     private String avatar;
 
-    @ApiModelProperty(value = "是否禁用 1（true）已禁用，0（false）未禁用")
+    @ApiModelProperty(value = "是否注销 1（true）已注销，0（false）未注销")
     private Boolean isDisabled;
 
-    @ApiModelProperty(value = "逻辑删除 1（true）已删除，0（false）未删除")
-    //@TableLogic
-    private Boolean isDeleted;
+    @ApiModelProperty(value = "是否为会员 1（true）是，0（false）不是")
+    private Boolean isVip;
+
+    @ApiModelProperty(value = "会员到期时间")
+    private Date vipEndTime;
 
     @ApiModelProperty(value = "用户签名")
     private String sign;
