@@ -1,5 +1,6 @@
 package com.heap.coinservice.mapper;
 
+import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,5 +25,8 @@ public interface QuestionMapper extends Neo4jRepository<Relationship,Long> {
     @Query("MATCH (n{domainId:{0}})-[r]-(m{domainId:{0}}) where n.name={1} RETURN n,m,r")
 //    @Query("MATCH (n)-[r]-(m) where n.name={1} RETURN n,m,r")
     List<Relationship> getNodesNear(@Param("domainId") int domainId,@Param("nodeName") String nodeName);
+
+    @Query("MATCH (n) where n.name = {0} and n.domainId = {1} return n.description")
+    String getNodeDesciption(@Param("name") String name, @Param("domainId") int domainId);
 
 }

@@ -197,7 +197,8 @@ class Question():
 class QuestionTemplate():
     def __init__(self):
         self.q_template_dict={
-            0:self.get_entity_near
+            0:self.get_entity_near,
+            1:self.get_entity_description
         }
         self.graph = Query()
     def get_question_answer(self,question,template):
@@ -230,10 +231,13 @@ class QuestionTemplate():
                 break
         entity_name = self.question_word[tag_index]
         return entity_name
-    # 0:地址
+    # 0:节点
     def get_entity_near(self):
         entity_name = self.get_entity_name()
         return entity_name
+    # 1:描述节点
+    def get_entity_description(self):
+        return self.get_entity_name()
 
 def ques(ask_question):
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer,encoding='utf-8')

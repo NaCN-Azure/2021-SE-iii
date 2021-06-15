@@ -66,7 +66,7 @@ public class QuestionServiceImpl implements QuestionService {
                     finalAnswer = getNodesNear(domainId, commands.get(1));
                     break;
                 case 1:
-                    finalAnswer = "dd";
+                    finalAnswer = getNodeDescription(domainId,commands.get(1));
                     break;
                 default:
                     finalAnswer = "爷不知道";
@@ -80,12 +80,16 @@ public class QuestionServiceImpl implements QuestionService {
 
     private String getNodesNear(int domainId,String nodeName){
         List<Relationship> relationships = questionMapper.getNodesNear(domainId,nodeName);
-        String finalAnswer = nodeName+"的临近节点分别为：";
+        String finalAnswer ="";
         for(Relationship r:relationships){
             finalAnswer=finalAnswer+r.getEndEntity().getName()+",";
         }
         finalAnswer = finalAnswer.substring(0,finalAnswer.length()-1)+"。";
         return finalAnswer;
+    }
+
+    private String getNodeDescription(int domainId,String nodeName){
+        return questionMapper.getNodeDesciption(nodeName,domainId);
     }
 
 }
