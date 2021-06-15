@@ -17,7 +17,9 @@
         <div class="createPane">
         <el-tabs v-model="createType"
                  type="border-card"
-                 class="createTab">
+                 class="createTab"
+                 stretch="true"
+        >
             <el-tab-pane label="上传csv文件" name="importCSV">
                 csv文件格式：节点-节点-关系 三元组
                 <el-upload
@@ -26,47 +28,14 @@
                         class="uploading"
                         :on-success="handleCsvSuccess"
                         accept=".csv"
+                        ref="upload"
                 >
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 </el-upload>
             </el-tab-pane>
-            <el-tab-pane label="上传json文件" name="importJSON">
-                json文件格式：
-                <el-upload
-                        drag
-                        class="uploading"
-                        :on-success="handleJsonSuccess"
-                        accept=".json"
-                        :auto-upload="false"
-                        :action="uploadUrl"
-                >
-                    <i class="el-icon-upload"></i>
-                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                </el-upload>
-            </el-tab-pane>
-            <el-tab-pane label="上传xml文件" name="importXML">
-                xml文件格式：
-                <el-upload
-                        drag
-                        :action="uploadUrl"
-                        class="uploading"
-                        :on-success="handleXmlSuccess"
-                        accept=".xml"
-                        :auto-upload="false"
-                >
-                    <i class="el-icon-upload"></i>
-                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                </el-upload>
-            </el-tab-pane>
-            <el-tab-pane label="文本提取生成" name="ExtractFromText">
-                <el-input
-                        type="textarea"
-                        :rows="10"
-                        placeholder="请输入要提取知识图谱的内容"
-                        v-model="extractedText"
-                >
-                </el-input>
+            <el-tab-pane label="使用说明" name="instructions">
+
             </el-tab-pane>
         </el-tabs>
         </div>
@@ -102,7 +71,8 @@
                 'isLogin'
             ]),
             uploadUrl(){
-                return "http://106.15.93.81:8002/coinservice/file/getCsv/"+this.userInfo.id
+                // return "http://106.15.93.81:8002/coinservice/file/getCsv/"+this.userInfo.id
+                return "http://localhost:8002/coinservice/file/getCsv/"+this.userInfo.id
             }
         },
         methods: {

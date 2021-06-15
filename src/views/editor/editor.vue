@@ -1297,6 +1297,7 @@
             compareArr(arr1,arr2){
                 return arr1.length-arr2.length;
             },
+            // 排版模式计算
             composeModeSet(nodesData){
                 let newData = JSON.parse(JSON.stringify(nodesData))
 
