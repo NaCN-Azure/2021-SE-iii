@@ -2,27 +2,24 @@ package com.heap.coinservice.utils;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FileTest {
     public static void main(String[] args) {
         try{
-            List<String> x = new ArrayList<>();
-            File file = new File("service/robot/ques/data/extract.txt");
-            BufferedReader in = new BufferedReader(new FileReader(file));
-            String str;
-            while ((str = in.readLine()) != null) {
-                if(str.split(" ")[0].equals("皮卡丘")){
-                    continue;
-                }
-                x.add(str+"\n");
+            String path = "service/DomainDefault/";
+            String filename ="";
+            filename="pokemon.csv";
+            File file = new File(path+filename);
+            List<List<String>> rowList = new ArrayList<List<String>>();
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                String[] rowArr = line.split(",");//CSV格式文件为逗号分隔符文件，这里根据逗号切分
+                List<String> row = Arrays.asList(rowArr);
+                rowList.add(row);
             }
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            for(String a:x) {
-                bw.write(a);
-            }
-            bw.close();
         }catch (Exception e){
             e.printStackTrace();
         }

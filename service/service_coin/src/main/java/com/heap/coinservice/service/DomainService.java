@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.heap.coinservice.entity.Domain;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -50,5 +52,11 @@ public interface DomainService extends IService<Domain> {
       * @return
       */
      List<Domain> getAllDomain(String userId);
+
+     /**
+      * 模板创建
+      * @param module
+      */
+     void getModule(int module,String userId) throws IOException;
 
 }

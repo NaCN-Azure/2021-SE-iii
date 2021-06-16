@@ -7,13 +7,13 @@ import com.heap.coinservice.entity.Relationship;
 import com.heap.coinservice.mapper.DomainMapper;
 import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.mapper.RelationshipMapper;
-import com.heap.coinservice.service.DomainService;
-import com.heap.coinservice.service.EntityService;
-import com.heap.coinservice.service.QuestionService;
-import com.heap.coinservice.service.RelationshipService;
+import com.heap.coinservice.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,6 +35,9 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private FileService fileService;
 
     @Autowired
     private RelationshipService relationshipService;
@@ -86,5 +89,32 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Override
     public List<Domain> getAllDomain(String userId){
         return domainMapper.selectAllDomain(userId);
+    }
+
+    @Override
+    public void getModule(int module,String userId) throws IOException {
+        String path = "service/DomainDefault/";
+        String filename ="";
+        String domainName="";
+        if(module==1){
+            filename="pokemon.csv";
+            domainName="pokemon";
+        }
+        else if(module==2){
+            filename="chemistry.csv";
+            domainName="化学";
+        }
+        File file = new File(path+filename);
+        List<List<String>> rowList = new ArrayList<List<String>>();
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            String[] rowArr = line.split(",");
+            List<String> row = Arrays.asList(rowArr);
+            rowList.add(row);
+        }
+        Domain csvDomain = Domain.builder().name(domainName).user_id(userId).build();
+        int domainId = this.createDomain(csvDomain);
+        fileService.createGraphByCsv(rowList,domainId);
     }
 }
