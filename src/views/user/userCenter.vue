@@ -56,7 +56,10 @@
                             <el-button type="primary" size="mini" @click="modifyInfo" round>编辑</el-button>
                             <el-button type="primary" size="mini" @click="modifyPWD" round>修改密码</el-button>
                             <el-button type="primary" size="mini" @click="deleteMyself" round>注销</el-button>
-                            <el-button v-if="!userInfo.isVip" round size="mini" style="background-color:rgb(240,213,157);color: rgb(51,51,51);border: none">充值会员</el-button>
+                            <el-button v-if="!userInfo.isVip" round size="mini"
+                                       style="background-color:rgb(240,213,157);color: rgb(51,51,51);border: none"
+                                       @click="topUp"
+                            >充值会员</el-button>
                         </el-form-item>
                     </el-form>
                 </el-tab-pane>
@@ -106,7 +109,10 @@
                                 </ul>
                             </el-form-item>
                             <el-form-item>
-                                <el-button round size="mini" style="background-color:rgb(240,213,157);color: rgb(51,51,51);border: none">续费</el-button>
+                                <el-button round size="mini"
+                                           style="background-color:rgb(240,213,157);color: rgb(51,51,51);border: none"
+                                           @click="topUp"
+                                >续费</el-button>
                             </el-form-item>
                         </el-form>
                     </div>
@@ -118,6 +124,7 @@
         <div v-if="!isLogin" style="font-size: 25px;color: #8c939d;margin-left: 20%;margin-top: 10%;">
             不好意思，请先登录哦~
         </div>
+        <top-up-vip-dialog></top-up-vip-dialog>
     </div>
 </template>
 
@@ -125,9 +132,11 @@
     import {mapActions, mapGetters, mapMutations} from "vuex";
     import {closeAccountAPI, updateAvatarAPI, updateUserInfoAPI, updateUserPwdAPI} from "../../api/users";
     import {Message} from "element-ui";
+    import TopUpVipDialog from "./topUpVipDialog";
 
     export default {
         name: "userCenter",
+        components: {TopUpVipDialog},
         data(){
             return{
                 modify: false,
@@ -152,6 +161,9 @@
             ])
         },
         methods:{
+            ...mapMutations([
+                'set_topUpVipDialogVisible'
+            ]),
             ...mapActions([
                 'getUserInfo',
                 'closeAccount'
@@ -236,8 +248,8 @@
                     this.closeAccount();
                 })
             },
-            changeSortOrder(){
-
+            topUp(){
+                this.set_topUpVipDialogVisible(true)
             }
         }
     }
