@@ -12,7 +12,11 @@
                 <span v-else class="noAvatar">暂无头像</span>
                 <div class="avatarChangeNote">更换头像</div>
             </el-upload>
-            <div class="userBasicInfo-name">{{userInfo.nickname}}</div>
+            <div class="userBasicInfo-name">
+                <div>{{userInfo.nickname}}</div>
+                <img class="vipicon" v-if="userInfo.isVip" src="../../assets/VIP-gold.svg">
+                <img class="vipicon" v-else src="../../assets/VIP-gray.svg">
+            </div>
             <div class="userBasicInfo-sign" v-if="userInfo.sign!=''">{{userInfo.sign}}</div>
         </div>
         <div class="right-container" v-if="isLogin">
@@ -232,6 +236,7 @@
         font-weight: bold;
         font-size: 20px;
         margin-top: 20px;
+        align-items: center;
     }
     .userBasicInfo-sign{
         color: #8c939d;
@@ -287,5 +292,8 @@
     .domain-table >>> .el-table::before{
         /* 去除下边框 */
         height: 0;
+    }
+    .vipicon{
+        height: 20px;
     }
 </style>
