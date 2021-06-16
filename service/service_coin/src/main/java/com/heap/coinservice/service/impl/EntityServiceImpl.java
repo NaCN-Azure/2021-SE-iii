@@ -75,7 +75,7 @@ public class EntityServiceImpl implements EntityService {
             entityMapper.deleteNodeWithLink(id);
             if(entityMapper.findById(id).isPresent()){
                 entityMapper.delete(entity);
-                questionService.clean(entity.getName());
+//                questionService.clean(entity.getName());
             }
             return true;
         }

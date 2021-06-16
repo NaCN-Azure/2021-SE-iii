@@ -32,14 +32,17 @@ public class QuestionServiceImpl implements QuestionService {
     QuestionMapper questionMapper;
 
     @Override
-    public void clean(String s){
+    public void clean(List<Entity> entity,List<Relationship> relation){
+        List<String> s = new ArrayList<>();
+        for(Entity node:entity){s.add(node.getName());s.add(node.getType());}
+        for(Relationship link:relation){s.add(link.getName());}
         try{
             List<String> x = new ArrayList<>();
             File file = new File("service/robot/ques/data/extract.txt");
             BufferedReader in = new BufferedReader(new FileReader(file));
             String str;
             while ((str = in.readLine()) != null) {
-                if(str.split(" ")[0].equals(s)){
+                if(s.contains(str.split(" ")[0])){
                     continue;
                 }
                 x.add(str+"\n");

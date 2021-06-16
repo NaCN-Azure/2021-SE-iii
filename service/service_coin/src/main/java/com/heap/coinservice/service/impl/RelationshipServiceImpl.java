@@ -62,7 +62,7 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         if(check.isPresent()) {
             relationshipMapper.delete(relationship);
-            questionService.clean(relationship.getName());
+//            questionService.clean(relationship.getName());
             return true;
         }
         else {

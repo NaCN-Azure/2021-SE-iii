@@ -47,7 +47,7 @@ public class TypeServiceImpl implements TypeService {
         //String color = typeMapper.searchColorByType(domainId,type);
         //DefaultUtil.releaseColor(color);
         typeMapper.deleteType(domainId,type);
-        questionService.clean(type);
+//        questionService.clean(type);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.heap.coinservice.service;
 
 import com.heap.coinservice.entity.Entity;
+import com.heap.coinservice.entity.Relationship;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,9 +41,8 @@ public interface QuestionService {
     void AddDict(String x,String type);
 
     /**
-     * 删除节点
-     * @param x
+     * 删除字典
      */
-    void clean(String x);
+    void clean(List<Entity> entity,List<Relationship> relation);
 
 }
