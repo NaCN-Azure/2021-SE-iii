@@ -68,8 +68,9 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
     @Override
     public Domain updateDomain(Domain domain){
-         domainMapper.updateDomain(domain.getName(), domain.getId());
-         return domainMapper.selectDomain(domain.getId());
+        baseMapper.updateById(domain);
+        //domainMapper.updateDomain(domain.getName(), domain.getId());
+        return domainMapper.selectDomain(domain.getId());
     }
 
     @Override
