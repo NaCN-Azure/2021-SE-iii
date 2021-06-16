@@ -122,6 +122,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         //对象的包装，我记得应该有更好的方法，比如clone啥的
         UserInfoVO userInfo = new UserInfoVO();
         userInfo.setId(user.getId());
+        userInfo.setMobile(user.getMobile());
         userInfo.setNickname(user.getNickname());
         userInfo.setAvatar(user.getAvatar());
         userInfo.setSign(user.getSign());
