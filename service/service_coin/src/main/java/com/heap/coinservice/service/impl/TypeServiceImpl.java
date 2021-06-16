@@ -1,6 +1,7 @@
 package com.heap.coinservice.service.impl;
 
 import com.heap.coinservice.mapper.TypeMapper;
+import com.heap.coinservice.service.QuestionService;
 import com.heap.coinservice.service.TypeService;
 import com.heap.commonutils.DefaultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class TypeServiceImpl implements TypeService {
     @Autowired
     TypeMapper typeMapper;
 
+    @Autowired
+    QuestionService questionService;
+
     @Override
     public String insertType(int domainId,String nodeType){
         String check=typeMapper.searchColorByType(domainId,nodeType);
@@ -32,6 +36,7 @@ public class TypeServiceImpl implements TypeService {
                 color= DefaultUtil.DEFAULT_COLOR;
             }
             typeMapper.insertType(domainId,color,nodeType);
+            questionService.AddDict(nodeType,"nr");
             return color;
         }
         else return check;
@@ -42,6 +47,7 @@ public class TypeServiceImpl implements TypeService {
         //String color = typeMapper.searchColorByType(domainId,type);
         //DefaultUtil.releaseColor(color);
         typeMapper.deleteType(domainId,type);
+        questionService.clean(type);
     }
 
     @Override

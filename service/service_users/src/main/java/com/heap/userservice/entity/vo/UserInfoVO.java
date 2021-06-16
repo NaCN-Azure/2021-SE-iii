@@ -3,6 +3,8 @@ package com.heap.userservice.entity.vo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class UserInfoVO {
     @ApiModelProperty(value = "id")
@@ -25,5 +27,9 @@ public class UserInfoVO {
 
     @ApiModelProperty(value = "是否为vip用户")
     private Boolean isVip;
+
+    @ApiModelProperty(value = "会员到期时间")
+    private Date vipEndTime;
+
 
 }

@@ -128,6 +128,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         userInfo.setSign(user.getSign());
         userInfo.setLevel(user.getLevel());
         userInfo.setIsVip(user.getIsVip());
+        userInfo.setVipEndTime(user.getVipEndTime());
 
         //如果vip原来是true的话，要判断一下，计算一下当前时间
         if(user.getIsVip()) {
