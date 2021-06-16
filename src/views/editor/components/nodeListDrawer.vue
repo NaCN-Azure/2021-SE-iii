@@ -5,7 +5,7 @@
             size="20%"
             :before-close="handleClose"
     >
-        <el-tabs stretch="true" type="card" v-model="activeName" @tab-click="handleClick">
+        <el-tabs :stretch="true" type="card" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="节点列表" name="nodeList">
                 <tab-node-list v-if="isChildUpdate1"></tab-node-list>
             </el-tab-pane>

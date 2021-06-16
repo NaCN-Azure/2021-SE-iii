@@ -126,6 +126,7 @@ const user = {
             removeToken()
             resetRouter()
             commit('reset_state')
+            router.push('/login')
         },
         closeAccount: async ({state,commit}) => {
             const res = await closeAccountAPI(state.userInfo.id);
