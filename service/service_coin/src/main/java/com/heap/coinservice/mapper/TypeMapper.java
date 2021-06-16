@@ -32,7 +32,7 @@ public interface TypeMapper {
     @Select("select color from nodetype where domain_id =#{domainId}")
     List<String> searchColor(@Param("domainId") int domainId);
 
-    @Select("select color from colors where color not in( select color from nodetype) limit 1")
-    String getNewColor();
+    @Select("select color from colors where color not in( select color from nodetype where nodetype.domain_id =#{domainId}) limit 1")
+    String getNewColor(@Param("domainId") int domainId);
 
 }
