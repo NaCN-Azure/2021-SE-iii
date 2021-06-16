@@ -37,7 +37,7 @@ public interface QuestionService {
      * 加入字典
      * @param x
      */
-    void AddDict(String x);
+    void AddDict(String x,String type);
 
     /**
      * 删除节点

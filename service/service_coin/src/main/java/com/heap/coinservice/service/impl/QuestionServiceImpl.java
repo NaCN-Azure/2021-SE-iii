@@ -56,9 +56,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public void AddDict(String x){
+    public void AddDict(String x,String type){
         try{
-            String data = x+" 15 nr\n";
+            String data = x+" 15 "+type+"\n";
             File file = new File("service/robot/ques/data/extract.txt");
             FileWriter fw = new FileWriter(file.getAbsoluteFile(),true);
             BufferedWriter bw = new BufferedWriter(fw);

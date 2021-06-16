@@ -4,6 +4,7 @@ import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
 import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.mapper.RelationshipMapper;
+import com.heap.coinservice.service.QuestionService;
 import com.heap.coinservice.service.RelationshipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ import java.util.Optional;
 @Service
 public class RelationshipServiceImpl implements RelationshipService {
     @Autowired
+    QuestionService questionService;
+
+    @Autowired
     RelationshipMapper relationshipMapper;
 
     @Autowired
@@ -37,7 +41,7 @@ public class RelationshipServiceImpl implements RelationshipService {
         if(check==null) {
             Relationship relationship = Relationship.builder().startEntity(startNode).endEntity(endNode)
                     .domainId(startNode.getDomainId()).name(name).fromId(fromId).toId(toId).type(1).build();
-
+            questionService.AddDict(name,"nl");
             return relationshipMapper.save(relationship);
         }
         else {
@@ -58,6 +62,7 @@ public class RelationshipServiceImpl implements RelationshipService {
 
         if(check.isPresent()) {
             relationshipMapper.delete(relationship);
+            questionService.clean(relationship.getName());
             return true;
         }
         else {

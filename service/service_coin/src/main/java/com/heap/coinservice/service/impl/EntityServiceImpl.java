@@ -39,7 +39,7 @@ public class EntityServiceImpl implements EntityService {
             String color=typeService.insertType(domainId,type);
             entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).r(r).description(description).
                     fontSize(fontSize).build();
-            questionService.AddDict(name);
+            questionService.AddDict(name,"nr");
             return entityMapper.save(entity);
         }
         else {
