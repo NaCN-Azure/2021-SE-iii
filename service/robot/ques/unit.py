@@ -167,7 +167,7 @@ class Question():
 
     def get_question_template(self):
         # 抽象问题
-        for item in ['nr','ns','n']:
+        for item in ['nr','ns','n','nrt','nl']:
             while (item in self.question_flag):
                 ix=self.question_flag.index(item) # 查找相应词性的位置
                 self.question_word[ix]=item # 词替换为词性
@@ -226,6 +226,7 @@ class QuestionTemplate():
         dict["AnswerType"]=template_id
         dict["AnswerMember"]=answer
         return dict
+
     def get_entity_name(self):
         tag_index = 0
         for i in range(len(self.question_flag)):
@@ -238,10 +239,13 @@ class QuestionTemplate():
     def get_entity_name_last(self):
         tag_index = 0
         for i in range(len(self.question_flag)):
-            if(self.question_flag[-(i+1)].startswith('n')):
+            if(self.question_flag[i].startswith('n')):
                 tag_index = i
-                break
-        entity_name = self.question_word[-(1+tag_index)]
+                if(self.question_word[i]==self.get_entity_name()):
+                    continue
+                else:
+                    break
+        entity_name = self.question_word[tag_index]
         return entity_name
 
     # 0:节点
