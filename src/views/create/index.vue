@@ -91,24 +91,12 @@
                     type: 'success'
                 })
             },
-            handleJsonSuccess(res) {
-                console.log(res);
-            },
-            handleXmlSuccess(res) {
-                console.log(res);
-            },
             handleCommand(command){
                 if(command=='userCenter'){
                     // 个人中心
                     this.set_activeIndex('3');
                     this.$router.push('/userCenter');
                 }else{
-                    // logout
-                    // cookie.set('coin_token', '')
-                    // cookie.set('coin_user', '')
-                    // this.set_userInfo('')
-                    // this.set_isLogin(false)
-                    // this.$router.push('/home')
                     this.logout();
                 }
             },
