@@ -3,6 +3,7 @@ package com.heap.coinservice.service.impl;
 import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.service.EntityService;
+import com.heap.coinservice.service.QuestionService;
 import com.heap.coinservice.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public class EntityServiceImpl implements EntityService {
     private TypeService typeService;
 
     @Autowired
+    private QuestionService questionService;
+
+    @Autowired
     private EntityMapper entityMapper;
 
     @Override
@@ -35,6 +39,7 @@ public class EntityServiceImpl implements EntityService {
             String color=typeService.insertType(domainId,type);
             entity = Entity.builder().name(name).bgColor(color).type(type).shape(shape).domainId(domainId).r(r).description(description).
                     fontSize(fontSize).build();
+            questionService.AddDict(name);
             return entityMapper.save(entity);
         }
         else {
@@ -70,6 +75,7 @@ public class EntityServiceImpl implements EntityService {
             entityMapper.deleteNodeWithLink(id);
             if(entityMapper.findById(id).isPresent()){
                 entityMapper.delete(entity);
+                questionService.clean(entity.getName());
             }
             return true;
         }

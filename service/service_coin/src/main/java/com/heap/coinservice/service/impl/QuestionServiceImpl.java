@@ -12,10 +12,7 @@ import com.heap.commonutils.DefaultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +32,44 @@ public class QuestionServiceImpl implements QuestionService {
     QuestionMapper questionMapper;
 
     @Override
+    public void clean(String s){
+        try{
+            List<String> x = new ArrayList<>();
+            File file = new File("service/robot/ques/data/extract.txt");
+            BufferedReader in = new BufferedReader(new FileReader(file));
+            String str;
+            while ((str = in.readLine()) != null) {
+                if(str.split(" ")[0].equals(s)){
+                    continue;
+                }
+                x.add(str+"\n");
+            }
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            for(String a:x) {
+                bw.write(a);
+            }
+            bw.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void AddDict(String x){
+        try{
+            String data = x+" 15 nr\n";
+            File file = new File("service/robot/ques/data/extract.txt");
+            FileWriter fw = new FileWriter(file.getAbsoluteFile(),true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(data);
+            bw.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public List<String> dealByPython(String question){
         List<String> r = new ArrayList<>();
         try{
@@ -46,9 +81,10 @@ public class QuestionServiceImpl implements QuestionService {
             String line;
             while((line = in.readLine())!=null){
                 r.add(line);
+                System.out.println(line);
             }
             in.close();
-            int result = process.waitFor();
+            process.waitFor();
         }catch (Exception e) {
             e.printStackTrace();
         }

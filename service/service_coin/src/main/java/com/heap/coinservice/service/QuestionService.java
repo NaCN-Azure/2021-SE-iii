@@ -33,4 +33,16 @@ public interface QuestionService {
      */
     String getAnswer(int domainId,List<String> commands);
 
+    /**
+     * 加入字典
+     * @param x
+     */
+    void AddDict(String x);
+
+    /**
+     * 删除节点
+     * @param x
+     */
+    void clean(String x);
+
 }
