@@ -60,18 +60,26 @@
                         <el-table
                                 :data="domainList"
                                 style="width:100%"
-                                :show-header="false"
                                 :row-style="{height:'30px'}"
                                 :cell-style="{padding:'8px'}"
                         >
-                            <el-table-column>
-                                <template slot-scope="scope">
-                                    {{scope.row.name}}
-<!--                                    <el-tag-->
-<!--                                            effect="light"-->
-<!--                                            style="margin-left:3px;width: 98%; font-size: 15px;cursor: pointer"-->
-<!--                                    >{{scope.row.name}}</el-tag>-->
-                                </template>
+                            <el-table-column
+                                    label="图谱名称"
+                                    prop="name"
+                                    sortable
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                    sortable
+                                    label="创建时间"
+                                    prop="createTime"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                    sortable
+                                    label="上次修改时间"
+                                    prop="modifyTime"
+                            >
                             </el-table-column>
 
                         </el-table>
@@ -104,7 +112,7 @@
                 avatarUpdater:{
                     id:'',
                     avatar:'',
-                }
+                },
             }
         },
         computed:{
@@ -199,6 +207,9 @@
                 }).then(() => {
                     this.closeAccount();
                 })
+            },
+            changeSortOrder(){
+
             }
         }
     }

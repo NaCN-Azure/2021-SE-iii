@@ -119,7 +119,12 @@
                 <div class="graphInfo-item" v-show="selectedDomain.name!=''">
                     当前图谱：
                     <span v-if="!editDomainName">{{selectedDomain.name}}</span>
-                    <el-input v-if="editDomainName" v-model="selectedDomain.name" size="small" style="width: 100px"></el-input>
+                    <el-button v-if="!editDomainName" icon="el-icon-edit" circle size="mini" plain type="primary"
+                               @click="updateDomainName"
+                               style="margin-left: 10px"
+                    ></el-button>
+                    <el-input v-if="editDomainName" v-model="newDomainName" size="small" style="width: 100px" @keyup.enter.native="saveDomainName">
+                    </el-input>
                 </div>
                 <div class="graphInfo-item" v-show="selectedNode.name!=''" style="width: 150px">
                     <span class="">选中节点：</span>
@@ -192,7 +197,7 @@
     import $ from 'jquery';
     import {mapActions, mapGetters, mapMutations} from "vuex";
     import {updateNodeAPI, deleteNodeAPI, updateXYAPI} from "../../api/entity";
-    import {deleteDomainAPI} from "../../api/domain";
+    import {deleteDomainAPI,updateDomainAPI} from "../../api/domain";
     import {deleteLinkAPI, getLinkByDomainIdAPI} from "../../api/relationship";
     import {downloadAPI, exportGraphXMLAPI} from "../../api/file";
     import CreateNodeDialog from "./components/createNodeDialog";
@@ -259,6 +264,7 @@
                 typeValue: [],
 
                 editDomainName: false,
+                newDomainName:'',
             }
         },
 
@@ -913,6 +919,30 @@
                         })
                     }
                 )
+            },
+            updateDomainName(){
+                this.editDomainName = true;
+                this.newDomainName = this.selectedDomain.name;
+            },
+            saveDomainName(){
+                let editDomainParams = this.selectedDomain;
+                editDomainParams.name = this.newDomainName;
+                updateDomainAPI(editDomainParams).then(res=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        Message({
+                            type:'success',
+                            message:'修改成功'
+                        })
+                        this.selectDomainById(this.selectedDomain.id)
+                    }else{
+                        Message({
+                            type:'error',
+                            message:'修改失败'
+                        })
+                    }
+                })
+                this.editDomainName = false
             },
 
             showNodeList (){
