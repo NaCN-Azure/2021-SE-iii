@@ -235,7 +235,6 @@
                     toId:'',
                     domainId:'',
                 },
-                popoverContent:'',
                 simulation: null,
                 markedSimulation: null,
                 circleNodes: [],
@@ -895,9 +894,9 @@
                                 type: 'success',
                             });
                             // 删除正在显示的domain，刷新
-                            if (domainId == this.domain.id) {
+                            if (domainId == this.selectedDomain.id) {
                                 this.relationships = [];
-                                this.updateGraph();
+                                this.init()
                             }
                         } else {
                             this.$message({
@@ -905,7 +904,7 @@
                                 type: 'error'
                             })
                         }
-                        this.getAllDomains();
+                        this.getAllDomains(this.userInfo.id);
                     });
                 }).catch(() => {
                         this.$message({

@@ -56,7 +56,26 @@
                     </el-form>
                 </el-tab-pane>
                 <el-tab-pane label="我的图谱" name="myDomains">
+                    <div class="domain-table" style="margin-top: 10px">
+                        <el-table
+                                :data="domainList"
+                                style="width:100%"
+                                :show-header="false"
+                                :row-style="{height:'30px'}"
+                                :cell-style="{padding:'8px'}"
+                        >
+                            <el-table-column>
+                                <template slot-scope="scope">
+                                    {{scope.row.name}}
+<!--                                    <el-tag-->
+<!--                                            effect="light"-->
+<!--                                            style="margin-left:3px;width: 98%; font-size: 15px;cursor: pointer"-->
+<!--                                    >{{scope.row.name}}</el-tag>-->
+                                </template>
+                            </el-table-column>
 
+                        </el-table>
+                    </div>
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -93,6 +112,7 @@
                 'isLogin',
                 'userInfo',
                 'modifyUserInfoParams',
+                'domainList'
             ])
         },
         methods:{
@@ -248,5 +268,13 @@
     }
     .modifyForm .el-form-item{
         display: flex;
+    }
+    .domain-table >>> .el-table__row > td{
+        /* 去除表格线 */
+        border: none;
+    }
+    .domain-table >>> .el-table::before{
+        /* 去除下边框 */
+        height: 0;
     }
 </style>

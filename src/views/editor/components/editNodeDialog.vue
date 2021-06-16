@@ -34,7 +34,12 @@
                 ></el-input>
             </el-form-item>
             <el-form-item label="半径长度">
-                <el-input style="width: 330px" v-model="editNodeParams.r"></el-input>
+                <el-slider v-model="editNodeParams.r"
+                           :min="20"
+                           :max="50"
+                           input-size="small"
+                           show-input
+                ></el-slider>
             </el-form-item>
             <el-form-item label="字体大小">
                 <el-slider v-model="editNodeParams.fontSize"

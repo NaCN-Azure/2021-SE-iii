@@ -8,9 +8,10 @@
                         @blur="blur"
                         @keyup.enter.native="searchHandler"
                         placeholder="搜索想要的节点..."
-                        style="width: 270px"
+                        style="width: 260px"
+                        size="small"
                 >
-                    <el-button slot="append" icon="el-icon-search" style="color:white;" id="search" @click="searchHandler"></el-button>
+                    <el-button slot="append" icon="el-icon-search" style="color:white;" id="search" @click="searchHandler" size="small"></el-button>
                 </el-input>
                 <!---设置z-index优先级,防止被走马灯效果遮挡-->
                 <el-card
