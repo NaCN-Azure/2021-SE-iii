@@ -144,6 +144,7 @@ const editor = {
             const res = await selectAllDomainAPI(userId);
             if(res.data.code == 200){
                 commit('set_domainList',res.data.data.domain);
+                console.log("domainlist",state.domainList)
             }
         },
         // 创建节点提交

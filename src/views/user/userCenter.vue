@@ -12,7 +12,11 @@
                 <span v-else class="noAvatar">暂无头像</span>
                 <div class="avatarChangeNote">更换头像</div>
             </el-upload>
-            <div class="userBasicInfo-name">{{userInfo.nickname}}</div>
+            <div class="userBasicInfo-name">
+                <div>{{userInfo.nickname}}</div>
+                <img class="vipicon" v-if="userInfo.isVip" src="../../assets/VIP-gold.svg">
+                <img class="vipicon" v-else src="../../assets/VIP-gray.svg">
+            </div>
             <div class="userBasicInfo-sign" v-if="userInfo.sign!=''">{{userInfo.sign}}</div>
         </div>
         <div class="right-container" v-if="isLogin">
@@ -56,7 +60,34 @@
                     </el-form>
                 </el-tab-pane>
                 <el-tab-pane label="我的图谱" name="myDomains">
+                    <div class="domain-table" style="margin-top: 10px">
+                        <el-table
+                                :data="domainList"
+                                style="width:100%"
+                                :row-style="{height:'30px'}"
+                                :cell-style="{padding:'8px'}"
+                        >
+                            <el-table-column
+                                    label="图谱名称"
+                                    prop="name"
+                                    sortable
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                    sortable
+                                    label="创建时间"
+                                    prop="createTime"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                    sortable
+                                    label="上次修改时间"
+                                    prop="modifyTime"
+                            >
+                            </el-table-column>
 
+                        </el-table>
+                    </div>
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -85,7 +116,7 @@
                 avatarUpdater:{
                     id:'',
                     avatar:'',
-                }
+                },
             }
         },
         computed:{
@@ -93,6 +124,7 @@
                 'isLogin',
                 'userInfo',
                 'modifyUserInfoParams',
+                'domainList'
             ])
         },
         methods:{
@@ -179,6 +211,9 @@
                 }).then(() => {
                     this.closeAccount();
                 })
+            },
+            changeSortOrder(){
+
             }
         }
     }
@@ -201,6 +236,7 @@
         font-weight: bold;
         font-size: 20px;
         margin-top: 20px;
+        align-items: center;
     }
     .userBasicInfo-sign{
         color: #8c939d;
@@ -248,5 +284,16 @@
     }
     .modifyForm .el-form-item{
         display: flex;
+    }
+    .domain-table >>> .el-table__row > td{
+        /* 去除表格线 */
+        border: none;
+    }
+    .domain-table >>> .el-table::before{
+        /* 去除下边框 */
+        height: 0;
+    }
+    .vipicon{
+        height: 20px;
     }
 </style>

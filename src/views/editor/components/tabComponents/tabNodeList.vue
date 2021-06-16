@@ -8,9 +8,10 @@
                         @blur="blur"
                         @keyup.enter.native="searchHandler"
                         placeholder="搜索想要的节点..."
-                        style="width: 270px"
+                        style="width: 260px"
+                        size="small"
                 >
-                    <el-button slot="append" icon="el-icon-search" style="color:white;" id="search" @click="searchHandler"></el-button>
+                    <el-button slot="append" icon="el-icon-search" style="color:white;" id="search" @click="searchHandler" size="small"></el-button>
                 </el-input>
                 <!---设置z-index优先级,防止被走马灯效果遮挡-->
                 <el-card
@@ -42,6 +43,9 @@
                 </el-card>
             </el-col>
         </div>
+        <div id="sort">
+            <el-radio v-model="sortBy" label="type" @change="sortSearchNodes">按节点类型排序</el-radio>
+        </div>
         <div class="result" id="resultShow">
         </div>
 
@@ -63,6 +67,7 @@
                 history: false,
                 types: ["", "success", "info", "warning", "danger"], //搜索历史tag式样
                 searchNodesResult: [],  //搜索节点结果
+                sortBy:'createTime'
             };
         },
         computed:{
@@ -82,8 +87,10 @@
             }
         },
         mounted(){
-            // console.log("tab1组件");
-            this.showSearchNodes(this.nodesData);
+            console.log("tab1组件");
+            console.log(this.nodesData)
+            this.searchNodesResult = this.nodesData
+            this.showSearchNodes(this.searchNodesResult);
         },
         methods: {
             focus() {
@@ -139,6 +146,23 @@
                     }
                 }
                 //searchNodesResult就是结果数组
+            },
+            // 节点排序
+            sortSearchNodes(sortWay){
+                console.log("sorting by", sortWay)
+                // 按类型名排序
+                if(sortWay==='type'){
+                    this.searchNodesResult.sort(function (a,b) {
+                        if(a.type==b.type){
+                            return 0;
+                        }else if(a.type<b.type){
+                            return -1;
+                        }else{
+                            return 1;
+                        }
+                    })
+                }
+                this.showSearchNodes(this.searchNodesResult)
             },
             createCircleHtml(name,type,description,color){
                 return "            <div class=\"showElement\" style='margin-top: 10px;margin-bottom: 15px;margin-left:20px;width: 250px;height: 110px;-webkit-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);-moz-box-shadow:0 0 10px rgba(52, 56, 66, 0.2);box-shadow:0 0 10px rgba(52, 56, 66, 0.2);border-radius: 10px 10px;'>\n" +
@@ -253,5 +277,12 @@
         height: 300px;
         margin-top: 0px;
         padding-bottom: 20px;
+    }
+    #sort{
+        float: right;
+        padding-right: 20px;
+        margin-bottom: 10px;
+        font-size: 13px;
+        color: gray;
     }
 </style>

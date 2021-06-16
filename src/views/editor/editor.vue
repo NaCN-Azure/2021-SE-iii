@@ -119,7 +119,12 @@
                 <div class="graphInfo-item" v-show="selectedDomain.name!=''">
                     当前图谱：
                     <span v-if="!editDomainName">{{selectedDomain.name}}</span>
-                    <el-input v-if="editDomainName" v-model="selectedDomain.name" size="small" style="width: 100px"></el-input>
+                    <el-button v-if="!editDomainName" icon="el-icon-edit" circle size="mini" plain type="primary"
+                               @click="updateDomainName"
+                               style="margin-left: 10px"
+                    ></el-button>
+                    <el-input v-if="editDomainName" v-model="newDomainName" size="small" style="width: 100px" @keyup.enter.native="saveDomainName">
+                    </el-input>
                 </div>
                 <div class="graphInfo-item" v-show="selectedNode.name!=''" style="width: 150px">
                     <span class="">选中节点：</span>
@@ -170,12 +175,12 @@
             </ul>
 
             <!-- 节点富文本展示 -->
-            <div id="rich-container" style="display: none;">
-                <div class="mind-fj-box" v-show="popoverContent!=''">
-                    <el-scrollbar v-show="popoverContent!=''" class="mind-fj-p">
-                        <p v-html="popoverContent"></p>
+            <div id="rich-container" style="display: none;padding-left: 5px;padding-right: 5px">
+                    <el-scrollbar>
+                        <div style="font-size: 18px;padding-top: 5px;padding-bottom:3px;margin-bottom: 10px;border-bottom: 1px solid gray">{{selectedNode.name}}<br/></div>
+                        <div style="margin-bottom: 10px">节点类型: {{selectedNode.type}}<br/></div>
+                        <div style="padding-bottom: 10px">节点描述: {{selectedNode.description}}</div>
                     </el-scrollbar>
-                </div>
             </div>
         </div>
 
@@ -192,7 +197,7 @@
     import $ from 'jquery';
     import {mapActions, mapGetters, mapMutations} from "vuex";
     import {updateNodeAPI, deleteNodeAPI, updateXYAPI} from "../../api/entity";
-    import {deleteDomainAPI} from "../../api/domain";
+    import {deleteDomainAPI,updateDomainAPI} from "../../api/domain";
     import {deleteLinkAPI, getLinkByDomainIdAPI} from "../../api/relationship";
     import {downloadAPI, exportGraphXMLAPI} from "../../api/file";
     import CreateNodeDialog from "./components/createNodeDialog";
@@ -222,7 +227,7 @@
                     bgColor:'',
                     shape:'',
                     domainId:'',
-                    nodeType:'',
+                    type:'',
                     description:'',
                     r: '',
                     fontSize: '',  //字体大小
@@ -235,7 +240,6 @@
                     toId:'',
                     domainId:'',
                 },
-                popoverContent:'',
                 simulation: null,
                 markedSimulation: null,
                 circleNodes: [],
@@ -260,6 +264,7 @@
                 typeValue: [],
 
                 editDomainName: false,
+                newDomainName:'',
             }
         },
 
@@ -610,23 +615,20 @@
                     .on('mouseenter', function (d, i) {
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
                         that.selectedNode = i
+                        console.log(that.selectedNode)
                     })
                     // 鼠标在节点上停留2s时，显示节点描述信息  （此功能暂时禁用，后面再讨论具体使用细节）
-                    // .on('mouseover',function (d, i){
-                    //     that.timer = setTimeout(function (d) {
-                    //         that.popoverContent = i.description
-                    //         d3.select("#rich-container")
-                    //             .style('position', 'absolute')
-                    //             .style('left', i.x + "px")
-                    //             .style('top', i.y + "px")
-                    //             .style('display', 'block')
-                    //     }, 2000)
-                    // })
-                    // .on('mouseout',function (d, i) {
-                    //     clearTimeout(that.timer)
-                    // })
-                    .on('mouseleave', function (d) {
+                    .on('mouseover',function (d, i){
+                        that.timer = setTimeout(function (d) {
+                            d3.select("#rich-container")
+                                .style('display', 'block')
+                        }, 1000)
+                    })
+                    .on('mouseout',function (d, i) {
                         d3.select(this).style("stroke-width", "0")
+                        clearTimeout(that.timer)
+                        d3.select("#rich-container")
+                            .style('display', 'none')
                     })
             },
 
@@ -672,22 +674,18 @@
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
                         that.selectedNode = i
                     })
-                    // 鼠标在节点上停留2s时，显示节点描述信息
-                    // .on('mouseover',function (d, i){
-                    //     this.timer = setTimeout(function (d) {
-                    //         that.popoverContent = d.description
-                    //         d3.select("#rich-container")
-                    //             .style('position', 'absolute')
-                    //             .style('left', d.x + "px")
-                    //             .style('top', d.y + "px")
-                    //             .style('display', 'block')
-                    //     }, 2000)
-                    // })
-                    // .on('mouseout',function (d, i) {
-                    //     clearTimeout(this.timer)
-                    // })
-                    .on('mouseleave',function (d) {
+                    // 鼠标在节点上停留1s时，显示节点描述信息
+                    .on('mouseover',function (d, i){
+                        this.timer = setTimeout(function (d) {
+                            d3.select("#rich-container")
+                                .style('display', 'block')
+                        }, 1000)
+                    })
+                    .on('mouseout',function (d, i) {
                         d3.select(this).style("stroke-width","0")
+                        clearTimeout(this.timer)
+                        d3.select("#rich-container")
+                            .style('display', 'none')
                     })
             },
 
@@ -721,22 +719,18 @@
                         d3.select(this).style("stroke-width", "2").style("stroke","#999")
                         that.selectedNode = i
                     })
-                    // 鼠标在节点上停留2s时，显示节点描述信息
-                    // .on('mouseover',function (d, i){
-                    //     this.timer = setTimeout(function (d) {
-                    //         that.popoverContent = d.description
-                    //         d3.select("#rich-container")
-                    //             .style('position', 'absolute')
-                    //             .style('left', d.x + "px")
-                    //             .style('top', d.y + "px")
-                    //             .style('display', 'block')
-                    //     }, 2000)
-                    // })
-                    // .on('mouseout',function (d, i) {
-                    //     clearTimeout(this.timer)
-                    // })
-                    .on('mouseleave',function (d) {
+                    // 鼠标在节点上停留1s时，显示节点描述信息
+                    .on('mouseover',function (d, i){
+                        this.timer = setTimeout(function (d) {
+                            d3.select("#rich-container")
+                                .style('display', 'block')
+                        }, 1000)
+                    })
+                    .on('mouseout',function (d, i) {
                         d3.select(this).style("stroke-width","0")
+                        clearTimeout(this.timer)
+                        d3.select("#rich-container")
+                            .style('display', 'none')
                     })
             },
 
@@ -906,9 +900,9 @@
                                 type: 'success',
                             });
                             // 删除正在显示的domain，刷新
-                            if (domainId == this.domain.id) {
+                            if (domainId == this.selectedDomain.id) {
                                 this.relationships = [];
-                                this.updateGraph();
+                                this.init()
                             }
                         } else {
                             this.$message({
@@ -916,7 +910,7 @@
                                 type: 'error'
                             })
                         }
-                        this.getAllDomains();
+                        this.getAllDomains(this.userInfo.id);
                     });
                 }).catch(() => {
                         this.$message({
@@ -925,6 +919,30 @@
                         })
                     }
                 )
+            },
+            updateDomainName(){
+                this.editDomainName = true;
+                this.newDomainName = this.selectedDomain.name;
+            },
+            saveDomainName(){
+                let editDomainParams = this.selectedDomain;
+                editDomainParams.name = this.newDomainName;
+                updateDomainAPI(editDomainParams).then(res=>{
+                    console.log(res)
+                    if(res.data.code == 200){
+                        Message({
+                            type:'success',
+                            message:'修改成功'
+                        })
+                        this.selectDomainById(this.selectedDomain.id)
+                    }else{
+                        Message({
+                            type:'error',
+                            message:'修改失败'
+                        })
+                    }
+                })
+                this.editDomainName = false
             },
 
             showNodeList (){
@@ -1308,6 +1326,7 @@
             compareArr(arr1,arr2){
                 return arr1.length-arr2.length;
             },
+            // 排版模式计算
             composeModeSet(nodesData){
                 let newData = JSON.parse(JSON.stringify(nodesData))
 
@@ -1459,6 +1478,17 @@
     .domain-table >>> .el-table::before{
         /* 去除下边框 */
         height: 0;
+    }
+    #rich-container{
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+        background-color: rgba(255,255,255,0.5);
+        width: 180px;
+        height: auto;
+        border-radius: 5px;
+        font-size: 13px;
+        position: absolute;
+        right: 310px;
+        top: 110px;
     }
 
 </style>

@@ -15,7 +15,7 @@ export function loginAPI(userInfo) {
 //根据token获取用户信息
 export function getUserInfoAPI() {
     return axios({
-        url: `${api.userPre}/getMemberInfo`,
+        url: `${api.userPre}/getUserInfo`,
         method: 'get'
     })
 }
@@ -45,7 +45,7 @@ export function updateUserPwdAPI(id, oldPwd, newPwd) {
     })
 }
 
-export function resetPwdAPI(mobile,password) {
+export function resetPwdAPI(mobile, password) {
     return axios({
         url: `${api.userPre}/resetPwd/${mobile}/${password}`,
         method: 'post',
@@ -64,5 +64,13 @@ export function closeAccountAPI(id){
     return axios({
         url:`${api.userPre}/deleteUser/${id}`,
         method: 'delete',
+    })
+}
+
+//设置用户为vip
+export function setVipUserAPI(id, days){
+    return axios({
+        url:`${api.userPre}/setVipUser/${id}/${days}`,
+        method: 'get',
     })
 }
