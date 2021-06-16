@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.entity.query.DomainQuery;
 import com.heap.coinservice.service.DomainService;
+import com.heap.commonutils.DefaultUtil;
 import com.heap.commonutils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -40,6 +41,7 @@ public class DomainController {
 
     @GetMapping("/selectDomainById/{domainId}")
     public Result selectDomainById(@PathVariable int domainId){
+        DefaultUtil.NOW_DOMAIN_ID=domainId;
         return Result.ok().data("domain", domainService.getDomainById(domainId));
     }
 

@@ -5,6 +5,7 @@ import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
 import com.heap.coinservice.service.RelationshipService;
+import com.heap.commonutils.DefaultUtil;
 import com.heap.commonutils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,7 @@ public class RelationshipController {
     @GetMapping("/getLinkByDomainId/{domainId}")
     public Result getGraph(@PathVariable int domainId){
         List<Relationship> relationshipList = relationshipService.getLinkByDomainId(domainId);
+        DefaultUtil.NOW_DOMAIN_ID=domainId;//知道当前ID
         return Result.ok().data("relationships", relationshipList);
     }
 

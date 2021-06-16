@@ -96,6 +96,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public String getAnswer(int domainId,List<String> commands){
+        if(domainId ==-1) return "还没选中图谱哦~";
         try {
             int AnswerType = Integer.parseInt(commands.get(0));
             String finalAnswer = "";

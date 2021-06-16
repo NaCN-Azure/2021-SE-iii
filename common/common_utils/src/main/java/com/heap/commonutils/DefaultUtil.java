@@ -17,6 +17,8 @@ public class DefaultUtil {
 
     public static double DEFAULT_R=40;
 
+    public static int NOW_DOMAIN_ID=-1;
+
 //    public static HashMap<String,Boolean> DEFAULT_TYPE_COLORS=new HashMap<String, Boolean>(){
 //        {
 //                    put("#409EFF", false);
