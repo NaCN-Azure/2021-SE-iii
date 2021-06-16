@@ -23,7 +23,7 @@ public interface DomainMapper extends BaseMapper<Domain> {
      * 新增域
      * @param domain
      */
-    @Insert("insert into domain(name,user_id) values (#{name},#{user_id})")
+    @Insert("insert into domain(name, user_id, create_time, modify_time) values (#{name},#{user_id},#{createTime},#{modifyTime})")
     void createDomain(Domain domain);
 
     /**

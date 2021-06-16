@@ -22,8 +22,7 @@ public class DomainController {
 
     @PostMapping("/createDomain")
     public Result createDomain(@RequestBody Domain domain) {
-        System.out.println(domain);
-        int flag=domainService.createDomain(domain);
+        int flag = domainService.createDomain(domain);
         return flag != -1 ? Result.ok().message("创建成功") : Result.error().message("名称重复");
     }
 
