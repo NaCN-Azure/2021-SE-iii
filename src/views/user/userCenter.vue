@@ -3,7 +3,7 @@
         <div class="left-container" v-if="isLogin">
             <el-upload
                     class="avatar-uploader"
-                    action="http://106.15.93.81:9001/ossservice/fileoss"
+                    action="http://localhost:9001/ossservice/fileoss"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess"
                     accept=".jpg,.jpeg,.png,.JPG,.JPEG,.PNG"
