@@ -1,7 +1,5 @@
 import io
 import json
-from query import Query
-from py2neo import Graph,Node,Relationship,NodeMatcher
 import jieba.posseg
 # # 将自定义字典写入文件
 # result = []
@@ -203,7 +201,6 @@ class QuestionTemplate():
             3:self.get_another,
             4:self.get_type_node
         }
-        self.graph = Query()
     def get_question_answer(self,question,template):
         # 如果问题模板的格式不正确则结束
         assert len(str(template).strip().split("\t"))==2

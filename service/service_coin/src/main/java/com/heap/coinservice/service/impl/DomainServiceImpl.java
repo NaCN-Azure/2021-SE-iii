@@ -97,11 +97,19 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         String domainName = "";
         if(template == 1){
             filename = "pokemon.csv";
-            domainName = "pokemon";
+            domainName = "宝可梦";
         }
         else if(template == 2){
             filename = "chemistry.csv";
             domainName = "化学";
+        }
+        else if(template == 3){
+            filename = "finanial.csv";
+            domainName = "金融知识图谱";
+        }
+        else if(template == 4){
+            filename = "movie.csv";
+            domainName = "电影知识图谱";
         }
         File file = new File(path + filename);
         List<List<String>> rowList = new ArrayList<>();
