@@ -125,6 +125,7 @@ public class UsersController {
         Integer level = userQuery.getLevel();
         String begin = userQuery.getBegin();
         String end = userQuery.getEnd();
+        Boolean isVip = userQuery.getIsVip();
         if(!StringUtils.isEmpty(nickname)){
             wrapper.like("nickname", nickname);
         }
@@ -140,6 +141,7 @@ public class UsersController {
         if(!StringUtils.isEmpty(end)){
             wrapper.le("create_time", end);
         }
+        wrapper.eq("is_vip", isVip);
 
         //排序
         wrapper.orderByDesc("create_time");

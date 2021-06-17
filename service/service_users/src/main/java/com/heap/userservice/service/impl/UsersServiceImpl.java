@@ -253,7 +253,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
     /**
      *
      * @param id
-     * @param days 分为30天、90天和365天
+     * @param days 充值天数
      */
     @Override
     public void setVipUser(String id, int days) {

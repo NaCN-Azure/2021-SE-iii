@@ -18,6 +18,9 @@ public class UserQuery {
     @ApiModelProperty(value = "等级 1普通用户 2高级用户")
     private Integer level;
 
+    @ApiModelProperty(value = "是否为会员 1（true）是，0（false）不是")
+    private Boolean isVip;
+
     //注意，这里使用的是String类型，前端传过来的数据无需进行类型转换
     @ApiModelProperty(value = "查询开始时间", example = "2019-01-01 10:10:10")
     private String begin;
