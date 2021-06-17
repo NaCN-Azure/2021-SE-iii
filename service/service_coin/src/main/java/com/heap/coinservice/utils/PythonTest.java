@@ -8,7 +8,7 @@ public class PythonTest {
     public static void main(String[] args) {
         try{
             String question = "电类型的宝可梦有哪些";
-            String exe = "python";
+            String exe = "/usr/local/bin/python3";
             String command = "service/robot/ques/unit.py";
             String[] cmdArr = new String[]{exe,command,question};
             Process process = Runtime.getRuntime().exec(cmdArr);

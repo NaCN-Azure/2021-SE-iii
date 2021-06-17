@@ -76,7 +76,7 @@ public class QuestionServiceImpl implements QuestionService {
     public List<String> dealByPython(String question){
         List<String> r = new ArrayList<>();
         try{
-            String exe = "python3";
+            String exe = "/usr/local/bin/python3";
             String command = "service/robot/ques/unit.py";//改路径
             String[] cmdArr = new String[]{exe,command,question};
             Process process = Runtime.getRuntime().exec(cmdArr);
