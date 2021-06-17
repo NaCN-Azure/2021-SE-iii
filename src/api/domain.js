@@ -39,3 +39,10 @@ export function selectAllDomainAPI(userId) {
         method: 'get'
     })
 }
+
+export function getTemplateAPI(template, userId) {
+    return axios({
+        url: `${api.domainPre}/getTemplate/${template}/${userId}`,
+        method: 'get'
+    })
+}

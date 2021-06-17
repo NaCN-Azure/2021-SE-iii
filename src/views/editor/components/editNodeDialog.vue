@@ -7,7 +7,7 @@
             :before-close="cancelEditNode"
             width="600px"
     >
-        <el-form>
+        <el-form label-width="70px">
             <el-form-item label="节点名称">
                 <el-input v-model="editNodeParams.name" style="width: 330px"></el-input>
             </el-form-item>
@@ -34,10 +34,20 @@
                 ></el-input>
             </el-form-item>
             <el-form-item label="半径长度">
-                <el-input style="width: 330px" v-model="editNodeParams.r"></el-input>
+                <el-slider v-model="editNodeParams.r"
+                           :min="20"
+                           :max="50"
+                           input-size="small"
+                           show-input
+                ></el-slider>
             </el-form-item>
             <el-form-item label="字体大小">
-                <el-input style="width: 330px" v-model="editNodeParams.fontSize"></el-input>
+                <el-slider v-model="editNodeParams.fontSize"
+                           :min="10"
+                           :max="25"
+                           input-size="small"
+                           show-input
+                ></el-slider>
             </el-form-item>
         </el-form>
         <!-- mark：dialog的footer一定要如下加span标签！不是div！ 按钮才可以靠右 -->

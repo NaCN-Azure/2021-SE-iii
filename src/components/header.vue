@@ -35,6 +35,8 @@
                 <div class="user">
                     <el-avatar :src=userInfo.avatar alt="user" :size="45" v-if="isLogin"></el-avatar>
                     <span class="username">{{userInfo.nickname}}</span>
+                    <img class="vipicon" v-if="userInfo.isVip" src="../assets/VIP-gold.svg">
+                    <img class="vipicon" v-else src="../assets/VIP-gray.svg">
                 </div>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="userCenter">个人中心</el-dropdown-item>
@@ -85,12 +87,6 @@
                     console.log(this.activeIndex);
                     this.$router.push('/userCenter');
                 }else{
-                    // logout
-                    // cookie.set('coin_token', '')
-                    // cookie.set('coin_user', '')
-                    // this.set_userInfo('')
-                    // this.set_isLogin(false)
-                    // this.$router.push('/home')
                     this.logout();
                 }
             },
@@ -150,5 +146,9 @@
     .username{
         margin-left: 15px;
         font-size: 15px;
+    }
+    .vipicon{
+        padding-left: 5px;
+        height: 20px;
     }
 </style>
