@@ -209,7 +209,7 @@ function loadWidget(config) {
 		console.log(question)
 		showMessage("让我想一想...(ˇˍˇ) ~",3000,9);
 		$.ajax({
-			url: `http://localhost:8002/coinservice/question/ask/${question}`,
+			url: `http://106.15.93.81:8002/coinservice/question/ask/${question}`,
 			type: "GET",
 			contentType: "application/x-www-form-urlencoded",
 			data: {
