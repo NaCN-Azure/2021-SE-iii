@@ -146,7 +146,10 @@ function loadWidget(config) {
 
 	function intelligentQA() {
 			console.log("QA TIME!")
-			console.log()
+			askQuestionAPI(40, "关都地区有哪些宝可梦")
+				.then(res => {
+					console.log(res)
+				})
 	}
 
 	function showMessage(text, timeout, priority) {

@@ -6,7 +6,7 @@
 		"selector": "#waifu-tool .fa-comments-o",
 		"text": ["猜猜我要说些什么？", "我从青蛙王子那里听到了不少人生经验。"]
 	}, {
-		"selector": "#waifu-tool .fa-object-ungroup",
+		"selector": "#waifu-tool .fa-question-circle-o",
 		"text": ["要不要来问问我问题啊，我可是很聪明的哦~~", "想聊天(≧∇≦)", "QWQ聪明问答小助手 铛铛铛~", "啪~聊天框要出来喽~~"]
 	}, {
 		"selector": "#waifu-tool .fa-user-o",
