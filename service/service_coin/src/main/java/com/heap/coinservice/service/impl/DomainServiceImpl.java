@@ -77,7 +77,6 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Override
     public Domain updateDomain(Domain domain){
         baseMapper.updateById(domain);
-        //domainMapper.updateDomain(domain.getName(), domain.getId());
         return domainMapper.selectDomain(domain.getId());
     }
 
@@ -92,20 +91,20 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     }
 
     @Override
-    public void getModule(int module,String userId) throws IOException {
+    public void getTemplate(int template, String userId) throws IOException {
         String path = "service/DomainDefault/";
-        String filename ="";
-        String domainName="";
-        if(module==1){
-            filename="pokemon.csv";
-            domainName="pokemon";
+        String filename = "";
+        String domainName = "";
+        if(template == 1){
+            filename = "pokemon.csv";
+            domainName = "pokemon";
         }
-        else if(module==2){
-            filename="chemistry.csv";
-            domainName="化学";
+        else if(template == 2){
+            filename = "chemistry.csv";
+            domainName = "化学";
         }
-        File file = new File(path+filename);
-        List<List<String>> rowList = new ArrayList<List<String>>();
+        File file = new File(path + filename);
+        List<List<String>> rowList = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = null;
         while ((line = reader.readLine()) != null) {
@@ -115,6 +114,6 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         }
         Domain csvDomain = Domain.builder().name(domainName).user_id(userId).build();
         int domainId = this.createDomain(csvDomain);
-        fileService.createGraphByCsv(rowList,domainId);
+        fileService.createGraphByCsv(rowList, domainId);
     }
 }

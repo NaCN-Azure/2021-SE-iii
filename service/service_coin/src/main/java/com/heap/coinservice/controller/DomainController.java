@@ -93,10 +93,10 @@ public class DomainController {
     }
 
     //根据模板查阅
-    @PostMapping("/getModule/{mudule}/{userId}")
-    public Result getModule(@PathVariable int mudule,@PathVariable String userId) throws IOException {
-        domainService.getModule(mudule,userId);
-        return Result.ok().message("图谱"+mudule+"号模板成功");
+    @GetMapping("/getTemplate/{template}/{userId}")
+    public Result getTemplate(@PathVariable int template, @PathVariable String userId) throws IOException {
+        domainService.getTemplate(template, userId);
+        return Result.ok().message("图谱" + template + "号模板成功");
     }
 
 }

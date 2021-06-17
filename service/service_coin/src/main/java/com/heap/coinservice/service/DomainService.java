@@ -55,8 +55,8 @@ public interface DomainService extends IService<Domain> {
 
      /**
       * 模板创建
-      * @param module
+      * @param template
       */
-     void getModule(int module,String userId) throws IOException;
+     void getTemplate(int template, String userId) throws IOException;
 
 }
