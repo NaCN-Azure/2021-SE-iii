@@ -18,7 +18,7 @@
         <el-tabs v-model="createType"
                  type="border-card"
                  class="createTab"
-                 stretch="true"
+                 :stretch="true"
         >
             <el-tab-pane label="上传csv文件" name="importCSV">
                 csv文件格式：节点-节点-关系 三元组
@@ -33,6 +33,15 @@
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 </el-upload>
+            </el-tab-pane>
+            <el-tab-pane label="使用推荐模板" name="useTemplate">
+                我们为您推荐以下几个图谱模板，欢迎使用哦:
+                <div style="margin-top: 20px">
+                    <el-button plain type="primary" size="small" round @click="handleCurrentChange(1)">宝可梦图谱</el-button>
+                    <el-button plain type="primary" size="small" round @click="handleCurrentChange(2)">化学图谱</el-button>
+                    <el-button plain type="primary" size="small" round @click="handleCurrentChange(3)">金融图谱</el-button>
+                    <el-button plain type="primary" size="small" round @click="handleCurrentChange(4)">电影图谱</el-button>
+                </div>
             </el-tab-pane>
             <el-tab-pane label="使用说明" name="instructions">
 
@@ -53,6 +62,8 @@
 <script>
     import {mapActions, mapGetters, mapMutations} from "vuex";
     import cookie from 'js-cookie';
+    import {getTemplateAPI} from "../../api/domain";
+    import {Message} from "element-ui";
 
     export default {
         name: "index.vue",
@@ -62,6 +73,25 @@
                 extractedText: '',
                 uploadParam: {},
                 // uploadURL:"http://106.15.93.81:8002/coinservice/file/getCsv/"+this.userInfo.id,
+                templates:[
+                    {
+                        id:1,
+                        name:'宝可梦图谱'
+                    },
+                    {
+                        id:2,
+                        name:'化学图谱'
+                    },
+                    {
+                        id:3,
+                        name:'金融图谱'
+                    },
+                    {
+                        id:4,
+                        name:'电影图谱'
+                    }
+                ],
+                selectedTemplate:'',
             }
         },
         computed: {
@@ -84,6 +114,11 @@
             ...mapActions([
                 'logout'
             ]),
+            handleCurrentChange(val) {
+                // console.log(val);
+                // console.log(val.id);
+                this.selectedTemplate = val.id
+            },
             handleCsvSuccess(res) {
                 console.log(res);
                 this.$message({
@@ -101,9 +136,28 @@
                 }
             },
             submitUpload() {
-                console.log('submiting');
-                this.$refs.upload.submit();
-                this.$router.push('/editor');
+                if(this.createType=='importCsv'){
+                    console.log('submiting');
+                    this.$refs.upload.submit();
+                    this.$router.push('/editor');
+                }else if(this.createType=='useTemplate'){
+                    console.log("using template")
+                    getTemplateAPI(this.selectedTemplate,this.userInfo.id).then(res=>{
+                        console.log(res);
+                        if(res.data.code == 200){
+                            Message({
+                                type:'success',
+                                message:'创建成功'
+                            })
+                            this.$router.push('/editor')
+                        }else{
+                            Message({
+                                type:'error',
+                                message:'创建失败'
+                            })
+                        }
+                    })
+                }
             },
             addRouterToEditor() {
                 this.set_activeIndex('2');
