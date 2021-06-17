@@ -23,6 +23,7 @@ public class QuestionController {
         String answer = questionService.getAnswer(DefaultUtil.NOW_DOMAIN_ID, commands);
         String result = question + ":\n" + answer;
         System.out.println(result);
-        return Result.ok().data("result", result);
+//        return Result.ok().data("result", result);
+        return Result.ok().data("result", answer);
     }
 }
