@@ -901,7 +901,9 @@
                             });
                             // 删除正在显示的domain，刷新
                             if (domainId == this.selectedDomain.id) {
-                                this.relationships = [];
+                                console.log("删除domain")
+                                // this.relationships = [];
+                                this.set_relationships([])
                                 this.init()
                             }
                         } else {

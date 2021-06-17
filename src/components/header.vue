@@ -87,12 +87,6 @@
                     console.log(this.activeIndex);
                     this.$router.push('/userCenter');
                 }else{
-                    // logout
-                    // cookie.set('coin_token', '')
-                    // cookie.set('coin_user', '')
-                    // this.set_userInfo('')
-                    // this.set_isLogin(false)
-                    // this.$router.push('/home')
                     this.logout();
                 }
             },

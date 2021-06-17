@@ -22,10 +22,10 @@
                 csv文件格式：节点-节点-关系 三元组
                 <el-upload
                         drag
+                        :action="uploadUrl"
                         class="uploading"
-                        action="http://localhost:8002/coinservice/file/getCsv"
+                        :on-success="handleCsvSuccess"
                         accept=".csv"
-                        :auto-upload=false
                         ref="upload"
                 >
                     <i class="el-icon-upload"></i>
@@ -50,6 +50,7 @@
             return {
                 addDomainType:'empty',
                 addDomainName:'',
+                uploadParam: {},
             }
         },
         computed:{
@@ -57,6 +58,10 @@
                 'addDomainDialogVisible',
                 'userInfo',
             ]),
+            uploadUrl(){
+                // return "http://106.15.93.81:8002/coinservice/file/getCsv/"+this.userInfo.id
+                return "http://localhost:8002/coinservice/file/getCsv/"+this.userInfo.id
+            }
         },
         methods:{
             ...mapMutations([
@@ -73,6 +78,13 @@
             //         user_id: this.userInfo.id,
             //     }
             // },
+            handleCsvSuccess(res) {
+                console.log(res);
+                this.$message({
+                    message: '导入完成',
+                    type: 'success'
+                })
+            },
             cancelAddDomain(){
                 this.set_addDomainDialogVisible(false);
                 this.addDomainName = '';
@@ -90,11 +102,9 @@
                 }else{
                     // 导入文件创建图谱
                     this.set_addDomainDialogVisible(false);
-                    this.$message({
-                        message:'添加成功',
-                        type:'success'
-                    })
-                    this.getAllDomains(this.userInfo.id);
+                    console.log('submiting');
+                    this.$refs.upload.submit();
+                    this.getAllDomains(this.userInfo.id)
                 }
             }
         }

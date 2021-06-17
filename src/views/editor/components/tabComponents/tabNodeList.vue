@@ -46,7 +46,10 @@
         <div id="sort">
             <el-radio v-model="sortBy" label="type" @change="sortSearchNodes">按节点类型排序</el-radio>
         </div>
-        <div class="result" id="resultShow">
+        <div class="result">
+            <div id="resultShow">
+
+            </div>
         </div>
 
     </div>
@@ -279,10 +282,12 @@
         padding-bottom: 20px;
     }
     #sort{
-        float: right;
+        position: absolute;
+        top: 55px;
+        right: 10px;
+        bottom: 5px;
         padding-right: 20px;
-        margin-bottom: 10px;
         font-size: 13px;
-        color: gray;
+        color: #8c939d;
     }
 </style>

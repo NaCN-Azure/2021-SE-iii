@@ -29,6 +29,7 @@ const user = {
 
         },
         resetPwdDialogVisible: false,
+        topUpVipDialogVisible: false,
 
     },
     mutations: {
@@ -55,8 +56,11 @@ const user = {
         set_modifyUserInfoParams: function (state, data) {
             state.modifyUserInfoParams = data;
         },
-        set_resetPwdDialogVisible: function (state, date) {
-            state.resetPwdDialogVisible = date;
+        set_resetPwdDialogVisible: function (state, data) {
+            state.resetPwdDialogVisible = data;
+        },
+        set_topUpVipDialogVisible: function (state, data) {
+            state.topUpVipDialogVisible = data;
         }
     },
     actions: {

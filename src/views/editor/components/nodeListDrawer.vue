@@ -2,6 +2,7 @@
     <el-drawer
             :with-header="false"
             :visible.sync="nodeListVisible"
+            v-if="nodeListVisible"
             size="20%"
             :before-close="handleClose"
     >
@@ -38,6 +39,9 @@
                 'nodesData',
                 'linksData',
             ])
+        },
+        mounted() {
+            console.log("tab打开")
         },
         methods:{
             ...mapMutations([

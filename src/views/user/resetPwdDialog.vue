@@ -122,10 +122,12 @@
     .el-form-item{
         margin-bottom: 0px;
         display: flex;
+        color: ;
     }
     .promptMsg{
         color: #ff463f;
         font-size: 14px;
         display: none;
     }
+
 </style>
