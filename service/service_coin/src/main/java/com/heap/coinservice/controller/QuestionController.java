@@ -17,7 +17,7 @@ public class QuestionController {
     QuestionService questionService;
 
     @GetMapping("/ask/{question}")
-    public Result AskQuestion(@PathVariable String question){
+    public Result askQuestion(@PathVariable String question){
         List<String> commands = questionService.dealByPython(question);
         System.out.println("解析问题代号:" + commands.get(0));
         String answer = questionService.getAnswer(DefaultUtil.NOW_DOMAIN_ID, commands);
