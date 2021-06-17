@@ -118,18 +118,5 @@
 
     </dependencies>
 
-    <!--&lt;!&ndash; 项目打包时会将java目录中的*.xml文件也进行打包 &ndash;&gt;-->
-    <!--<build>-->
-        <!--<resources>-->
-            <!--<resource>-->
-                <!--<directory>src/main/java</directory>-->
-                <!--<includes>-->
-                    <!--<include>**/*.xml</include>    &lt;!&ndash;两个*，表示多层目录&ndash;&gt;-->
-                <!--</includes>-->
-                <!--<filtering>false</filtering>-->
-            <!--</resource>-->
-        <!--</resources>-->
-    <!--</build>-->
-
 
 </project>
