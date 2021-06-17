@@ -16,14 +16,14 @@ public class QuestionController {
     @Autowired
     QuestionService questionService;
 
-    @GetMapping("/ask/{question}")
-    public Result askQuestion(@PathVariable String question){
-        List<String> commands = questionService.dealByPython(question);
-        System.out.println("解析问题代号:" + commands.get(0));
-        String answer = questionService.getAnswer(DefaultUtil.NOW_DOMAIN_ID, commands);
-        String result = question + ":\n" + answer;
-        System.out.println(result);
+    @GetMapping("/ask")
+    public Result askQuestion(@RequestParam int commands,@RequestParam List<String> members){
+        //List<String> commands = questionService.dealByPython(question);
+        System.out.println("解析问题代号:" + commands);
+        String answer = questionService.getAnswer(DefaultUtil.NOW_DOMAIN_ID, commands,members);
+        System.out.println(answer);
 //        return Result.ok().data("result", result);
         return Result.ok().data("result", answer);
     }
+
 }

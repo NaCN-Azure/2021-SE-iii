@@ -95,26 +95,26 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public String getAnswer(int domainId,List<String> commands){
+    public String getAnswer(int domainId,int commands,List<String> members){
         if(domainId ==-1) return "还没选中图谱哦~";
         try {
-            int AnswerType = Integer.parseInt(commands.get(0));
+            int AnswerType = commands;
             String finalAnswer = "";
             switch (AnswerType) {
                 case 0:
-                    finalAnswer = getNodesNear(domainId, commands.get(1));
+                    finalAnswer = getNodesNear(domainId, members.get(0));
                     break;
                 case 1:
-                    finalAnswer = getNodeDescription(domainId,commands.get(1));
+                    finalAnswer = getNodeDescription(domainId,members.get(0));
                     break;
                 case 2:
-                    finalAnswer = getRelationWithTwoNodes(domainId,commands.get(1),commands.get(2));
+                    finalAnswer = getRelationWithTwoNodes(domainId,members.get(0),members.get(1));
                     break;
                 case 3:
-                    finalAnswer = getTargetNodes(domainId,commands.get(1),commands.get(2));
+                    finalAnswer = getTargetNodes(domainId,members.get(0),members.get(1));
                     break;
                 case 4:
-                    finalAnswer = getTypesNodes(domainId,commands.get(1));
+                    finalAnswer = getTypesNodes(domainId,members.get(0));
                     break;
                 default:
                     finalAnswer = "我不知道哎~或许你可以换个问法。";

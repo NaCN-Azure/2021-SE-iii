@@ -29,10 +29,10 @@ public interface QuestionService {
     /**
      * 得到答案
      * @param domainId
-     * @param commands
+     * @param members
      * @return
      */
-    String getAnswer(int domainId,List<String> commands);
+    String getAnswer(int domainId,int commands,List<String> members);
 
     /**
      * 加入字典
