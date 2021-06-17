@@ -1,8 +1,7 @@
 <template>
     <div class="container" style="position: absolute;left: 0;top:60px;bottom: 0; width: 100%">
     <!-- 左侧-图谱（domain）列表 -->
-        <div class="domain-list" style="height: 100%;text-align: center;;border-right: 1px solid lightgray">
-            <el-scrollbar style="height:100%;width: 300px;overflow-x: hidden">
+        <div class="domain-list" style="height: 100%;width:300px;text-align: center;;border-right: 1px solid lightgray">
                 <div class="domain-list-head" style="margin-top: 15px;">
                     <span style="font-size: 16px;color: grey;">图谱列表</span>
                     <el-tooltip content="添加图谱" placement="right">
@@ -15,10 +14,13 @@
                             type="primary"
                     ></el-button></el-tooltip>
                 </div>
-                <div class="domain-table" style="margin-top: 10px">
+            <el-scrollbar
+                    wrap-class="list" wrap-style="overflow-x:hidden;height:110%"
+                    style="overflow:scroll;height:300px;overflow-x:hidden;overflow-y:hidden">
+                <div class="domain-table" style="margin-top: 10px;width: 300px">
                     <el-table
                             :data="domainList"
-                            style="width:100%"
+                            style="width:100%;overflow-x: hidden"
                             :show-header="false"
                             :row-style="{height:'30px'}"
                             :cell-style="{padding:'8px'}"
@@ -109,10 +111,10 @@
                 </div>
             </div>
             <!-- 右边中间-图谱渲染区域 -->
-            <div class="graph">
-                <el-scrollbar style="width: 100%;height: 100%">
+            <div class="graph" style="width: 100%;height: 100%">
+<!--                <el-scrollbar style="width: 100%;height: 100%">-->
                     <svg id="kgGraph" width="1300" height="650"></svg>
-                </el-scrollbar>
+<!--                </el-scrollbar>-->
             </div>
             <div class="graphInfo">
                 <!-- 显示当前图谱名称，可以在这里对图谱名称进行修改 TODO-->
@@ -1491,6 +1493,14 @@
         position: absolute;
         right: 310px;
         top: 110px;
+    }
+    .el-scrollbar { overflow: scroll; width: 100%; }
+    .el-scrollbar__wrap{
+        overflow-x: hidden;
+        height: 110%;
+    }
+    .el-table--scrollable-x .el-table__body-wrapper {
+        overflow-x: hidden;
     }
 
 </style>

@@ -61,6 +61,7 @@
     import {createNodeAPI} from "../../../api/entity";
     import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../../api/relationship";
     import { Message } from 'element-ui'
+    import {addNodeNameAPI, addTypeNameAPI} from "../../../api/robot";
 
     export default {
         name: "createNodeDialog",
@@ -93,6 +94,15 @@
                                 type:'success'
                             })
                             this.set_createNodeDialogVisible(false)
+                            // 传到机器人字典
+                            addNodeNameAPI(this.createNodeParams.name)
+                                .then(res=>{
+                                    console.log("addNodeNameToDir",res)
+                            })
+                            addTypeNameAPI(this.createNodeParams.type)
+                                .then(res=>{
+                                    console.log("addTypeNameToDir",res)
+                            })
                             getLinkByDomainIdAPI(this.createNodeParams.domainId)
                                 .then(res => {
                                     this.set_relationships(res.data.data.relationships)

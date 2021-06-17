@@ -55,6 +55,7 @@
     import {mapActions, mapGetters, mapMutations} from "vuex";
     import {createLinkAPI, getLinkByDomainIdAPI, updateLinkAPI} from "../../../api/relationship";
     import { Message } from 'element-ui'
+    import {addLinkNameAPI} from "../../../api/robot";
 
     export default {
         name: "createLinkDialog",
@@ -86,6 +87,11 @@
                                 type:'success'
                             })
                             this.set_createLinkDialogVisible(false)
+                            // 传到机器人字典
+                            addLinkNameAPI(this.createLinkParams.name)
+                                .then(res=>{
+                                    console.log("addLinkNameToDir",res)
+                            })
                             getLinkByDomainIdAPI(this.createLinkParams.domainId)
                                 .then(res => {
                                     this.set_relationships(res.data.data.relationships)
