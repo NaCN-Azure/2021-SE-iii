@@ -92,6 +92,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
 
     @Override
     public void getTemplate(int template, String userId) throws IOException {
+        System.out.println(template+100);
         String path = "service/DomainDefault/";
         String filename = "";
         String domainName = "";
@@ -120,7 +121,9 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             List<String> row = Arrays.asList(rowArr);
             rowList.add(row);
         }
+        System.out.println("ahah2:"+userId);
         Domain csvDomain = Domain.builder().name(domainName).user_id(userId).build();
+        System.out.println("ahah3:"+userId);
         int domainId = this.createDomain(csvDomain);
         fileService.createGraphByCsv(rowList, domainId);
     }

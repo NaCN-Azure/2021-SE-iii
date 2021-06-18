@@ -94,8 +94,9 @@ public class DomainController {
 
     //根据模板查阅
     @GetMapping("/getTemplate/{template}/{userId}")
-    public Result getTemplate(@PathVariable int template, @PathVariable String userId) throws IOException {
-        domainService.getTemplate(template, userId);
+    public Result getTemplate(@PathVariable String template, @PathVariable String userId) throws IOException {
+        System.out.println("ahah:"+userId+" "+template);
+        domainService.getTemplate(Integer.parseInt(template), userId);
         return Result.ok().message("图谱" + template + "号模板成功");
     }
 

@@ -16,10 +16,11 @@ public class QuestionController {
     @Autowired
     QuestionService questionService;
 
-    @GetMapping("/ask")
-    public Result askQuestion(@RequestParam int commands,@RequestParam List<String> members){
+    @PostMapping("/ask/{commands}")
+    public Result askQuestion(@PathVariable int commands, @RequestBody List<String> members){
         //List<String> commands = questionService.dealByPython(question);
         System.out.println("解析问题代号:" + commands);
+        System.out.println(members);
         String answer = questionService.getAnswer(DefaultUtil.NOW_DOMAIN_ID, commands,members);
         System.out.println(answer);
 //        return Result.ok().data("result", result);
