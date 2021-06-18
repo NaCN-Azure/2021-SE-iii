@@ -209,14 +209,33 @@ function loadWidget(config) {
 		console.log(question)
 		showMessage("让我想一想...(ˇˍˇ) ~",3000,9);
 		$.ajax({
-			url: `http://106.15.93.81:8002/coinservice/question/ask/${question}`,
+			url: `http://106.15.93.81:5000/question/${question}`,
 			type: "GET",
 			contentType: "application/x-www-form-urlencoded",
 			data: {
 				question:question
 			},
 			success: function(data){
-				showMessage(data.data.result,9000,9);
+				console.log(data.Members);
+				console.log(data.Type);
+				$.ajax({
+					url: `http://106.15.93.81:8002/coinservice/question/ask/${question}`,
+					type: "GET",
+					contentType: "application/x-www-form-urlencoded",
+					data: {
+						commands:data.Type,
+						members:data.Members
+					},
+					success: function(data){
+						console.log(data);
+
+						// showMessage(data.data.result,9000,9);
+					},
+					error: function(){
+						showMessage("你说啥了呀~刚刚走神啦(*￣︶￣)",9000,9);
+					}
+				});
+				// showMessage(data.data.result,9000,9);
 			},
 			error: function(){
 				showMessage("你说啥了呀~刚刚走神啦(*￣︶￣)",9000,9);
