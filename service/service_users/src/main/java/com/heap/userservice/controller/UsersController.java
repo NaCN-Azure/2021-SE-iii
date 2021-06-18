@@ -141,7 +141,10 @@ public class UsersController {
         if(!StringUtils.isEmpty(end)){
             wrapper.le("create_time", end);
         }
-        wrapper.eq("is_vip", isVip);
+        if(!StringUtils.isEmpty(isVip)) {
+            wrapper.eq("is_vip", isVip);
+        }
+
 
         //排序
         wrapper.orderByDesc("create_time");
