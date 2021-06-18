@@ -14,8 +14,12 @@ import com.heap.coinservice.utils.FileUtil;
 import com.heap.commonutils.DefaultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
+import javax.xml.transform.TransformerConfigurationException;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +28,8 @@ import java.util.Map;
  *  服务实现类
  * </p>
  *
- * @author 车一晗
- * @since 2021-03-07
+ * @author 纳思彧
+ * @since 2021-04-07
  */
 @Service
 public class FileServiceImpl implements FileService {
@@ -48,14 +52,14 @@ public class FileServiceImpl implements FileService {
                 Entity startNode, endNode;
                 Entity check = entityService.findByName(points.get(0), domainId,true);
                 if(check == null) {
-                    startNode = entityService.createNode(points.get(0),DefaultUtil.DEFAULT_SHAPE, points.get(3), domainId, DefaultUtil.DEFAULT_DESCRIPTION, DefaultUtil.DEFAULT_R, DefaultUtil.DEFAULT_FONT);
+                    startNode = entityService.createNode(points.get(0),Integer.parseInt(points.get(5)), points.get(3), domainId, DefaultUtil.DEFAULT_DESCRIPTION, DefaultUtil.DEFAULT_R, DefaultUtil.DEFAULT_FONT);
                 }
                 else {
                     startNode = check;
                 }
                 check = entityService.findByName(points.get(1), domainId,true);
                 if(check == null) {
-                    endNode = entityService.createNode(points.get(1), DefaultUtil.DEFAULT_SHAPE, points.get(4), domainId, DefaultUtil.DEFAULT_DESCRIPTION, DefaultUtil.DEFAULT_R, DefaultUtil.DEFAULT_FONT);
+                    endNode = entityService.createNode(points.get(1), Integer.parseInt(points.get(6)), points.get(4), domainId, DefaultUtil.DEFAULT_DESCRIPTION, DefaultUtil.DEFAULT_R, DefaultUtil.DEFAULT_FONT);
                 }
                 else {
                     endNode = check;
@@ -113,6 +117,13 @@ public class FileServiceImpl implements FileService {
         else {
             return false;
         }
+    }
+
+    @Override
+    public boolean exportCSV(int domainId) throws TransformerConfigurationException, IOException, SAXException{
+        List<Relationship> relationships = relationshipService.getLinkByDomainId(domainId);
+        Domain domain = domainService.getDomainById(domainId);
+        return FileUtil.outCsv(relationships,domain);
     }
 
 }

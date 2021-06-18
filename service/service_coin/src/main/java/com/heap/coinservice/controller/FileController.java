@@ -19,6 +19,14 @@ import javax.xml.transform.TransformerConfigurationException;
 import java.io.*;
 import java.util.List;
 
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author 纳思彧
+ * @since 2021-04-07
+ */
 @RestController
 @RequestMapping("/coinservice/file")
 @CrossOrigin
@@ -58,6 +66,12 @@ public class FileController {
     @ResponseBody
     public Result exportGraphXML(@PathVariable int domainId, final HttpServletRequest request, final HttpServletResponse response) throws FileNotFoundException, SAXException, TransformerConfigurationException {
         return fileService.exportGraphXml(domainId) ? Result.ok().message("输出成功") : Result.error().message("输出失败");
+    }
+
+    @GetMapping(value = "/exportXml/{domainId}", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public Result exportCSV(@PathVariable int domainId, final HttpServletRequest request, final HttpServletResponse response) throws IOException, SAXException, TransformerConfigurationException {
+        return fileService.exportCSV(domainId) ? Result.ok().message("输出成功") : Result.error().message("输出失败");
     }
 
     @GetMapping("/download/{domainName}/{type}")

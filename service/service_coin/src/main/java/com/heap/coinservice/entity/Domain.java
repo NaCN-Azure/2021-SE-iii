@@ -11,6 +11,14 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * <p>
+ *
+ * </p>
+ *
+ * @author 车一晗
+ * @since 2021-03-07
+ */
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = false)
