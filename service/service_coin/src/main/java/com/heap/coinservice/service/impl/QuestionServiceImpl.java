@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.entity.Relationship;
+import com.heap.coinservice.mapper.EntityMapper;
 import com.heap.coinservice.mapper.QuestionMapper;
 import com.heap.coinservice.service.*;
 import com.heap.coinservice.utils.FileUtil;
@@ -30,6 +31,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     QuestionMapper questionMapper;
+
+    @Autowired
+    EntityMapper entityMapper;
 
     @Override
     public void clean(List<Entity> entity,List<Relationship> relation){
@@ -149,6 +153,10 @@ public class QuestionServiceImpl implements QuestionService {
         if(name1.equals(name2)){
             return getNodeDescription(domainId,name1);
         }
+        Entity entity = entityMapper.findByName(name2,domainId);
+        if(entity==null){
+            return getNodesNear(domainId,name1);
+        }
         return questionMapper.getLinkWithTwoNodes(domainId,name1,name2);
     }
 
@@ -163,6 +171,10 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     private String getTypesNodes(int domainId,String type){
+        Entity entity = entityMapper.findByName(type,domainId);
+        if(entity!=null){
+            return getNodesNear(domainId,type);
+        }
         List<String> results = questionMapper.getTypeNodes(type,domainId);
         String finalAnswer ="";
         for(String r:results){
