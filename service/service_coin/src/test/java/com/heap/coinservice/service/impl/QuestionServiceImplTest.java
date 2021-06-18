@@ -1,10 +1,15 @@
 package com.heap.coinservice.service.impl;
 
+import com.heap.coinservice.COINApplication;
 import com.heap.coinservice.entity.Entity;
 import com.heap.coinservice.service.EntityService;
 import com.heap.coinservice.service.QuestionService;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,7 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest(
+        classes = COINApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
+@DirtiesContext
 class QuestionServiceImplTest {
 
     @Autowired
