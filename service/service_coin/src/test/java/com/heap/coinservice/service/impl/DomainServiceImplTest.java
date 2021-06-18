@@ -4,6 +4,7 @@ import com.heap.coinservice.COINApplication;
 import com.heap.coinservice.controller.DomainController;
 import com.heap.coinservice.entity.Domain;
 import com.heap.coinservice.entity.Entity;
+import com.heap.commonutils.DefaultUtil;
 import com.heap.commonutils.Result;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -66,5 +68,16 @@ public class DomainServiceImplTest {
     public void getAllDomain() {
 //        List<Domain> domains=domainService.getAllDomain();
 //        assertEquals(2,domains.size());
+    }
+
+    @Test
+    public void getTemplate() {
+//        try {
+//            domainService.getTemplate(1, "1145145968582");
+//            Domain domain=domainService.getDomainById(DefaultUtil.NOW_DOMAIN_ID);
+//            assertEquals("宝可梦",domain.getName());
+//        }catch (IOException e){
+//            e.printStackTrace();
+//        }
     }
 }
