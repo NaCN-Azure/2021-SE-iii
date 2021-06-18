@@ -146,6 +146,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     private String getRelationWithTwoNodes(int domainId,String name1,String name2){
+        if(name1.equals(name2)){
+            return getNodeDescription(domainId,name1);
+        }
         return questionMapper.getLinkWithTwoNodes(domainId,name1,name2);
     }
 

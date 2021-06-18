@@ -93,7 +93,7 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
     @Override
     public void getTemplate(int template, String userId) throws IOException {
         System.out.println(template+100);
-        String path = "service/DomainDefault/";
+//        String path = "service/DomainDefault/";
         String filename = "";
         String domainName = "";
         if(template == 1){
@@ -112,7 +112,8 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
             filename = "movie.csv";
             domainName = "电影知识图谱";
         }
-        File file = new File(path + filename);
+//        File file = new File(path + filename);
+        File file = new File(filename);
         List<List<String>> rowList = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = null;
