@@ -117,13 +117,12 @@ public class DomainServiceImpl extends ServiceImpl<DomainMapper, Domain> impleme
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line = null;
         while ((line = reader.readLine()) != null) {
+            if(line.contains("形状B")){continue;}
             String[] rowArr = line.split(",");
             List<String> row = Arrays.asList(rowArr);
             rowList.add(row);
         }
-        System.out.println("ahah2:"+userId);
         Domain csvDomain = Domain.builder().name(domainName).user_id(userId).build();
-        System.out.println("ahah3:"+userId);
         int domainId = this.createDomain(csvDomain);
         fileService.createGraphByCsv(rowList, domainId);
     }

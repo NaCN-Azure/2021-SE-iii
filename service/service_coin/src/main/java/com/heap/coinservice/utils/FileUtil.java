@@ -33,6 +33,7 @@ public class FileUtil {
         BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream(),charset));
         String line = null;
         while ((line = reader.readLine()) != null) {
+            if(line.contains("形状B")){continue;}
             String[] rowArr = line.split(",");//CSV格式文件为逗号分隔符文件，这里根据逗号切分
             List<String> row = Arrays.asList(rowArr);
             rowList.add(row);
@@ -126,6 +127,8 @@ public class FileUtil {
             File file = new File(filename);
             FileWriter fw = new FileWriter(file);
             BufferedWriter bw = new BufferedWriter(fw);
+            bw.write("节点A,节点B,关系,A类型,B类型,形状A,形状B");
+            bw.flush();
             for(Relationship res:relationships){
                 bw.write(res.getStartEntity().getName()+','+res.getEndEntity().getName()+','+res.getName()+','+
                         res.getStartEntity().getType()+','+res.getEndEntity().getType()+','+
