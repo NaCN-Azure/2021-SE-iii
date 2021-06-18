@@ -6,6 +6,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -13,8 +14,8 @@ import java.util.List;
  *  服务类
  * </p>
  *
- * @author 车一晗
- * @since 2021-03-07
+ * @author 纳思彧
+ * @since 2021-04-07
  */
 @Service
 public interface FileService {
@@ -28,7 +29,7 @@ public interface FileService {
     boolean createGraphByCsv(List<List<String>> content, int domainId);
 
     /**
-     * 根据json格式创建公司（数据集成用）
+     * 根据json格式创建
      * @param jsonArray
      * @param domainId
      * @return
@@ -36,7 +37,7 @@ public interface FileService {
     boolean createJsonCompany(JSONArray jsonArray, int domainId);
 
     /**
-     * 导出图谱为csv文件
+     * 导出图谱为xml文件
      * @param domainId
      * @return
      * @throws TransformerConfigurationException
@@ -51,5 +52,15 @@ public interface FileService {
      * @param type
      */
     boolean deleteFile(String domainName, int type);
+
+    /**
+     * 导出csv
+     * @param domainId
+     * @return
+     * @throws TransformerConfigurationException
+     * @throws FileNotFoundException
+     * @throws SAXException
+     */
+    boolean exportCSV(int domainId) throws TransformerConfigurationException, IOException, SAXException;
 
 }

@@ -11,14 +11,14 @@ import java.util.List;
  *  服务类
  * </p>
  *
- * @author 车一晗
- * @since 2021-03-07
+ * @author 纳思彧
+ * @since 2021-06-07
  */
 @Service
 public interface QuestionService {
 
     /**
-     * 脚本调用
+     * 脚本调用（废弃）
      * 返回第一个命令参数
      * 后面为未知的查询变量
      * @param question
@@ -41,7 +41,7 @@ public interface QuestionService {
     void AddDict(String x,String type);
 
     /**
-     * 删除字典
+     * 删除字典（暂时废弃）
      */
     void clean(List<Entity> entity,List<Relationship> relation);
 

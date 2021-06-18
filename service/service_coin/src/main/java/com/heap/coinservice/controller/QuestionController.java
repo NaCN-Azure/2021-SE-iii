@@ -7,7 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/**
+ * <p>
+ *  前端控制器
+ * </p>
+ *
+ * @author 纳思彧
+ * @since 2021-06-01
+ */
 @RestController
 @RequestMapping("/coinservice/question")
 @CrossOrigin

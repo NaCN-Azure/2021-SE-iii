@@ -1,26 +1,31 @@
 package com.heap.coinservice.utils;
 
+import com.heap.coinservice.entity.Relationship;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+//本地测试使用的类，没有意义
 public class FileTest {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        String filename ="AAA"+".csv";
+        new File(filename).createNewFile();
         try{
-            String path = "service/DomainDefault/";
-            String filename ="";
-            filename="pokemon.csv";
-            File file = new File(path+filename);
-            List<List<String>> rowList = new ArrayList<List<String>>();
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                String[] rowArr = line.split(",");//CSV格式文件为逗号分隔符文件，这里根据逗号切分
-                List<String> row = Arrays.asList(rowArr);
-                rowList.add(row);
+            File file = new File(filename);
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            for(int i=0;i<3;i++){
+                bw.write("S"+','+"S"+','+"A"+','+
+                        "F"+','+"F"+','+
+                        "Q"+','+"Q"+'\n');
+                bw.flush();
             }
-        }catch (Exception e){
+            bw.close();
+            fw.close();
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
     }

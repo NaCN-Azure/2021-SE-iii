@@ -45,6 +45,9 @@ public class FileUtil {
         if(type == 1){
             filename = domainName + ".xml";
         }
+        else if(type ==2){
+            filename = domainName + ".csv";
+        }
         return FILEPATH + filename;
     }
 
@@ -114,6 +117,29 @@ public class FileUtil {
     public static JSONArray readJsonCompany(MultipartFile file) throws IOException{
         String parserWord = readJsonFile(file).replace("'","\"").replace("None","\"Unknown\"");
         return JSONArray.parseArray(parserWord);
+    }
+
+    public static boolean outCsv(List<Relationship> relationships,Domain domain) throws IOException {
+        String filename =domain.getName()+".csv";
+        new File(filename).createNewFile();
+        try{
+            File file = new File(filename);
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+            for(Relationship res:relationships){
+                bw.write(res.getStartEntity().getName()+','+res.getEndEntity().getName()+','+res.getName()+','+
+                        res.getStartEntity().getType()+','+res.getEndEntity().getType()+','+
+                        res.getStartEntity().getShape()+','+res.getEndEntity().getShape()+'\n');
+                bw.flush();
+            }
+            bw.close();
+            fw.close();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     private static String readJsonFile(MultipartFile file) throws IOException {

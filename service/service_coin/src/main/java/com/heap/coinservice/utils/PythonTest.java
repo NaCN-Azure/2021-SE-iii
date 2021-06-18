@@ -1,6 +1,7 @@
 package com.heap.coinservice.utils;
 import java.io.*;
 
+//python运行测试的脚本，没有意义
 public class PythonTest {
     public static void main(String[] args) {
         try{
